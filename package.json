@@ -1,0 +1,19 @@
+{
+  "name": "megatae-esim",
+  "private": true,
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=11"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter=./apps/* dev",
+    "build": "pnpm --filter=./apps/* build",
+    "db:migrate": "pnpm --filter=api db:migrate",
+    "db:seed": "pnpm --filter=api db:seed",
+    "db:studio": "pnpm --filter=api db:studio"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

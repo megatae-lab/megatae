@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Compania {
+  ATT
+  MOVISTAR
+  BAIT
+}
+
+enum EstadoSolicitud {
+  RECIBIDA
+  REVISION_PAGO
+  PAGO_RECHAZADO
+  PAGO_VALIDADO
+  EN_ACTIVACION
+  QR_ENVIADO
+  ACTIVADA
+  CANCELADA
+}
+
+enum RolAdmin {
+  PRO
+  GENERAL
+}
+
+model Plan {
+  id          Int         @id @default(autoincrement())
+  compania    Compania
+  precio      Decimal     @db.Decimal(10, 2)
+  recarga     Decimal     @db.Decimal(10, 2)
+  descripcion String?
+  activo      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  solicitudes Solicitud[]
+}
+
+model Solicitud {
+  id          Int             @id @default(autoincrement())
+  nombre      String
+  email       String
+  telefono    String
+  ciudad      String?
+  estadoMx    String?
+  lada        String?
+  compania    Compania
+  planId      Int
+  plan        Plan            @relation(fields: [planId], references: [id])
+  comprobante String
+  estado      EstadoSolicitud @default(RECIBIDA)
+  observacion String?
+  qrUrl       String?
+  dn          String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  historial   HistorialEstado[]
+}
+
+model HistorialEstado {
+  id             Int             @id @default(autoincrement())
+  solicitudId    Int
+  solicitud      Solicitud       @relation(fields: [solicitudId], references: [id])
+  estadoAnterior EstadoSolicitud
+  estadoNuevo    EstadoSolicitud
+  adminId        Int?
+  admin          Admin?          @relation(fields: [adminId], references: [id])
+  observacion    String?
+  createdAt      DateTime        @default(now())
+}
+
+model CuentaBancaria {
+  id      Int     @id @default(autoincrement())
+  banco   String
+  titular String
+  cuenta  String?
+  clabe   String?
+  activo  Boolean @default(true)
+  orden   Int     @default(0)
+}
+
+model Lead {
+  id             Int      @id @default(autoincrement())
+  email          String
+  aceptoTerminos Boolean
+  createdAt      DateTime @default(now())
+}
+
+model Admin {
+  id           Int               @id @default(autoincrement())
+  email        String            @unique
+  passwordHash String
+  nombre       String
+  rol          RolAdmin
+  activo       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  historial    HistorialEstado[]
+}
