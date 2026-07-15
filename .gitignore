@@ -3,5 +3,6 @@ dist/
 .env
 .env.local
 *.tsbuildinfo
-docs/
+docs/*
+!docs/DEPLOY.md
 apps/web/src/**/*.js
