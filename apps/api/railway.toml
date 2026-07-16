@@ -1,9 +1,9 @@
 [build]
 builder = "nixpacks"
-buildCommand = "pnpm install --frozen-lockfile && pnpm --filter api build"
+buildCommand = "pnpm install --frozen-lockfile && pnpm --filter web build"
 
 [deploy]
-startCommand = "pnpm --filter api db:migrate:deploy && pnpm --filter api start"
-healthcheckPath = "/api/health"
+startCommand = "pnpm --filter web preview --port $PORT --host 0.0.0.0"
+healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
