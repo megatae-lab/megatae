@@ -135,11 +135,12 @@ export function DevicesSection() {
 
   const filtered = useMemo<BrandGroup[]>(() => {
     if (!query.trim()) return DEVICE_LIST;
-    const q = query.toLowerCase();
+    const words = query.toLowerCase().split(/\s+/).filter(Boolean);
     return DEVICE_LIST.flatMap((g) => {
-      const models = g.models.filter(
-        (m) => m.toLowerCase().includes(q) || g.brand.toLowerCase().includes(q)
-      );
+      const models = g.models.filter((m) => {
+        const text = (g.brand + " " + m).toLowerCase();
+        return words.every((w) => text.includes(w));
+      });
       return models.length ? [{ brand: g.brand, models }] : [];
     });
   }, [query]);
@@ -185,32 +186,34 @@ export function DevicesSection() {
           )}
         </div>
 
-        {/* Resultados */}
-        {filtered.length === 0 ? (
-          <p className="text-center text-white/50 py-8">
-            No encontramos ese modelo. Contáctanos para confirmarlo.
-          </p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {filtered.map((group) => (
-              <div key={group.brand} className="bg-navy-800 border border-white/10 rounded-xl p-4">
-                <p className="text-white font-bold text-sm mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-brand inline-block" />
-                  {group.brand}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {group.models.map((model) => (
-                    <span
-                      key={model}
-                      className="text-white/70 text-xs bg-white/5 border border-white/10 px-2 py-1 rounded-lg"
-                    >
-                      {model}
-                    </span>
-                  ))}
+        {/* Resultados — solo cuando hay búsqueda activa */}
+        {query.trim() && (
+          filtered.length === 0 ? (
+            <p className="text-center text-white/50 py-4 text-sm">
+              No encontramos ese modelo. Contáctanos para confirmarlo.
+            </p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {filtered.map((group) => (
+                <div key={group.brand} className="bg-navy-800 border border-white/10 rounded-xl p-4">
+                  <p className="text-white font-bold text-sm mb-2 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-brand inline-block" />
+                    {group.brand}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.models.map((model) => (
+                      <span
+                        key={model}
+                        className="text-white/70 text-xs bg-white/5 border border-white/10 px-2 py-1 rounded-lg"
+                      >
+                        {model}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )
         )}
       </div>
     </section>

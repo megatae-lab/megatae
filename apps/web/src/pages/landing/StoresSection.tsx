@@ -1,26 +1,25 @@
 const STORES = [
-  { name: "OXXO", color: "#ed1c24" },
-  { name: "Soriana", color: "#004f9f" },
-  { name: "7-Eleven", color: "#007a33" },
-  { name: "Farmacias del Ahorro", color: "#e31837" },
-  { name: "Chedraui", color: "#009944" },
-  { name: "Walmart", color: "#0071ce" },
+  { name: "OXXO", src: "/assets/store-oxxo.png" },
+  { name: "Soriana", src: "/assets/store-soriana.png" },
+  { name: "7-Eleven", src: "/assets/store-7eleven.png" },
+  { name: "Bodega Aurrera", src: "/assets/store-bodega.png" },
+  { name: "Farmacias del Ahorro", src: "/assets/store-farmacias.png" },
+  { name: "Chedraui", src: "/assets/store-chedraui.png" },
 ];
 
 export function StoresSection() {
   return (
     <section className="bg-navy-950 py-12 px-4">
-      <div className="mx-auto max-w-4xl text-center">
+      <div className="mx-auto max-w-7xl text-center">
         <p className="text-white/60 text-sm mb-6">Puedes recargar en tu tienda favorita</p>
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-6">
           {STORES.map((s) => (
-            <div
+            <img
               key={s.name}
-              className="px-5 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/80 text-sm font-bold"
-              style={{ borderLeftColor: s.color, borderLeftWidth: 3 }}
-            >
-              {s.name}
-            </div>
+              src={s.src}
+              alt={s.name}
+              style={{ display: "block", height: 40, width: 140, objectFit: "contain" }}
+            />
           ))}
         </div>
       </div>

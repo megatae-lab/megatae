@@ -1,14 +1,15 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap");
 
 @theme {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --color-navy-950: #030b1a;
-  --color-navy-900: #050e24;
-  --color-navy-800: #0a1a36;
-  --color-navy-700: #0e2248;
-  --color-brand: #0057ff;
-  --color-brand-dark: #0040cc;
-  --color-brand-light: #3d80ff;
+  --font-sans: "Montserrat", system-ui, sans-serif;
+  --color-navy-950: #011840;
+  --color-navy-900: #022554;
+  --color-navy-800: #032e67;
+  --color-navy-700: #043a82;
+  --color-brand: #1365d2;
+  --color-brand-dark: #0d4fa0;
+  --color-brand-light: #1a7ef1;
 }
 
 * {

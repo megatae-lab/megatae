@@ -32,8 +32,8 @@ const BENEFITS: Benefit[] = [
 
 export function BenefitsSection() {
   return (
-    <section className="bg-navy-800 py-16 px-4">
-      <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-center gap-12">
+    <section className="bg-navy-800 pt-16 pb-8 px-4">
+      <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-start gap-12">
         {/* Texto */}
         <div className="flex-1">
           <h2 className="text-white font-black text-3xl md:text-4xl leading-tight mb-8">
@@ -64,7 +64,7 @@ export function BenefitsSection() {
           <img
             src="/assets/benefits-phone.png"
             alt="eSIM en tu teléfono"
-            className="w-72 h-72 object-contain drop-shadow-2xl"
+            className="w-96 h-96 object-contain drop-shadow-2xl"
           />
         </div>
       </div>
