@@ -52,6 +52,7 @@ export function AdminSolicitudDetalle() {
   const [imgError, setImgError] = useState(false);
   const [qrLoading, setQrLoading] = useState(false);
   const [qrError, setQrError] = useState<string | undefined>();
+  const [recordatorioState, setRecordatorioState] = useState<"idle" | "loading" | "sent" | "error">("idle");
 
   const { data: s, isLoading } = useQuery({
     queryKey: ["admin", "solicitudes", Number(id)],
@@ -103,6 +104,18 @@ export function AdminSolicitudDetalle() {
       setQrError(err instanceof Error ? err.message : "Error inesperado");
     } finally {
       setQrLoading(false);
+    }
+  }
+
+  async function enviarRecordatorio() {
+    setRecordatorioState("loading");
+    try {
+      await api.admin.solicitudes.recordatorio(Number(id));
+      setRecordatorioState("sent");
+      setTimeout(() => setRecordatorioState("idle"), 3000);
+    } catch {
+      setRecordatorioState("error");
+      setTimeout(() => setRecordatorioState("idle"), 3000);
     }
   }
 
@@ -219,6 +232,7 @@ export function AdminSolicitudDetalle() {
           {/* Acciones */}
           <AccionesEstado
             estado={s.estado}
+            compania={s.compania}
             updatedAt={s.updatedAt}
             loading={mutation.isPending}
             error={mutation.error?.message}
@@ -227,6 +241,8 @@ export function AdminSolicitudDetalle() {
             qrLoading={qrLoading}
             qrError={qrError}
             onEnviarQr={submitQr}
+            recordatorioState={recordatorioState}
+            onRecordatorio={enviarRecordatorio}
           />
         </div>
       </div>
@@ -276,6 +292,7 @@ export function AdminSolicitudDetalle() {
 
 function AccionesEstado({
   estado,
+  compania,
   updatedAt,
   loading,
   error,
@@ -284,8 +301,11 @@ function AccionesEstado({
   qrLoading,
   qrError,
   onEnviarQr,
+  recordatorioState,
+  onRecordatorio,
 }: {
   estado: EstadoSolicitud;
+  compania: string;
   updatedAt: string;
   loading: boolean;
   error?: string;
@@ -294,10 +314,13 @@ function AccionesEstado({
   qrLoading: boolean;
   qrError?: string;
   onEnviarQr: (file: File, dn: string) => void;
+  recordatorioState: "idle" | "loading" | "sent" | "error";
+  onRecordatorio: () => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [qrFile, setQrFile] = useState<File | null>(null);
   const [dn, setDn] = useState("");
+  const isBait = compania === "BAIT";
 
   if (estado === "ACTIVADA" || estado === "CANCELADA") return null;
 
@@ -379,12 +402,15 @@ function AccionesEstado({
 
           {/* Campo DN */}
           <div>
-            <p className="text-white/40 text-xs mb-1.5">Número de línea (DN)</p>
+            <p className="text-white/40 text-xs mb-1.5">
+              Número de línea (DN)
+              {isBait && <span className="ml-1 text-white/30">(opcional para Bait)</span>}
+            </p>
             <input
               type="text"
               value={dn}
               onChange={(e) => setDn(e.target.value)}
-              placeholder="Ej: 5512345678"
+              placeholder={isBait ? "Se asignará cuando el cliente active" : "Ej: 5512345678"}
               className="w-full bg-navy-900 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-brand transition-colors"
             />
           </div>
@@ -399,9 +425,9 @@ function AccionesEstado({
             label="Enviar QR al cliente"
             color="bg-teal-600 hover:bg-teal-700"
             loading={qrLoading}
-            disabled={!qrFile || !dn.trim()}
+            disabled={!qrFile || (!isBait && !dn.trim())}
             onClick={() => {
-              if (qrFile && dn.trim()) onEnviarQr(qrFile, dn.trim());
+              if (qrFile) onEnviarQr(qrFile, dn.trim());
             }}
           />
         </div>
@@ -423,6 +449,24 @@ function AccionesEstado({
             loading={anyLoading}
             onClick={() => onTransicion("ACTIVADA")}
           />
+          <button
+            onClick={onRecordatorio}
+            disabled={recordatorioState === "loading" || recordatorioState === "sent"}
+            className={`w-full font-bold py-2.5 rounded-lg text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2 border ${
+              recordatorioState === "sent"
+                ? "border-green-500/40 bg-green-500/10 text-green-400"
+                : recordatorioState === "error"
+                ? "border-red-500/40 bg-red-500/10 text-red-400"
+                : "border-white/20 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white"
+            }`}
+          >
+            {recordatorioState === "loading" && <Loader className="w-4 h-4 animate-spin" />}
+            {recordatorioState === "sent"
+              ? "Recordatorio enviado"
+              : recordatorioState === "error"
+              ? "Error al enviar — intenta de nuevo"
+              : "Recordar al cliente registro"}
+          </button>
           <ActionButton
             label="Cancelar solicitud"
             color="bg-white/10 hover:bg-white/20 text-white/70"
