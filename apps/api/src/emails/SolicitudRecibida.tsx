@@ -1,15 +1,16 @@
-import { Html, Head, Body, Container, Text, Hr, Preview } from "@react-email/components";
+import { Html, Head, Body, Container, Text, Hr, Preview, Img } from "@react-email/components";
 
 interface Props {
   nombre: string;
   compania: string;
   precio: string;
   recarga: string;
+  logoUrl?: string;
 }
 
 const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
 
-export function SolicitudRecibida({ nombre, compania, precio, recarga }: Props) {
+export function SolicitudRecibida({ nombre, compania, precio, recarga, logoUrl }: Props) {
   return (
     <Html lang="es">
       <Head />
@@ -21,13 +22,19 @@ export function SolicitudRecibida({ nombre, compania, precio, recarga }: Props) 
           <div style={{ height: 5, background: "#1365d2", borderRadius: "8px 8px 0 0" }} />
 
           {/* Header */}
-          <div style={{ background: "#022554", padding: "28px 36px 24px" }}>
-            <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px", margin: 0 }}>
-              MEGATAE
-            </Text>
-            <Text style={{ color: "#7aa8e8", fontSize: 12, margin: "4px 0 0", letterSpacing: "1.5px", textTransform: "uppercase" }}>
-              eSIM Mexico
-            </Text>
+          <div style={{ background: "#022554", padding: "24px 36px" }}>
+            {logoUrl ? (
+              <Img src={logoUrl} alt="MEGATAE" height={44} style={{ display: "block" }} />
+            ) : (
+              <>
+                <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px", margin: 0 }}>
+                  MEGATAE
+                </Text>
+                <Text style={{ color: "#7aa8e8", fontSize: 12, margin: "4px 0 0", letterSpacing: "1.5px", textTransform: "uppercase" }}>
+                  eSIM Mexico
+                </Text>
+              </>
+            )}
           </div>
 
           {/* Body */}

@@ -7,6 +7,7 @@ import { RecordatorioActivacion } from "../emails/RecordatorioActivacion.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "no-reply@megatae.mx";
+const logoUrl = process.env.APP_URL ? `${process.env.APP_URL}/assets/logo-megatae.png` : undefined;
 
 export async function sendPagoRechazado(opts: {
   to: string;
@@ -14,7 +15,7 @@ export async function sendPagoRechazado(opts: {
   compania: string;
   observacion: string;
 }) {
-  const html = await render(<PagoRechazado {...opts} />);
+  const html = await render(<PagoRechazado {...opts} logoUrl={logoUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -30,7 +31,7 @@ export async function sendSolicitudRecibida(opts: {
   precio: string;
   recarga: string;
 }) {
-  const html = await render(<SolicitudRecibida {...opts} />);
+  const html = await render(<SolicitudRecibida {...opts} logoUrl={logoUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -47,7 +48,7 @@ export async function sendQrEnviado(opts: {
   qrUrl: string;
 }) {
   const videoUrl = process.env.VIDEO_TUTORIAL_URL || undefined;
-  const html = await render(<QrEnviado {...opts} videoUrl={videoUrl} />);
+  const html = await render(<QrEnviado {...opts} videoUrl={videoUrl} logoUrl={logoUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -61,7 +62,7 @@ export async function sendRecordatorioActivacion(opts: {
   nombre: string;
   compania: string;
 }) {
-  const html = await render(<RecordatorioActivacion nombre={opts.nombre} compania={opts.compania} />);
+  const html = await render(<RecordatorioActivacion nombre={opts.nombre} compania={opts.compania} logoUrl={logoUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
