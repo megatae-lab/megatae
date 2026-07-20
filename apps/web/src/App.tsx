@@ -12,10 +12,6 @@ import { AdminSolicitudes } from "./pages/admin/Solicitudes.js";
 import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
 
-const isAdminSubdomain =
-  window.location.hostname.startsWith("admin.") ||
-  import.meta.env.VITE_FORCE_ADMIN === "true";
-
 function PublicLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-navy-900">
@@ -28,21 +24,7 @@ function PublicLayout() {
   );
 }
 
-function AdminRoutes() {
-  return (
-    <Routes>
-      <Route path="/login" element={<AdminLogin />} />
-      <Route path="/" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="solicitudes" element={<AdminSolicitudes />} />
-        <Route path="solicitudes/:id" element={<AdminSolicitudDetalle />} />
-        <Route path="configuracion" element={<AdminConfiguracion />} />
-      </Route>
-    </Routes>
-  );
-}
-
-function PublicRoutes() {
+export function App() {
   return (
     <Routes>
       <Route element={<PublicLayout />}>
@@ -51,10 +33,13 @@ function PublicRoutes() {
         <Route path="pago" element={<Pago />} />
         <Route path="gracias" element={<Gracias />} />
       </Route>
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="solicitudes" element={<AdminSolicitudes />} />
+        <Route path="solicitudes/:id" element={<AdminSolicitudDetalle />} />
+        <Route path="configuracion" element={<AdminConfiguracion />} />
+      </Route>
     </Routes>
   );
-}
-
-export function App() {
-  return isAdminSubdomain ? <AdminRoutes /> : <PublicRoutes />;
 }
