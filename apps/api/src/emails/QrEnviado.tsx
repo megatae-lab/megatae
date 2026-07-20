@@ -1,79 +1,103 @@
-import { Html, Head, Body, Container, Heading, Text, Hr, Img, Link } from "@react-email/components";
+import { Html, Head, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
 
 interface Props {
   nombre: string;
   compania: string;
-  dn: string;
+  dn?: string;
   qrUrl: string;
   videoUrl?: string;
+  logoUrl?: string;
 }
 
-export function QrEnviado({ nombre, compania, dn, qrUrl, videoUrl }: Props) {
+const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+
+export function QrEnviado({ nombre, compania, dn, qrUrl, videoUrl, logoUrl }: Props) {
   return (
     <Html lang="es">
       <Head />
-      <Body style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#f6f6f6", margin: 0 }}>
-        <Container
-          style={{
-            maxWidth: 600,
-            margin: "32px auto",
-            backgroundColor: "#ffffff",
-            padding: "32px",
-            borderRadius: "8px",
-          }}
-        >
-          <Heading style={{ color: "#030b1a", fontSize: 22, marginTop: 0 }}>
-            ¡Tu eSIM {compania} está lista, {nombre}!
-          </Heading>
+      <Preview>Tu eSIM {compania} está lista — escanea el QR para activarla</Preview>
+      <Body style={{ fontFamily: font, backgroundColor: "#eef2f7", margin: 0, padding: "40px 16px" }}>
+        <Container style={{ maxWidth: 560, margin: "0 auto" }}>
 
-          <Text style={{ color: "#444444", fontSize: 16, lineHeight: "24px" }}>
-            Tu número asignado es: <strong>{dn}</strong>
-          </Text>
+          {/* Accent bar */}
+          <div style={{ height: 5, background: "#059669", borderRadius: "8px 8px 0 0" }} />
 
-          <Text style={{ color: "#444444", fontSize: 15, margin: "0 0 8px" }}>
-            Escanea este código QR para activar tu línea:
-          </Text>
-
-          <div style={{ textAlign: "center", margin: "16px 0" }}>
-            <Img
-              src={qrUrl}
-              alt="Código QR eSIM"
-              width="220"
-              height="220"
-              style={{ borderRadius: 8, border: "1px solid #e5e5e5" }}
-            />
+          {/* Header */}
+          <div style={{ background: "#022554", padding: "24px 36px" }}>
+            {logoUrl ? (
+              <Img src={logoUrl} alt="MEGATAE" height={44} style={{ display: "block" }} />
+            ) : (
+              <>
+                <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px", margin: 0 }}>
+                  MEGATAE
+                </Text>
+                <Text style={{ color: "#7aa8e8", fontSize: 12, margin: "4px 0 0", letterSpacing: "1.5px", textTransform: "uppercase" }}>
+                  eSIM Mexico
+                </Text>
+              </>
+            )}
           </div>
 
-          {videoUrl && (
-            <Text style={{ color: "#444444", fontSize: 15, lineHeight: "24px" }}>
-              ¿No sabes cómo activarla?{" "}
-              <Link href={videoUrl} style={{ color: "#0057ff" }}>
-                Ve el video tutorial aquí
-              </Link>
-              .
+          {/* Body */}
+          <div style={{ background: "#ffffff", padding: "36px 36px 28px" }}>
+            <Text style={{ color: "#022554", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: "30px" }}>
+              ¡Tu eSIM {compania} está lista!
             </Text>
-          )}
+            <Text style={{ color: "#4a5568", fontSize: 15, lineHeight: "24px", margin: "0 0 28px" }}>
+              Hola <strong>{nombre}</strong>, ya puedes activar tu nueva línea. Escanea el código QR con tu teléfono para completar la activación.
+            </Text>
 
-          <div
-            style={{
-              backgroundColor: "#fffbeb",
-              border: "1px solid #fde68a",
-              borderRadius: 8,
-              padding: "12px 16px",
-              margin: "20px 0",
-            }}
-          >
-            <Text style={{ color: "#92400e", fontSize: 14, margin: 0 }}>
-              <strong>Importante:</strong> Tienes <strong>24 horas</strong> para
-              registrar tu línea con {compania}. Si no completas el registro en ese
-              plazo, tu boleto de participación podría no ser válido.
+            {/* QR card */}
+            <div style={{ background: "#f7faff", border: "1px solid #d0e1fb", borderRadius: 12, padding: "28px 24px", textAlign: "center", marginBottom: 24 }}>
+              <div style={{ background: "#ffffff", display: "inline-block", padding: 12, borderRadius: 10, border: "1px solid #e8f0fe" }}>
+                <Img
+                  src={qrUrl}
+                  alt="Código QR eSIM"
+                  width="200"
+                  height="200"
+                  style={{ display: "block" }}
+                />
+              </div>
+              {dn && (
+                <div style={{ marginTop: 16 }}>
+                  <Text style={{ color: "#718096", fontSize: 11, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", margin: "0 0 4px" }}>
+                    Número de línea asignado
+                  </Text>
+                  <Text style={{ color: "#022554", fontSize: 20, fontWeight: 700, fontFamily: "monospace, monospace", margin: 0, letterSpacing: "2px" }}>
+                    {dn}
+                  </Text>
+                </div>
+              )}
+            </div>
+
+            {/* 24h warning */}
+            <div style={{ background: "#fffbeb", border: "1px solid #fce082", borderRadius: 10, padding: "16px 20px", marginBottom: videoUrl ? 20 : 0 }}>
+              <Text style={{ color: "#92400e", fontSize: 13, margin: 0, lineHeight: "20px" }}>
+                <strong>Importante:</strong> Activa tu línea lo antes posible. Si tienes dudas sobre el proceso, contacta a soporte.
+              </Text>
+            </div>
+
+            {/* Video tutorial link */}
+            {videoUrl && (
+              <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10, padding: "16px 20px" }}>
+                <Text style={{ color: "#166534", fontSize: 13, margin: 0, lineHeight: "20px" }}>
+                  ¿Primera vez con una eSIM?{" "}
+                  <Link href={videoUrl} style={{ color: "#1365d2", fontWeight: 600 }}>
+                    Ve el video tutorial aquí
+                  </Link>{" "}
+                  y actívala en menos de 3 minutos.
+                </Text>
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div style={{ background: "#f7fafc", borderTop: "1px solid #e2e8f0", borderRadius: "0 0 8px 8px", padding: "20px 36px" }}>
+            <Text style={{ color: "#a0aec0", fontSize: 11, margin: 0, lineHeight: "18px" }}>
+              Megatae Global · Si no realizaste esta solicitud, ignora este mensaje.
             </Text>
           </div>
 
-          <Hr style={{ borderColor: "#e5e5e5", margin: "24px 0" }} />
-          <Text style={{ color: "#999999", fontSize: 12, margin: 0 }}>
-            Megatae Global · Si no realizaste esta solicitud, ignora este mensaje.
-          </Text>
         </Container>
       </Body>
     </Html>

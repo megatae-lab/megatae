@@ -3,9 +3,11 @@ import { render } from "@react-email/render";
 import { SolicitudRecibida } from "../emails/SolicitudRecibida.js";
 import { PagoRechazado } from "../emails/PagoRechazado.js";
 import { QrEnviado } from "../emails/QrEnviado.js";
+import { RecordatorioActivacion } from "../emails/RecordatorioActivacion.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "no-reply@megatae.mx";
+const logoUrl = process.env.WEB_URL ? `${process.env.WEB_URL}/assets/logo-megatae.png` : undefined;
 
 export async function sendPagoRechazado(opts: {
   to: string;
@@ -13,7 +15,7 @@ export async function sendPagoRechazado(opts: {
   compania: string;
   observacion: string;
 }) {
-  const html = await render(<PagoRechazado {...opts} />);
+  const html = await render(<PagoRechazado {...opts} logoUrl={logoUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -29,7 +31,7 @@ export async function sendSolicitudRecibida(opts: {
   precio: string;
   recarga: string;
 }) {
-  const html = await render(<SolicitudRecibida {...opts} />);
+  const html = await render(<SolicitudRecibida {...opts} logoUrl={logoUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -42,15 +44,29 @@ export async function sendQrEnviado(opts: {
   to: string;
   nombre: string;
   compania: string;
-  dn: string;
+  dn?: string;
   qrUrl: string;
 }) {
   const videoUrl = process.env.VIDEO_TUTORIAL_URL || undefined;
-  const html = await render(<QrEnviado {...opts} videoUrl={videoUrl} />);
+  const html = await render(<QrEnviado {...opts} videoUrl={videoUrl} logoUrl={logoUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
     subject: `¡Tu eSIM ${opts.compania} está lista! Aquí está tu QR`,
+    html,
+  });
+}
+
+export async function sendRecordatorioActivacion(opts: {
+  to: string;
+  nombre: string;
+  compania: string;
+}) {
+  const html = await render(<RecordatorioActivacion nombre={opts.nombre} compania={opts.compania} logoUrl={logoUrl} />);
+  await resend.emails.send({
+    from: FROM,
+    to: opts.to,
+    subject: `Acción requerida: completa tu registro LMTR — eSIM ${opts.compania}`,
     html,
   });
 }
