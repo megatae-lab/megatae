@@ -7,7 +7,7 @@ import { RecordatorioActivacion } from "../emails/RecordatorioActivacion.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "no-reply@megatae.mx";
-const logoUrl = process.env.APP_URL ? `${process.env.APP_URL}/assets/logo-megatae.png` : undefined;
+const logoUrl = process.env.WEB_URL ? `${process.env.WEB_URL}/assets/logo-megatae.png` : undefined;
 
 export async function sendPagoRechazado(opts: {
   to: string;
