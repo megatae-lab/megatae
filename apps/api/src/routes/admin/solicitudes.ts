@@ -3,7 +3,7 @@ import { z } from "zod";
 import { EstadoSolicitud } from "@prisma/client";
 import { prisma } from "../../lib/prisma.js";
 import { transicionValida } from "../../lib/transitions.js";
-import { sendPagoRechazado, sendQrEnviado } from "../../services/email.js";
+import { sendPagoRechazado, sendQrEnviado, sendRecordatorioActivacion } from "../../services/email.js";
 import { generatePresignedUploadUrl, isAllowedType } from "../../services/r2.js";
 import { siredAdapter } from "../../services/sired.js";
 import type { AuthRequest } from "../../middleware/auth.js";
@@ -184,7 +184,7 @@ adminSolicitudesRouter.post("/:id/qr/presigned-url", async (req: AuthRequest, re
 // POST /api/admin/solicitudes/:id/qr
 const qrSchema = z.object({
   qrUrl: z.string().url("URL de QR inválida"),
-  dn: z.string().min(1, "El DN es requerido"),
+  dn: z.string().optional(),
 });
 
 adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
@@ -207,7 +207,7 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
     await prisma.$transaction([
       prisma.solicitud.update({
         where: { id },
-        data: { qrUrl, dn, estado: "QR_ENVIADO" },
+        data: { qrUrl, dn: dn || null, estado: "QR_ENVIADO" },
       }),
       prisma.historialEstado.create({
         data: {
@@ -223,7 +223,7 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
-      dn,
+      dn: dn || undefined,
       qrUrl,
     }).catch((err) => console.error("Error enviando correo QrEnviado:", err));
 
@@ -233,6 +233,40 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
       res.status(422).json({ error: err.errors[0]?.message ?? "Datos inválidos" });
       return;
     }
+    next(err);
+  }
+});
+
+// POST /api/admin/solicitudes/:id/recordatorio
+adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "ID inválido" }); return; }
+
+    const solicitud = await prisma.solicitud.findUnique({
+      where: { id },
+      select: { estado: true, email: true, nombre: true, compania: true, dn: true, qrUrl: true },
+    });
+    if (!solicitud) { res.status(404).json({ error: "Solicitud no encontrada" }); return; }
+    if (solicitud.estado !== "QR_ENVIADO") {
+      res.status(422).json({ error: "Solo se puede enviar recordatorio en estado QR enviado" });
+      return;
+    }
+    if (!solicitud.qrUrl) {
+      res.status(422).json({ error: "La solicitud no tiene QR registrado" });
+      return;
+    }
+
+    await sendRecordatorioActivacion({
+      to: solicitud.email,
+      nombre: solicitud.nombre,
+      compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
+      dn: solicitud.dn ?? undefined,
+      qrUrl: solicitud.qrUrl,
+    });
+
+    res.json({ ok: true });
+  } catch (err) {
     next(err);
   }
 });

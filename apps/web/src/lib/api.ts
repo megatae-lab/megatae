@@ -159,6 +159,8 @@ export const api = {
           headers: JSON_HEADERS,
           body: JSON.stringify({ qrUrl, dn }),
         }),
+      recordatorio: (id: number): Promise<{ ok: boolean }> =>
+        adminRequest(`/admin/solicitudes/${id}/recordatorio`, { method: "POST" }),
     },
   },
   solicitudes: {

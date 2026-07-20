@@ -3,6 +3,7 @@ import { render } from "@react-email/render";
 import { SolicitudRecibida } from "../emails/SolicitudRecibida.js";
 import { PagoRechazado } from "../emails/PagoRechazado.js";
 import { QrEnviado } from "../emails/QrEnviado.js";
+import { RecordatorioActivacion } from "../emails/RecordatorioActivacion.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "no-reply@megatae.mx";
@@ -42,7 +43,7 @@ export async function sendQrEnviado(opts: {
   to: string;
   nombre: string;
   compania: string;
-  dn: string;
+  dn?: string;
   qrUrl: string;
 }) {
   const videoUrl = process.env.VIDEO_TUTORIAL_URL || undefined;
@@ -51,6 +52,22 @@ export async function sendQrEnviado(opts: {
     from: FROM,
     to: opts.to,
     subject: `¡Tu eSIM ${opts.compania} está lista! Aquí está tu QR`,
+    html,
+  });
+}
+
+export async function sendRecordatorioActivacion(opts: {
+  to: string;
+  nombre: string;
+  compania: string;
+  dn?: string;
+  qrUrl: string;
+}) {
+  const html = await render(<RecordatorioActivacion {...opts} />);
+  await resend.emails.send({
+    from: FROM,
+    to: opts.to,
+    subject: `Recuerda activar tu eSIM ${opts.compania}`,
     html,
   });
 }
