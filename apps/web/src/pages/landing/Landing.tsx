@@ -11,7 +11,7 @@ function CtaBanner() {
     <div className="bg-brand py-2 text-center">
       <button
         onClick={() =>
-          document.getElementById("planes")?.scrollIntoView({ behavior: "smooth" })
+          document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })
         }
         className="text-white text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
       >

@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar.js";
 import { Footer } from "./components/Footer.js";
 import { Landing } from "./pages/landing/Landing.js";
@@ -11,6 +11,7 @@ import { AdminDashboard } from "./pages/admin/Dashboard.js";
 import { AdminSolicitudes } from "./pages/admin/Solicitudes.js";
 import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
+import { useEffect } from "react";
 
 function PublicLayout() {
   return (
@@ -24,22 +25,33 @@ function PublicLayout() {
   );
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 export function App() {
   return (
-    <Routes>
-      <Route element={<PublicLayout />}>
-        <Route index element={<Landing />} />
-        <Route path="comprar" element={<Comprar />} />
-        <Route path="pago" element={<Pago />} />
-        <Route path="gracias" element={<Gracias />} />
-      </Route>
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="solicitudes" element={<AdminSolicitudes />} />
-        <Route path="solicitudes/:id" element={<AdminSolicitudDetalle />} />
-        <Route path="configuracion" element={<AdminConfiguracion />} />
-      </Route>
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route element={<PublicLayout />}>
+          <Route index element={<Landing />} />
+          <Route path="comprar" element={<Comprar />} />
+          <Route path="pago" element={<Pago />} />
+          <Route path="gracias" element={<Gracias />} />
+        </Route>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="solicitudes" element={<AdminSolicitudes />} />
+          <Route path="solicitudes/:id" element={<AdminSolicitudDetalle />} />
+          <Route path="configuracion" element={<AdminConfiguracion />} />
+        </Route>
+      </Routes>
+    </>
   );
 }

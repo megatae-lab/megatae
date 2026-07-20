@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api.js";
 import type { Plan, CompaniaKey } from "../../types.js";
 
+
 const COMPANY_CFG: Record<
   CompaniaKey,
   {
@@ -15,20 +16,20 @@ const COMPANY_CFG: Record<
 > = {
   MOVISTAR: {
     name: "Movistar",
-    gradient: "from-[#019DF4] to-[#005A9E]",
-    buttonCls: "bg-[#005A9E] hover:bg-[#004A84]",
+    gradient: "from-green-500 to-green-500",
+    buttonCls: "bg-green-500 hover:bg-green-400",
     textDark: false,
     badge: "MÁS VENDIDO",
   },
   ATT: {
     name: "AT&T",
-    gradient: "from-[#00A8E0] to-[#004080]",
-    buttonCls: "bg-[#004080] hover:bg-[#003060]",
+    gradient: "from-[#9f62d9] to-[#9f62d9]",
+    buttonCls: "bg-[#9f62d9] hover:bg-[#8753b8]",
     textDark: false,
   },
   BAIT: {
     name: "bait",
-    gradient: "from-[#FFE600] to-[#FFB300]",
+    gradient: "from-[#FFE600] to-[#f3ce01]",
     buttonCls: "bg-[#E6A000] hover:bg-[#CC8F00]",
     textDark: true,
   },
@@ -119,7 +120,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         </ul>
         <button
           onClick={goToComprar}
-          className={`w-full mt-auto text-white font-bold py-2.5 rounded-xl text-sm transition-colors ${cfg.buttonCls} ${cfg.textDark ? "!text-white" : ""}`}
+          className={`w-full mt-auto text-white font-bold py-2.5 rounded-xl text-sm transition-colors ${cfg.buttonCls} ${cfg.textDark ? "text-white" : ""}`}
         >
           Me interesa
         </button>
@@ -139,7 +140,7 @@ function CompanyLogo({ compania }: { compania: CompaniaKey }) {
     <img
       src={COMPANY_LOGO[compania]}
       alt={compania}
-      className={`h-10 w-auto object-contain${compania === "BAIT" ? " mix-blend-multiply" : ""}`}
+      className={`h-20 w-auto object-contain${compania === "BAIT" ? " mix-blend-multiply" : ""}`}
     />
   );
 }
