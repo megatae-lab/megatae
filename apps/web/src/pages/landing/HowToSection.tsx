@@ -25,7 +25,7 @@ export function HowToSection() {
   return (
     <section className="bg-navy-900 py-16 px-4">
       <div className="mx-auto max-w-5xl text-center">
-        <h2 className="text-white font-black text-3xl md:text-4xl mb-2">
+        <h2 className="text-white font-black text-3xl md:text-5xl mb-2">
           ¿Cómo obtener tu eSIM?
         </h2>
         <p className="text-white/60 mb-12">Sigue estos 4 sencillos pasos</p>
@@ -36,20 +36,20 @@ export function HowToSection() {
               <img
                 src={step.img}
                 alt={step.title}
-                className="w-20 h-20 object-contain drop-shadow-lg"
+                className="w-24 h-24 object-contain drop-shadow-lg"
               />
-              <p className="text-brand font-bold text-sm">{step.title}</p>
-              <p className="text-white/70 text-sm leading-snug">{step.desc}</p>
+              <p className="text-brand font-bold text-2xl">{step.title}</p>
+              <p className="text-white/95 text-base leading-snug">{step.desc}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-10">
           <a
-            href="#planes"
+            href="#hero"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById("planes")?.scrollIntoView({ behavior: "smooth" });
+              document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
             }}
             className="inline-block border-2 border-brand text-white hover:bg-brand font-bold px-8 py-3 rounded-full text-sm transition-colors"
           >

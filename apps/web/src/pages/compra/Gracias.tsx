@@ -1,14 +1,76 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { CheckCircle, Mail } from "lucide-react";
-import { Stepper } from "../../components/Stepper.js";
+import { Stepper, type StepperTheme } from "../../components/Stepper.js";
+import type { CompaniaKey } from "../../types.js";
 
 const STEPS = ["Tus datos", "Pago", "Confirmación"];
+
+interface CompaniaTheme {
+  border: string;
+  borderSelected: string;
+  bg: string;
+  text: string;
+  ring: string;
+  button: string;
+  dot: string;
+  panelBorder: string;
+  panelTop: string;
+  hr: string;
+  label: string;
+  stepRing: string;
+}
+
+const THEME: Record<CompaniaKey, CompaniaTheme> = {
+  ATT: {
+    border: "border-[#9f62d9]",
+    borderSelected: "border-[#9f62d9]",
+    bg: "bg-[#9f62d9]/20",
+    text: "text-[#9f62d9]",
+    ring: "focus:border-[#9f62d9]",
+    button: "bg-[#9f62d9] hover:bg-[#8753b8]",
+    dot: "bg-[#9f62d9]",
+    panelBorder: "border-[#9f62d9]/30",
+    panelTop: "border-t-[#9f62d9]",
+    hr: "border-[#9f62d9]/20",
+    label: "text-[#c39ee8]",
+    stepRing: "ring-[#9f62d9]/30",
+  },
+  MOVISTAR: {
+    border: "border-green-500",
+    borderSelected: "border-green-500",
+    bg: "bg-green-500/20",
+    text: "text-green-400",
+    ring: "focus:border-green-500",
+    button: "bg-green-500 hover:bg-green-600",
+    dot: "bg-green-500",
+    panelBorder: "border-green-500/30",
+    panelTop: "border-t-green-500",
+    hr: "border-green-500/20",
+    label: "text-green-300",
+    stepRing: "ring-green-500/30",
+  },
+  BAIT: {
+    border: "border-yellow-400",
+    borderSelected: "border-yellow-400",
+    bg: "bg-yellow-400/20",
+    text: "text-yellow-400",
+    ring: "focus:border-yellow-400",
+    button: "bg-yellow-400 hover:bg-yellow-500",
+    dot: "bg-yellow-400",
+    panelBorder: "border-yellow-400/30",
+    panelTop: "border-t-yellow-400",
+    hr: "border-yellow-400/20",
+    label: "text-yellow-300",
+    stepRing: "ring-yellow-400/30",
+  },
+};
 
 interface GraciasState {
   id: number;
   email: string;
   nombre: string;
+  compania?: CompaniaKey;
 }
 
 export function Gracias() {
@@ -24,14 +86,31 @@ export function Gracias() {
 
   if (!state) return null;
 
+  const theme: CompaniaTheme | null = state.compania ? THEME[state.compania] : null;
+
+  const stepperTheme: StepperTheme | undefined = theme
+    ? {
+      circle: theme.dot,
+      ring: theme.stepRing,
+      label: theme.text,
+      line: theme.dot,
+    }
+    : undefined;
+
   return (
     <div className="min-h-screen bg-navy-900 py-10 px-4">
       <div className="mx-auto max-w-lg">
-        <Stepper steps={STEPS} current={2} />
+        <Stepper steps={STEPS} current={2} theme={stepperTheme} />
 
-        <div className="bg-navy-800 border border-white/10 rounded-2xl p-8 shadow-2xl text-center">
+        <div
+          className={`bg-navy-800 border rounded-2xl p-8 shadow-2xl text-center transition-colors border-t-4 ${theme ? `${theme.panelBorder} ${theme.panelTop}` : "border-white/10 border-t-brand"
+            }`}
+        >
           <div className="flex justify-center mb-5">
-            <CheckCircle className="w-16 h-16 text-brand" strokeWidth={1.5} />
+            <CheckCircle
+              className={`w-16 h-16 ${theme ? theme.text : "text-brand"}`}
+              strokeWidth={1.5}
+            />
           </div>
 
           <h1 className="text-white font-black text-2xl mb-2">
@@ -42,8 +121,14 @@ export function Gracias() {
             <span className="text-white font-mono font-semibold">#{state.id}</span>
           </p>
 
-          <div className="bg-navy-900 border border-white/10 rounded-xl p-4 flex items-start gap-3 text-left mb-6">
-            <Mail className="w-5 h-5 text-brand shrink-0 mt-0.5" strokeWidth={1.5} />
+          <div
+            className={`bg-navy-900 border rounded-xl p-4 flex items-start gap-3 text-left mb-6 transition-colors ${theme ? theme.panelBorder : "border-white/10"
+              }`}
+          >
+            <Mail
+              className={`w-5 h-5 shrink-0 mt-0.5 ${theme ? theme.text : "text-brand"}`}
+              strokeWidth={1.5}
+            />
             <div>
               <p className="text-white text-sm font-medium">Revisa tu correo</p>
               <p className="text-white/50 text-xs mt-0.5">
@@ -55,7 +140,8 @@ export function Gracias() {
 
           <Link
             to="/"
-            className="inline-block bg-brand hover:bg-brand-dark text-white font-bold px-8 py-3 rounded-lg transition-colors text-sm"
+            className={`inline-block text-white font-bold px-8 py-3 rounded-lg transition-colors text-sm ${theme ? theme.button : "bg-brand hover:bg-brand-dark"
+              }`}
           >
             Volver al inicio
           </Link>
