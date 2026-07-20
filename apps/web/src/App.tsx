@@ -12,6 +12,8 @@ import { AdminSolicitudes } from "./pages/admin/Solicitudes.js";
 import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
 
+const isAdminSubdomain = window.location.hostname.startsWith("admin.");
+
 function PublicLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-navy-900">
@@ -24,8 +26,21 @@ function PublicLayout() {
   );
 }
 
+function AdminRoutes() {
+  return (
+    <Routes>
+      <Route path="/login" element={<AdminLogin />} />
+      <Route path="/" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="solicitudes" element={<AdminSolicitudes />} />
+        <Route path="solicitudes/:id" element={<AdminSolicitudDetalle />} />
+        <Route path="configuracion" element={<AdminConfiguracion />} />
+      </Route>
+    </Routes>
+  );
+}
 
-export function App() {
+function PublicRoutes() {
   return (
     <Routes>
       <Route element={<PublicLayout />}>
@@ -43,4 +58,8 @@ export function App() {
       </Route>
     </Routes>
   );
+}
+
+export function App() {
+  return isAdminSubdomain ? <AdminRoutes /> : <PublicRoutes />;
 }
