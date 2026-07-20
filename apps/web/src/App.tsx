@@ -12,7 +12,9 @@ import { AdminSolicitudes } from "./pages/admin/Solicitudes.js";
 import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
 
-const isAdminSubdomain = window.location.hostname.startsWith("admin.");
+const isAdminSubdomain =
+  window.location.hostname.startsWith("admin.") ||
+  import.meta.env.VITE_FORCE_ADMIN === "true";
 
 function PublicLayout() {
   return (
