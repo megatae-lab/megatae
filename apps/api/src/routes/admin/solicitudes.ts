@@ -245,15 +245,11 @@ adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, n
 
     const solicitud = await prisma.solicitud.findUnique({
       where: { id },
-      select: { estado: true, email: true, nombre: true, compania: true, dn: true, qrUrl: true },
+      select: { estado: true, email: true, nombre: true, compania: true },
     });
     if (!solicitud) { res.status(404).json({ error: "Solicitud no encontrada" }); return; }
     if (solicitud.estado !== "QR_ENVIADO") {
       res.status(422).json({ error: "Solo se puede enviar recordatorio en estado QR enviado" });
-      return;
-    }
-    if (!solicitud.qrUrl) {
-      res.status(422).json({ error: "La solicitud no tiene QR registrado" });
       return;
     }
 
@@ -261,8 +257,6 @@ adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, n
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
-      dn: solicitud.dn ?? undefined,
-      qrUrl: solicitud.qrUrl,
     });
 
     res.json({ ok: true });

@@ -1,19 +1,17 @@
-import { Html, Head, Body, Container, Text, Img, Preview } from "@react-email/components";
+import { Html, Head, Body, Container, Text, Preview } from "@react-email/components";
 
 interface Props {
   nombre: string;
   compania: string;
-  dn?: string;
-  qrUrl: string;
 }
 
 const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
 
-export function RecordatorioActivacion({ nombre, compania, dn, qrUrl }: Props) {
+export function RecordatorioActivacion({ nombre, compania }: Props) {
   return (
     <Html lang="es">
       <Head />
-      <Preview>Recuerda activar tu eSIM {compania} — aquí tienes tu código QR de nuevo</Preview>
+      <Preview>Acción requerida: completa tu registro LMTR para tu eSIM {compania}</Preview>
       <Body style={{ fontFamily: font, backgroundColor: "#eef2f7", margin: 0, padding: "40px 16px" }}>
         <Container style={{ maxWidth: 560, margin: "0 auto" }}>
 
@@ -33,55 +31,42 @@ export function RecordatorioActivacion({ nombre, compania, dn, qrUrl }: Props) {
           {/* Body */}
           <div style={{ background: "#ffffff", padding: "36px 36px 28px" }}>
             <Text style={{ color: "#022554", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: "30px" }}>
-              Todavía no activaste tu eSIM
+              Completa tu registro LMTR
             </Text>
             <Text style={{ color: "#4a5568", fontSize: 15, lineHeight: "24px", margin: "0 0 24px" }}>
-              Hola <strong>{nombre}</strong>, notamos que tu eSIM <strong>{compania}</strong> aún no ha sido activada. Aquí tienes tu código QR de nuevo para que puedas completar el proceso.
+              Hola <strong>{nombre}</strong>, aún no hemos podido confirmar que completaste el registro de tu línea <strong>{compania}</strong> ante el LMTR (Registro Nacional de Usuarios de Telecomunicaciones).
             </Text>
 
-            {/* QR card */}
-            <div style={{ background: "#fffdf7", border: "1px solid #fde68a", borderRadius: 12, padding: "28px 24px", textAlign: "center", marginBottom: 24 }}>
-              <div style={{ background: "#ffffff", display: "inline-block", padding: 12, borderRadius: 10, border: "1px solid #fce082" }}>
-                <Img
-                  src={qrUrl}
-                  alt="Código QR eSIM"
-                  width="200"
-                  height="200"
-                  style={{ display: "block" }}
-                />
-              </div>
-              {dn && (
-                <div style={{ marginTop: 16 }}>
-                  <Text style={{ color: "#92400e", fontSize: 11, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", margin: "0 0 4px" }}>
-                    Número de línea asignado
-                  </Text>
-                  <Text style={{ color: "#78350f", fontSize: 20, fontWeight: 700, fontFamily: "monospace, monospace", margin: 0, letterSpacing: "2px" }}>
-                    {dn}
-                  </Text>
-                </div>
-              )}
+            {/* What is LMTR */}
+            <div style={{ background: "#f7faff", border: "1px solid #d0e1fb", borderRadius: 10, padding: "20px 24px", marginBottom: 20 }}>
+              <Text style={{ color: "#718096", fontSize: 11, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", margin: "0 0 10px" }}>
+                ¿Qué es el registro LMTR?
+              </Text>
+              <Text style={{ color: "#4a5568", fontSize: 14, lineHeight: "22px", margin: 0 }}>
+                La Ley de Migración y Telecomunicaciones de México (LMTR) obliga a todos los usuarios de telefonía móvil a registrar sus datos personales ante su operadora. Sin este registro, tu línea puede ser suspendida.
+              </Text>
             </div>
 
             {/* Steps */}
-            <div style={{ background: "#f7faff", border: "1px solid #d0e1fb", borderRadius: 10, padding: "20px 24px", marginBottom: 20 }}>
-              <Text style={{ color: "#718096", fontSize: 11, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", margin: "0 0 12px" }}>
-                Cómo activar tu eSIM
+            <div style={{ background: "#fffdf7", border: "1px solid #fde68a", borderRadius: 10, padding: "20px 24px", marginBottom: 20 }}>
+              <Text style={{ color: "#92400e", fontSize: 11, fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", margin: "0 0 12px" }}>
+                Cómo completar tu registro
               </Text>
-              <Text style={{ color: "#4a5568", fontSize: 14, lineHeight: "22px", margin: "0 0 8px" }}>
-                1. Abre la cámara de tu teléfono y apúntala al código QR.
+              <Text style={{ color: "#78350f", fontSize: 14, lineHeight: "22px", margin: "0 0 8px" }}>
+                1. Ingresa al portal de registro de <strong>{compania}</strong>.
               </Text>
-              <Text style={{ color: "#4a5568", fontSize: 14, lineHeight: "22px", margin: "0 0 8px" }}>
-                2. Sigue las instrucciones en pantalla para agregar la eSIM.
+              <Text style={{ color: "#78350f", fontSize: 14, lineHeight: "22px", margin: "0 0 8px" }}>
+                2. Proporciona tu nombre completo, CURP y número de línea.
               </Text>
-              <Text style={{ color: "#4a5568", fontSize: 14, lineHeight: "22px", margin: 0 }}>
-                3. Selecciona la nueva línea como tu línea activa.
+              <Text style={{ color: "#78350f", fontSize: 14, lineHeight: "22px", margin: 0 }}>
+                3. Confirma el registro — recibirás un SMS o correo de tu operadora.
               </Text>
             </div>
 
-            {/* Help */}
+            {/* Warning */}
             <div style={{ background: "#fff8e1", border: "1px solid #fce082", borderRadius: 10, padding: "14px 20px" }}>
               <Text style={{ color: "#92400e", fontSize: 13, margin: 0, lineHeight: "20px" }}>
-                ¿Tienes problemas para activarla? Responde a este correo y te ayudamos personalmente.
+                <strong>Importante:</strong> Si tienes dudas sobre cómo completar el registro, responde a este correo y te orientamos paso a paso.
               </Text>
             </div>
           </div>
@@ -89,7 +74,7 @@ export function RecordatorioActivacion({ nombre, compania, dn, qrUrl }: Props) {
           {/* Footer */}
           <div style={{ background: "#f7fafc", borderTop: "1px solid #e2e8f0", borderRadius: "0 0 8px 8px", padding: "20px 36px" }}>
             <Text style={{ color: "#a0aec0", fontSize: 11, margin: 0, lineHeight: "18px" }}>
-              Megatae Global · Si ya activaste tu línea, ignora este mensaje.
+              Megatae Global · Este recordatorio es requerido por la normativa LMTR vigente en México.
             </Text>
           </div>
 

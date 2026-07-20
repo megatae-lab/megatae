@@ -60,14 +60,12 @@ export async function sendRecordatorioActivacion(opts: {
   to: string;
   nombre: string;
   compania: string;
-  dn?: string;
-  qrUrl: string;
 }) {
-  const html = await render(<RecordatorioActivacion {...opts} />);
+  const html = await render(<RecordatorioActivacion nombre={opts.nombre} compania={opts.compania} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
-    subject: `Recuerda activar tu eSIM ${opts.compania}`,
+    subject: `Acción requerida: completa tu registro LMTR — eSIM ${opts.compania}`,
     html,
   });
 }
