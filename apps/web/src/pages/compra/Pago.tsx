@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Copy, Check, Upload, Loader } from "lucide-react";
@@ -100,7 +100,6 @@ export function Pago() {
     queryFn: api.cuentas.list,
   });
 
-  // Tema activo según la compañía elegida en el paso anterior
   const theme: CompaniaTheme | null = state?.compania ? THEME[state.compania] : null;
 
   const stepperTheme: StepperTheme | undefined = theme
@@ -119,7 +118,7 @@ export function Pago() {
     });
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
 
@@ -160,7 +159,12 @@ export function Pago() {
       });
 
       navigate("/gracias", {
-        state: { id: result.id, email: state.email, nombre: state.nombre },
+        state: {
+          id: result.id,
+          email: state.email,
+          nombre: state.nombre,
+          compania: state.compania,
+        },
       });
     } catch (err) {
       setError((err as Error).message ?? "Ocurrió un error. Intenta de nuevo.");
