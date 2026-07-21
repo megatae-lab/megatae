@@ -35,11 +35,6 @@ const COMPANY_CFG: Record<
   },
 };
 
-const FEATURES = [
-  "Activación inmediata",
-  "Sin SIM física",
-  "Conexión segura",
-];
 
 export function PlanesSection() {
   const { data: planes = [], isLoading } = useQuery({
@@ -78,7 +73,7 @@ function PlanCard({ plan }: { plan: Plan }) {
   const cfg = COMPANY_CFG[plan.compania];
 
   function goToComprar() {
-    navigate("/comprar", { state: { compania: plan.compania, planId: plan.id } });
+    navigate("/comprar", { state: { compania: plan.compania, planId: plan.id, descripcion: plan.descripcion } });
   }
 
   return (
@@ -92,7 +87,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         )}
         <CompanyLogo compania={plan.compania} />
         <p className={`text-xs font-medium mt-2 ${cfg.textDark ? "text-black/60" : "text-white/70"}`}>
-          DESDE SOLO
+          POR SOLO
         </p>
         <p className={`text-5xl font-black leading-tight ${cfg.textDark ? "text-black" : "text-white"}`}>
           ${plan.precio}
@@ -103,10 +98,11 @@ function PlanCard({ plan }: { plan: Plan }) {
       </div>
 
       {/* Cuerpo */}
+
       <div className="bg-navy-800 flex-1 flex flex-col p-4 gap-4">
         <ul className="flex flex-col gap-1.5">
-          {FEATURES.map((f) => (
-            <li key={f} className="flex items-center gap-2 text-white/80 text-sm">
+          {(plan.descripcion ?? "").split("·").map((d) => (
+            <li key={d} className="flex items-center gap-2 text-white/80 text-sm">
               <svg className="w-4 h-4 text-brand shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -114,7 +110,7 @@ function PlanCard({ plan }: { plan: Plan }) {
                   clipRule="evenodd"
                 />
               </svg>
-              {f}
+              {d.trim()}
             </li>
           ))}
         </ul>
@@ -140,7 +136,7 @@ function CompanyLogo({ compania }: { compania: CompaniaKey }) {
     <img
       src={COMPANY_LOGO[compania]}
       alt={compania}
-      className={`h-20 w-auto object-contain${compania === "BAIT" ? " mix-blend-multiply" : ""}`}
+      className={`h-20 w-auto object-contain`}
     />
   );
 }
