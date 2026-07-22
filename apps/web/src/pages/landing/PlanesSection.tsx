@@ -49,10 +49,11 @@ const COMPANY_LOGO: Record<CompaniaKey, string> = {
 };
 
 export function PlanesSection() {
-  const { data: planes = [], isLoading } = useQuery({
+  const { data: rawPlanes = [], isLoading } = useQuery({
     queryKey: ["planes"],
     queryFn: api.planes.list,
   });
+  const planes = [...rawPlanes].sort((a, b) => (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0));
 
   return (
     <section id="planes" className="bg-navy-900 py-16">
@@ -186,7 +187,7 @@ function PlanCard({ plan }: { plan: Plan }) {
 
       {/* Precio */}
       <div className="flex flex-col items-center py-2 px-4 border-b border-gray-100">
-        <p className="text-xs font-semibold tracking-widest uppercase mb-0.5" style={{ color: cfg.textColor }}>Desde solo</p>
+        <p className="text-xs font-semibold tracking-widest uppercase mb-0.5" style={{ color: cfg.textColor }}>Por solo</p>
         <p className="text-5xl font-black leading-none" style={{ color: cfg.textColor }}>
           <span className="text-2xl font-bold align-top mt-1 mr-0.5">$</span>{plan.precio}
         </p>

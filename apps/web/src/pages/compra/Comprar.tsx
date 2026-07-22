@@ -341,6 +341,11 @@ function PlanOption({
       <div>
         <p className={`font-bold text-lg ${selected ? "text-white" : "text-white/80"}`}>
           ${plan.precio} MXN
+          {(plan.megas || plan.dias) && (
+            <span className="text-sm font-normal text-white/50 ml-1.5">
+              ({[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")})
+            </span>
+          )}
         </p>
         <p className="text-white/50 text-xs">Incluye recarga de ${plan.recarga} MXN</p>
       </div>
