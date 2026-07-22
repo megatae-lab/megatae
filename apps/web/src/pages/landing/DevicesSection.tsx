@@ -132,10 +132,11 @@ const DEVICE_LIST: BrandGroup[] = [
 
 export function DevicesSection() {
   const [query, setQuery] = useState("");
+  const [searched, setSearched] = useState("");
 
   const filtered = useMemo<BrandGroup[]>(() => {
-    if (!query.trim()) return DEVICE_LIST;
-    const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!searched.trim()) return [];
+    const words = searched.toLowerCase().split(/\s+/).filter(Boolean);
     return DEVICE_LIST.flatMap((g) => {
       const models = g.models.filter((m) => {
         const text = (g.brand + " " + m).toLowerCase();
@@ -143,75 +144,87 @@ export function DevicesSection() {
       });
       return models.length ? [{ brand: g.brand, models }] : [];
     });
-  }, [query]);
+  }, [searched]);
 
-  const totalFound = filtered.reduce((acc, g) => acc + g.models.length, 0);
+  const allMatches = filtered.flatMap((g) => g.models.map((m) => ({ brand: g.brand, model: m })));
+  const found = allMatches.length > 0;
+
+  function handleSearch() {
+    setSearched(query);
+  }
 
   return (
     <section className="bg-navy-900 py-16 px-4" id="dispositivos">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-xl">
         <h2 className="text-white font-black text-3xl text-center mb-2">
-          Dispositivos compatibles
+          ¿Tu dispositivo es compatible?
         </h2>
         <p className="text-white/60 text-center mb-8 text-sm">
-          Verifica si tu teléfono es compatible. El cliente autodeclara compatibilidad.
+          Escribe el modelo de tu teléfono y te decimos al instante.
         </p>
 
         {/* Buscador */}
-        <div className="relative mb-6">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        <form
+          onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
+          className="flex gap-2 mb-4"
+        >
+          <div className="relative flex-1">
+            <svg
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => { setQuery(e.target.value); if (!e.target.value) setSearched(""); }}
+              placeholder="ej: iPhone 14, Galaxy S23, Pixel 8..."
+              className="w-full bg-navy-800 border border-white/20 text-white placeholder-white/40 rounded-2xl pl-11 pr-4 py-4 text-sm focus:outline-none focus:border-brand transition-colors"
             />
-          </svg>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Busca tu modelo (ej: iPhone 14, Galaxy S23...)"
-            className="w-full bg-navy-800 border border-white/20 text-white placeholder-white/40 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-brand transition-colors"
-          />
-          {query && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 text-xs">
-              {totalFound} resultado{totalFound !== 1 ? "s" : ""}
-            </span>
-          )}
-        </div>
+          </div>
+          <button
+            type="submit"
+            className="bg-brand hover:bg-brand-dark text-white font-bold px-5 rounded-2xl text-sm transition-colors shrink-0"
+          >
+            Buscar
+          </button>
+        </form>
 
-        {/* Resultados — solo cuando hay búsqueda activa */}
-        {query.trim() && (
-          filtered.length === 0 ? (
-            <p className="text-center text-white/50 py-4 text-sm">
-              No encontramos ese modelo. Contáctanos para confirmarlo.
-            </p>
+        {/* Resultado */}
+        {searched.trim() && (
+          found ? (
+            <div className="flex flex-col items-center gap-3 py-6 px-6 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-center">
+              <div className="w-14 h-14 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <svg className="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-emerald-400 font-black text-lg">¡Compatible con eSIM!</p>
+                <p className="text-white/70 text-sm mt-1">
+                  {allMatches.length === 1
+                    ? <><span className="text-white font-semibold">{allMatches[0].brand} {allMatches[0].model}</span> es compatible.</>
+                    : <>{allMatches.length} modelos encontrados para <span className="text-white font-semibold">"{query}"</span>.</>
+                  }
+                </p>
+              </div>
+            </div>
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {filtered.map((group) => (
-                <div key={group.brand} className="bg-navy-800 border border-white/10 rounded-xl p-4">
-                  <p className="text-white font-bold text-sm mb-2 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-brand inline-block" />
-                    {group.brand}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {group.models.map((model) => (
-                      <span
-                        key={model}
-                        className="text-white/70 text-xs bg-white/5 border border-white/10 px-2 py-1 rounded-lg"
-                      >
-                        {model}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-col items-center gap-3 py-6 px-6 bg-white/5 border border-white/10 rounded-2xl text-center">
+              <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center">
+                <svg className="w-7 h-7 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white/80 font-bold text-base">No encontramos ese modelo</p>
+                <p className="text-white/50 text-sm mt-1">
+                  Puede ser compatible de todas formas.{" "}
+                  <a href="https://wa.me/521XXXXXXXXXX" className="text-brand underline">Contáctanos</a> para confirmarlo.
+                </p>
+              </div>
             </div>
           )
         )}

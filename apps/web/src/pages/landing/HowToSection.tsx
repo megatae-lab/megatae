@@ -23,23 +23,23 @@ const STEPS = [
 
 export function HowToSection() {
   return (
-    <section className="bg-navy-900 py-16 px-4">
-      <div className="mx-auto max-w-5xl text-center">
-        <h2 className="text-white font-black text-3xl md:text-5xl mb-2">
+    <section className="bg-navy-900 py-12 px-4">
+      <div className="mx-auto max-w-4xl text-center">
+        <h2 className="text-white font-black text-2xl md:text-4xl mb-1">
           ¿Cómo obtener tu eSIM?
         </h2>
-        <p className="text-white/60 mb-12">Sigue estos 4 sencillos pasos</p>
+        <p className="text-white/60 text-sm mb-10">Sigue estos 4 sencillos pasos</p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {STEPS.map((step, i) => (
-            <div key={i} className="flex flex-col items-center gap-3">
+            <div key={i} className="flex flex-col items-center gap-2.5">
               <img
                 src={step.img}
                 alt={step.title}
-                className="w-24 h-24 object-contain drop-shadow-lg"
+                className="w-20 h-20 object-contain rounded-xl drop-shadow-lg"
               />
-              <p className="text-brand font-bold text-2xl">{step.title}</p>
-              <p className="text-white/95 text-base leading-snug">{step.desc}</p>
+              <p className="text-brand font-bold text-xl">{step.title}</p>
+              <p className="text-white/80 text-sm leading-snug">{step.desc}</p>
             </div>
           ))}
         </div>

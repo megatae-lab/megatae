@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { generatePresignedUploadUrl, isAllowedType } from "../services/r2.js";
-import { sendSolicitudRecibida } from "../services/email.js";
+import { sendSolicitudRecibida, sendFueraDeHorario, isWithinBusinessHours } from "../services/email.js";
 
 export const solicitudesRouter = Router();
 
@@ -90,6 +90,12 @@ solicitudesRouter.post("/", async (req, res, next) => {
     }).catch((err) => {
       console.error("Error enviando correo SolicitudRecibida:", err);
     });
+
+    if (!isWithinBusinessHours()) {
+      sendFueraDeHorario({ to: body.email, nombre: body.nombre }).catch((err) => {
+        console.error("Error enviando correo FueraDeHorario:", err);
+      });
+    }
 
     res.status(201).json({ ok: true, id: solicitud.id });
   } catch (err) {
