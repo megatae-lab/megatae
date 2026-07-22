@@ -14,6 +14,7 @@ export interface Plan {
   recarga: string;
   descripcion: string | null;
   activo: boolean;
+  destacado: boolean;
   createdAt: string;
 }
 

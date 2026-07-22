@@ -82,7 +82,7 @@ export const api = {
         }),
       update: (
         id: number,
-        data: { precio?: number; recarga?: number; descripcion?: string | null; activo?: boolean }
+        data: { precio?: number; recarga?: number; descripcion?: string | null; activo?: boolean; destacado?: boolean }
       ): Promise<Plan> =>
         adminRequest(`/admin/planes/${id}`, {
           method: "PATCH",

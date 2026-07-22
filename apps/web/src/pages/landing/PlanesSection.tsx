@@ -11,7 +11,6 @@ const COMPANY_CFG: Record<
     gradient: string;
     buttonCls: string;
     textDark: boolean;
-    badge?: string;
   }
 > = {
   MOVISTAR: {
@@ -19,7 +18,6 @@ const COMPANY_CFG: Record<
     gradient: "from-green-500 to-green-500",
     buttonCls: "bg-green-500 hover:bg-green-400",
     textDark: false,
-    badge: "MÁS VENDIDO",
   },
   ATT: {
     name: "AT&T",
@@ -80,9 +78,9 @@ function PlanCard({ plan }: { plan: Plan }) {
     <div className="relative flex flex-col rounded-2xl overflow-hidden shadow-lg border border-white/10">
       {/* Header con gradiente de compañía */}
       <div className={`bg-linear-to-b ${cfg.gradient} p-5 flex flex-col items-center`}>
-        {cfg.badge && (
+        {plan.destacado && (
           <span className="absolute top-3 left-3 bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            {cfg.badge}
+            MÁS VENDIDO
           </span>
         )}
         <CompanyLogo compania={plan.compania} />

@@ -44,6 +44,7 @@ const planUpdateSchema = z.object({
   recarga: z.number().positive("La recarga debe ser positiva").optional(),
   descripcion: z.string().nullable().optional(),
   activo: z.boolean().optional(),
+  destacado: z.boolean().optional(),
 });
 
 adminPlanesRouter.patch("/:id", requirePro, async (req: AuthRequest, res, next) => {

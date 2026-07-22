@@ -110,6 +110,12 @@ function PlanesPanel() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "planes"] }),
   });
 
+  const destacadoMutation = useMutation({
+    mutationFn: ({ id, destacado }: { id: number; destacado: boolean }) =>
+      api.admin.planes.update(id, { destacado }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "planes"] }),
+  });
+
   function openCreate() {
     setForm(PLAN_FORM_EMPTY);
     setFormError(undefined);
@@ -163,7 +169,8 @@ function PlanesPanel() {
                 <Th>Precio</Th>
                 <Th>Recarga</Th>
                 <Th>Descripción</Th>
-                <Th>Estado</Th>
+                <Th>Más vendido</Th>
+                <Th>Activo</Th>
                 <Th>{null}</Th>
               </tr>
             </thead>
@@ -182,6 +189,23 @@ function PlanesPanel() {
                     <Td>${plan.precio} MXN</Td>
                     <Td>${plan.recarga} MXN</Td>
                     <Td>{plan.descripcion ?? <span className="text-white/20">—</span>}</Td>
+                    <Td>
+                      <button
+                        onClick={() =>
+                          destacadoMutation.mutate({ id: plan.id, destacado: !plan.destacado })
+                        }
+                        disabled={destacadoMutation.isPending && destacadoMutation.variables?.id === plan.id}
+                        className={`relative inline-flex h-5 w-9 rounded-full transition-colors focus:outline-none ${
+                          plan.destacado ? "bg-yellow-500" : "bg-white/20"
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 mt-0.5 rounded-full bg-white shadow transition-transform ${
+                            plan.destacado ? "translate-x-4" : "translate-x-0.5"
+                          }`}
+                        />
+                      </button>
+                    </Td>
                     <Td>
                       <button
                         onClick={() =>

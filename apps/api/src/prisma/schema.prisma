@@ -36,6 +36,7 @@ model Plan {
   recarga     Decimal     @db.Decimal(10, 2)
   descripcion String?
   activo      Boolean     @default(true)
+  destacado   Boolean     @default(false)
   createdAt   DateTime    @default(now())
   solicitudes Solicitud[]
 }
