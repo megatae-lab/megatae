@@ -17,11 +17,11 @@ export function AdminLayout() {
     <div className="flex min-h-screen bg-navy-950">
       {/* Sidebar */}
       <aside className="w-56 shrink-0 border-r border-white/10 flex flex-col">
-        <div className="p-4 border-b border-white/10">
+        <div className="py-5 px-4 border-b border-white/10 flex justify-center">
           <img
             src="/assets/logo-megatae.png"
             alt="Megatae Global"
-            className="h-8 w-auto object-contain"
+            className="h-12 w-auto object-contain"
           />
         </div>
 

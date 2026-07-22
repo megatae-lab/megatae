@@ -47,12 +47,10 @@ export function BenefitsSection() {
                 key={b.title}
                 className="group flex items-start gap-3 bg-navy-900 border border-white/10 rounded-xl p-4 transition-all duration-200 hover:border-brand/50 hover:bg-navy-800 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/10 cursor-default"
               >
-                <div className="shrink-0 w-9 h-9 rounded-lg bg-brand/10 flex items-center justify-center transition-colors duration-200 group-hover:bg-brand/20">
-                  <b.Icon
-                    className="w-5 h-5 text-brand transition-transform duration-200 group-hover:scale-110"
-                    strokeWidth={1.5}
-                  />
-                </div>
+                <b.Icon
+                  className="shrink-0 w-8 h-8 text-white transition-transform duration-200 group-hover:scale-110 self-center"
+                  strokeWidth={1.5}
+                />
                 <div>
                   <p className="text-white font-semibold text-sm">{b.title}</p>
                   <p className="text-white/60 text-xs mt-0.5">{b.desc}</p>
@@ -63,11 +61,11 @@ export function BenefitsSection() {
         </div>
 
         {/* Ilustración real */}
-        <div className="shrink-0 flex items-center justify-center w-full md:w-auto">
+        <div className="hidden md:flex shrink-0 items-center justify-center">
           <img
             src="/assets/benefits-phone.png"
             alt="eSIM en tu teléfono"
-            className="w-56 h-56 sm:w-72 sm:h-72 md:w-96 md:h-96 object-contain drop-shadow-2xl"
+            className="w-72 h-72 md:w-96 md:h-96 object-contain drop-shadow-2xl"
           />
         </div>
       </div>

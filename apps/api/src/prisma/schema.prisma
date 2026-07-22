@@ -34,6 +34,8 @@ model Plan {
   compania    Compania
   precio      Decimal     @db.Decimal(10, 2)
   recarga     Decimal     @db.Decimal(10, 2)
+  megas       Int?
+  dias        Int?
   descripcion String?
   activo      Boolean     @default(true)
   destacado   Boolean     @default(false)

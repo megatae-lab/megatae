@@ -64,6 +64,8 @@ type PlanForm = {
   compania: string;
   precio: string;
   recarga: string;
+  megas: string;
+  dias: string;
   descripcion: string;
 };
 
@@ -71,6 +73,8 @@ const PLAN_FORM_EMPTY: PlanForm = {
   compania: "ATT",
   precio: "",
   recarga: "",
+  megas: "",
+  dias: "",
   descripcion: "",
 };
 
@@ -90,6 +94,8 @@ function PlanesPanel() {
       const payload = {
         precio: parseFloat(f.precio),
         recarga: parseFloat(f.recarga),
+        megas: f.megas ? parseInt(f.megas) : undefined,
+        dias: f.dias ? parseInt(f.dias) : undefined,
         descripcion: f.descripcion.trim() || undefined,
       };
       if (modal?.plan) {
@@ -127,6 +133,8 @@ function PlanesPanel() {
       compania: plan.compania,
       precio: plan.precio,
       recarga: plan.recarga,
+      megas: plan.megas?.toString() ?? "",
+      dias: plan.dias?.toString() ?? "",
       descripcion: plan.descripcion ?? "",
     });
     setFormError(undefined);
@@ -168,6 +176,8 @@ function PlanesPanel() {
                 <Th>Compañía</Th>
                 <Th>Precio</Th>
                 <Th>Recarga</Th>
+                <Th>Megas</Th>
+                <Th>Días</Th>
                 <Th>Descripción</Th>
                 <Th>Más vendido</Th>
                 <Th>Activo</Th>
@@ -188,6 +198,8 @@ function PlanesPanel() {
                     </Td>
                     <Td>${plan.precio} MXN</Td>
                     <Td>${plan.recarga} MXN</Td>
+                    <Td>{plan.megas != null ? `${plan.megas} GB` : <span className="text-white/20">—</span>}</Td>
+                    <Td>{plan.dias != null ? `${plan.dias} días` : <span className="text-white/20">—</span>}</Td>
                     <Td>{plan.descripcion ?? <span className="text-white/20">—</span>}</Td>
                     <Td>
                       <button
@@ -287,13 +299,35 @@ function PlanesPanel() {
                 />
               </Field>
             </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Megas (GB)">
+                <input
+                  type="number"
+                  min="1"
+                  value={form.megas}
+                  onChange={(e) => setForm({ ...form, megas: e.target.value })}
+                  placeholder="10"
+                  className={INPUT_CLS}
+                />
+              </Field>
+              <Field label="Días de vigencia">
+                <input
+                  type="number"
+                  min="1"
+                  value={form.dias}
+                  onChange={(e) => setForm({ ...form, dias: e.target.value })}
+                  placeholder="30"
+                  className={INPUT_CLS}
+                />
+              </Field>
+            </div>
             <Field label="Descripción (opcional)">
-              <input
-                type="text"
+              <textarea
+                rows={3}
                 value={form.descripcion}
                 onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
-                placeholder="Plan básico mensual"
-                className={INPUT_CLS}
+                placeholder="Activación inmediata - Sin SIM física - Conexión segura"
+                className={`${INPUT_CLS} resize-none`}
               />
             </Field>
 

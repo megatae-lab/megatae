@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Copy, Check, Upload, Loader } from "lucide-react";
+import { Copy, Check, Upload, Loader, CreditCard, ArrowLeft } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { Stepper, type StepperTheme } from "../../components/Stepper.js";
 import type { CompaniaKey } from "../../types.js";
@@ -30,7 +30,7 @@ const THEME: Record<CompaniaKey, CompaniaTheme> = {
     bg: "bg-[#9f62d9]/20",
     text: "text-[#9f62d9]",
     ring: "focus:border-[#9f62d9]",
-    button: "bg-[#9f62d9] hover:bg-[#8753b8]",
+    button: "bg-[#6B2FA0] hover:bg-[#5a2788]",
     dot: "bg-[#9f62d9]",
     panelBorder: "border-[#9f62d9]/30",
     panelTop: "border-t-[#9f62d9]",
@@ -39,32 +39,32 @@ const THEME: Record<CompaniaKey, CompaniaTheme> = {
     stepRing: "ring-[#9f62d9]/30",
   },
   MOVISTAR: {
-    border: "border-green-500",
-    borderSelected: "border-green-500",
-    bg: "bg-green-500/20",
-    text: "text-green-400",
-    ring: "focus:border-green-500",
-    button: "bg-green-500 hover:bg-green-600",
-    dot: "bg-green-500",
-    panelBorder: "border-green-500/30",
-    panelTop: "border-t-green-500",
-    hr: "border-green-500/20",
-    label: "text-green-300",
-    stepRing: "ring-green-500/30",
+    border: "border-[#3B82F6]",
+    borderSelected: "border-[#3B82F6]",
+    bg: "bg-[#3B82F6]/20",
+    text: "text-[#3B82F6]",
+    ring: "focus:border-[#3B82F6]",
+    button: "bg-[#1D5FC4] hover:bg-[#1a52a8]",
+    dot: "bg-[#3B82F6]",
+    panelBorder: "border-[#3B82F6]/30",
+    panelTop: "border-t-[#3B82F6]",
+    hr: "border-[#3B82F6]/20",
+    label: "text-[#7eb0f7]",
+    stepRing: "ring-[#3B82F6]/30",
   },
   BAIT: {
-    border: "border-yellow-400",
-    borderSelected: "border-yellow-400",
-    bg: "bg-yellow-400/20",
-    text: "text-yellow-400",
-    ring: "focus:border-yellow-400",
-    button: "bg-yellow-400 hover:bg-yellow-500",
-    dot: "bg-yellow-400",
-    panelBorder: "border-yellow-400/30",
-    panelTop: "border-t-yellow-400",
-    hr: "border-yellow-400/20",
-    label: "text-yellow-300",
-    stepRing: "ring-yellow-400/30",
+    border: "border-[#FFE600]",
+    borderSelected: "border-[#FFE600]",
+    bg: "bg-[#FFE600]/20",
+    text: "text-[#D4A800]",
+    ring: "focus:border-[#FFE600]",
+    button: "bg-[#D4A800] hover:bg-[#b89100]",
+    dot: "bg-[#FFE600]",
+    panelBorder: "border-[#FFE600]/30",
+    panelTop: "border-t-[#FFE600]",
+    hr: "border-[#FFE600]/20",
+    label: "text-[#F0C800]",
+    stepRing: "ring-[#FFE600]/30",
   },
 };
 
@@ -76,6 +76,11 @@ interface PagoState {
   planId: number;
   lada?: string;
   estadoMx?: string;
+  planPrecio?: string;
+  planRecarga?: string;
+  planMegas?: number | null;
+  planDias?: number | null;
+  planDescripcion?: string | null;
 }
 
 export function Pago() {
@@ -178,9 +183,81 @@ export function Pago() {
   return (
     <div className="min-h-screen bg-navy-900 py-10 px-4">
       <div className="mx-auto max-w-lg">
+        <button
+          type="button"
+          onClick={() =>
+            navigate("/comprar", {
+              state: {
+                nombre: state.nombre,
+                email: state.email,
+                telefono: state.telefono,
+                compania: state.compania,
+                planId: state.planId,
+              },
+            })
+          }
+          className="flex items-center gap-1.5 text-white/40 hover:text-white text-sm transition-colors mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Cambiar plan
+        </button>
+
         <Stepper steps={STEPS} current={1} theme={stepperTheme} />
 
         <div className="flex flex-col gap-4">
+          {/* Resumen del plan */}
+          {(state.planPrecio || state.planMegas || state.planDias || state.planDescripcion) && (() => {
+            const bullets = (state.planDescripcion ?? "")
+              .split("-")
+              .map((s) => s.trim())
+              .filter(Boolean);
+            return (
+              <div
+                className={`border rounded-2xl px-5 py-4 transition-colors ${
+                  theme ? `${theme.panelBorder} bg-navy-800` : "border-white/10 bg-navy-800"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-4 mb-3">
+                  <div>
+                    <p className={`text-xs uppercase tracking-widest mb-1 ${theme ? theme.label : "text-white/40"}`}>
+                      Tu plan
+                    </p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {state.planMegas != null && (
+                        <span className="text-white font-bold text-lg">{state.planMegas} GB</span>
+                      )}
+                      {state.planDias != null && (
+                        <span className={`text-sm ${theme ? theme.label : "text-white/50"}`}>
+                          {state.planMegas != null && "·"} {state.planDias} días
+                        </span>
+                      )}
+                      {state.planRecarga && (
+                        <span className={`text-sm ${theme ? theme.label : "text-white/50"}`}>
+                          · Recarga ${state.planRecarga} MXN
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {state.planPrecio && (
+                    <p className="text-white font-black text-2xl shrink-0">
+                      ${state.planPrecio} <span className="text-sm font-normal text-white/40">MXN</span>
+                    </p>
+                  )}
+                </div>
+                {bullets.length > 0 && (
+                  <ul className="flex flex-col gap-1">
+                    {bullets.map((b) => (
+                      <li key={b} className={`flex items-center gap-2 text-xs ${theme ? theme.label : "text-white/50"}`}>
+                        <span className="w-1 h-1 rounded-full bg-current shrink-0" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })()}
+
           {/* Cuentas bancarias */}
           <div
             className={`bg-navy-800 border rounded-2xl p-6 shadow-2xl transition-colors border-t-4 ${theme ? `${theme.panelBorder} ${theme.panelTop}` : "border-white/10 border-t-brand"
@@ -225,6 +302,28 @@ export function Pago() {
                     )}
                   </div>
                 ))}
+
+                {import.meta.env.VITE_MERCADOPAGO_URL && (
+                  <>
+                    <div className="flex items-center gap-3 my-1">
+                      <div className="flex-1 h-px bg-white/10" />
+                      <span className="text-white/30 text-xs uppercase tracking-widest">o</span>
+                      <div className="flex-1 h-px bg-white/10" />
+                    </div>
+                    <a
+                      href={import.meta.env.VITE_MERCADOPAGO_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2.5 bg-[#009ee3] hover:bg-[#007bbf] transition-colors rounded-xl px-4 py-3.5"
+                    >
+                      <CreditCard className="w-5 h-5 text-white shrink-0" strokeWidth={2} />
+                      <span className="text-white font-bold text-sm">Pagar con Mercado Pago</span>
+                    </a>
+                    <p className="text-white/30 text-xs text-center -mt-1">
+                      Abre Mercado Pago en una nueva pestaña. Vuelve aquí para adjuntar tu comprobante.
+                    </p>
+                  </>
+                )}
               </div>
             )}
           </div>

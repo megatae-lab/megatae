@@ -124,7 +124,7 @@ export function Navbar() {
               Ser socio
             </button>
 
-            <div className="flex items-center gap-4 pt-5 border-t border-white/10">
+            <div className="flex items-center justify-center gap-4 pt-5 border-t border-white/10">
               <SocialLink href="#" label="Facebook" icon={<IconFacebook />} />
               <SocialLink href="#" label="Instagram" icon={<IconInstagram />} />
               <SocialLink href="#" label="TikTok" icon={<IconTikTok />} />

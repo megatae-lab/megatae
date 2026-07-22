@@ -22,6 +22,8 @@ const planCreateSchema = z.object({
   compania: z.nativeEnum(Compania),
   precio: z.number().positive("El precio debe ser positivo"),
   recarga: z.number().positive("La recarga debe ser positiva"),
+  megas: z.number().int().positive().optional(),
+  dias: z.number().int().positive().optional(),
   descripcion: z.string().optional(),
 });
 
@@ -42,6 +44,8 @@ adminPlanesRouter.post("/", requirePro, async (req: AuthRequest, res, next) => {
 const planUpdateSchema = z.object({
   precio: z.number().positive("El precio debe ser positivo").optional(),
   recarga: z.number().positive("La recarga debe ser positiva").optional(),
+  megas: z.number().int().positive().nullable().optional(),
+  dias: z.number().int().positive().nullable().optional(),
   descripcion: z.string().nullable().optional(),
   activo: z.boolean().optional(),
   destacado: z.boolean().optional(),

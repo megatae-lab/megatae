@@ -12,6 +12,8 @@ export interface Plan {
   compania: CompaniaKey;
   precio: string;
   recarga: string;
+  megas: number | null;
+  dias: number | null;
   descripcion: string | null;
   activo: boolean;
   destacado: boolean;
