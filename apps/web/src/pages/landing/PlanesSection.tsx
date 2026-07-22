@@ -198,6 +198,11 @@ function PlanCard({ plan }: { plan: Plan }) {
         >
           Incluye recarga de ${plan.recarga} MXN
         </div>
+        {(plan.megas || plan.dias) && (
+          <p className="mt-1.5 text-[11px] font-semibold" style={{ color: cfg.textColor }}>
+            {[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")}
+          </p>
+        )}
       </div>
 
       {/* Features + botón */}
