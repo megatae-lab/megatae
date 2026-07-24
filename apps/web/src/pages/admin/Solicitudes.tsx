@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, ChevronRight } from "lucide-react";
 import { api } from "../../lib/api.js";
+import { getAdminUser } from "../../lib/auth.js";
 import type { EstadoSolicitud, SolicitudResumen } from "../../types.js";
 
 interface TabDef {
@@ -10,7 +11,7 @@ interface TabDef {
   label: string;
 }
 
-const TABS: TabDef[] = [
+const ALL_TABS: TabDef[] = [
   { estado: "RECIBIDA", label: "Nuevas" },
   { estado: "REVISION_PAGO", label: "En revisión" },
   { estado: "PAGO_RECHAZADO", label: "Rechazadas" },
@@ -20,6 +21,12 @@ const TABS: TabDef[] = [
   { estado: "ACTIVADA", label: "Activadas" },
   { estado: "CANCELADA", label: "Canceladas" },
 ];
+
+const TABS_POR_ROL: Record<string, EstadoSolicitud[]> = {
+  PRO: ["RECIBIDA", "REVISION_PAGO", "PAGO_RECHAZADO", "PAGO_VALIDADO", "EN_ACTIVACION", "QR_ENVIADO", "ACTIVADA", "CANCELADA"],
+  GENERAL: ["RECIBIDA", "REVISION_PAGO", "PAGO_RECHAZADO", "PAGO_VALIDADO", "EN_ACTIVACION"],
+  RECARGAS: ["QR_ENVIADO", "ACTIVADA"],
+};
 
 const ESTADO_COLOR: Record<EstadoSolicitud, string> = {
   RECIBIDA: "bg-blue-500/20 text-blue-300 border-blue-500/30",
@@ -51,7 +58,10 @@ function masde24h(iso: string): boolean {
 
 export function AdminSolicitudes() {
   const navigate = useNavigate();
-  const [tabActual, setTabActual] = useState<EstadoSolicitud>("RECIBIDA");
+  const admin = getAdminUser();
+  const rol = admin?.rol ?? "GENERAL";
+  const TABS = ALL_TABS.filter((t) => (TABS_POR_ROL[rol] ?? []).includes(t.estado));
+  const [tabActual, setTabActual] = useState<EstadoSolicitud>(TABS[0]?.estado ?? "RECIBIDA");
 
   const { data: todas = [], isLoading } = useQuery({
     queryKey: ["admin", "solicitudes"],

@@ -4,7 +4,7 @@ export interface AdminUser {
   id: number;
   email: string;
   nombre: string;
-  rol: "PRO" | "GENERAL";
+  rol: "PRO" | "GENERAL" | "RECARGAS";
 }
 
 export function getToken(): string | null {

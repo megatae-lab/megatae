@@ -84,7 +84,7 @@ async function main() {
     },
   });
 
-  // Admin GENERAL de ejemplo — cambiar contraseña en producción
+  // Admin GENERAL — cambiar contraseña en producción
   const hashGeneral = await bcrypt.hash("Mesa2024!", 12);
   await prisma.admin.upsert({
     where: { email: "mesa@megatae.mx" },
@@ -94,6 +94,20 @@ async function main() {
       passwordHash: hashGeneral,
       nombre: "Mesa de Control",
       rol: RolAdmin.GENERAL,
+      activo: true,
+    },
+  });
+
+  // Admin RECARGAS — cambiar contraseña en producción
+  const hashRecargas = await bcrypt.hash("Recargas2024!", 12);
+  await prisma.admin.upsert({
+    where: { email: "recargas@megatae.mx" },
+    update: {},
+    create: {
+      email: "recargas@megatae.mx",
+      passwordHash: hashRecargas,
+      nombre: "Equipo Recargas",
+      rol: RolAdmin.RECARGAS,
       activo: true,
     },
   });

@@ -27,6 +27,7 @@ enum EstadoSolicitud {
 enum RolAdmin {
   PRO
   GENERAL
+  RECARGAS
 }
 
 model Plan {
