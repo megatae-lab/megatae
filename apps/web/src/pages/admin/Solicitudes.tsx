@@ -167,7 +167,7 @@ function FilaSolicitud({
       <span
         className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full border ${ESTADO_COLOR[s.estado]}`}
       >
-        {TABS.find((t) => t.estado === s.estado)?.label ?? s.estado}
+        {ALL_TABS.find((t) => t.estado === s.estado)?.label ?? s.estado}
       </span>
 
       <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />
