@@ -1,22 +1,25 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-
-const NAV_LINKS = [
-  { label: "Inicio", to: "/", active: true },
-  { label: "Vende Recargas", to: "#", active: false },
-  { label: "Registra tu Línea", to: "#", active: false },
-  { label: "Conócenos", to: "#", active: false },
-];
+import { getBasePathFromPathname } from "../lib/routes.js";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const homePath = getBasePathFromPathname(location.pathname) || "/";
+
+  const NAV_LINKS = [
+    { label: "Inicio", to: homePath, active: true },
+    { label: "Vende Recargas", to: "#", active: false },
+    { label: "Registra tu Línea", to: "#", active: false },
+    { label: "Conócenos", to: "#", active: false },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 bg-brand border-b border-white/10 mb-3">
       <div className="mx-auto max-w-7xl px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex h-16 items-center gap-3 sm:gap-5 shrink-0 px-2 sm:px-5">
-          <Link to="/">
+          <Link to={homePath}>
             <img
               src="/assets/logo-megatae.png"
               alt="Megatae Global"
@@ -137,7 +140,6 @@ export function Navbar() {
   );
 }
 
-
 function SocialLink({ href, label, icon }: { href: string; label: string; icon: React.ReactNode }) {
   return (
     <a
@@ -191,7 +193,6 @@ function IconWhatsApp() {
     </svg>
   );
 }
-
 
 function IconMenu() {
   return (

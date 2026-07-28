@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { CheckCircle, Mail } from "lucide-react";
 import { Stepper, type StepperTheme } from "../../components/Stepper.js";
 import type { CompaniaKey } from "../../types.js";
+import { getBasePath } from "../../lib/routes.js";
 
 const STEPS = ["Tus datos", "Pago", "Confirmación"];
 
@@ -87,6 +88,7 @@ export function Gracias() {
   if (!state) return null;
 
   const theme: CompaniaTheme | null = state.compania ? THEME[state.compania] : null;
+  const basePath = getBasePath(state.compania);
 
   const stepperTheme: StepperTheme | undefined = theme
     ? {
@@ -139,7 +141,7 @@ export function Gracias() {
           </div>
 
           <Link
-            to="/"
+            to={basePath || "/"}
             className={`inline-block text-white font-bold px-8 py-3 rounded-lg transition-colors text-sm ${theme ? theme.button : "bg-brand hover:bg-brand-dark"
               }`}
           >

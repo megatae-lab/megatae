@@ -25,7 +25,7 @@ export function Hero() {
 
         if (Object.keys(next).length > 0) { setErrors(next); return; }
         setErrors({});
-        navigate("/comprar", { state: form });
+        navigate("//v1/eSIM-Att/comprar", { state: form });
     }
 
     return (
@@ -39,13 +39,13 @@ export function Hero() {
             <img
                 src="/assets/att_avatar.png"
                 alt="Maxi"
-                className="hidden md:block absolute bottom-0 left-1/2 -translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-[500px] w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
+                className="hidden md:block absolute bottom-0 left-1/2 -translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
             />
             <div className="relative mx-auto max-w-full px-4 py-3 md:py-7 flex flex-col md:flex-row items-center gap-6 md:gap-10">
                 {/* Copy izquierdo */}
                 <div className="flex-2 basis-0 md:pl-6 min-w-0 md:min-w-64 text-center md:text-left z-20 md:mr-16">
                     <h2 className="inline-block bg-[#000000] text-write font-extrabold text-2xl md:text-3xl px-4 py-2 rounded-sm animate-floating shadow-[0_8px_20px_rgba(0,0,0,0.35)]">
-                        ¡eSIM Movistar GRATIS!
+                        ¡eSIM AT&T GRATIS!
                     </h2>
                     <h1 className="text-3xl md:text-5xl lg:text-5xl px-5 mt-4 font-black text-white leading-tight">
                         Contectate sin limites

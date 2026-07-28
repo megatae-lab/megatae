@@ -25,7 +25,7 @@ export function Hero() {
 
         if (Object.keys(next).length > 0) { setErrors(next); return; }
         setErrors({});
-        navigate("/comprar", { state: form });
+        navigate("/v1/eSIM-Movistar/comprar", { state: form });
     }
 
     return (
@@ -39,7 +39,7 @@ export function Hero() {
             <img
                 src="/assets/maxi_avatar.png"
                 alt="Maxi"
-                className="hidden md:block absolute bottom-0 left-1/2 -translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-[500px] w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
+                className="hidden md:block absolute bottom-0 left-1/2 -translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
             />
             <div className="relative mx-auto max-w-full px-4 py-3 md:py-7 flex flex-col md:flex-row items-center gap-6 md:gap-10">
                 {/* Copy izquierdo */}

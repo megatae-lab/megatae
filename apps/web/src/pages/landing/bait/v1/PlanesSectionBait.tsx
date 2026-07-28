@@ -74,7 +74,7 @@ export function PlanesSectionBait() {
                     <>
                         <div className="hidden md:flex px-20 flex-wrap justify-center items-stretch gap-4">
                             {planes.map((plan) => (
-                                <div key={plan.id} className="w-full sm:w-[45%] lg:w-[30%] xl:w-[23%] max-w-[280px]">
+                                <div key={plan.id} className="w-full sm:w-[45%] lg:w-[30%] xl:w-[23%] max-w-70">
                                     <PlanCard plan={plan} />
                                 </div>
                             ))}

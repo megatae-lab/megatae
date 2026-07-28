@@ -6,6 +6,9 @@ import { LandingMovistar } from "./pages/landing/movistar/v1/LandingMovistar.js"
 import { LandingBait } from "./pages/landing/bait/v1/LandingBait.js";
 import { LandingAtt } from "./pages/landing/att/v1/LandingAtt.js";
 import { Comprar } from "./pages/compra/Comprar.js";
+import { ComprarAtt } from "./pages/landing/att/v1/ComprarAtt.js";
+import { ComprarBait } from "./pages/landing/bait/v1/ComprarBait.js";
+import { ComprarMovistar } from "./pages/landing/movistar/v1/ComprarMovistar.js";
 import { Pago } from "./pages/compra/Pago.js";
 import { Gracias } from "./pages/compra/Gracias.js";
 import { AdminLogin } from "./pages/admin/Login.js";
@@ -49,6 +52,9 @@ export function App() {
           <Route path="v1/eSIM-Movistar" element={<LandingMovistar />} />
           <Route path="v1/eSIM-Bait" element={<LandingBait />} />
           <Route path="v1/eSIM-Att" element={<LandingAtt />} />
+          <Route path="v1/eSIM-Att/comprar" element={<ComprarAtt />} />
+          <Route path="v1/eSIM-Bait/comprar" element={<ComprarBait />} />
+          <Route path="v1/eSIM-Movistar/comprar" element={<ComprarMovistar />} />
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminLayout />}>
