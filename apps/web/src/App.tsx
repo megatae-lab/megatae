@@ -2,6 +2,9 @@ import { Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar.js";
 import { Footer } from "./components/Footer.js";
 import { Landing } from "./pages/landing/Landing.js";
+import { LandingMovistar } from "./pages/landing/movistar/v1/LandingMovistar.js";
+import { LandingBait } from "./pages/landing/bait/v1/LandingBait.js";
+import { LandingAtt } from "./pages/landing/att/v1/LandingAtt.js";
 import { Comprar } from "./pages/compra/Comprar.js";
 import { Pago } from "./pages/compra/Pago.js";
 import { Gracias } from "./pages/compra/Gracias.js";
@@ -43,6 +46,9 @@ export function App() {
           <Route path="comprar" element={<Comprar />} />
           <Route path="pago" element={<Pago />} />
           <Route path="gracias" element={<Gracias />} />
+          <Route path="v1/eSIM-Movistar" element={<LandingMovistar />} />
+          <Route path="v1/eSIM-Bait" element={<LandingBait />} />
+          <Route path="v1/eSIM-Att" element={<LandingAtt />} />
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminLayout />}>

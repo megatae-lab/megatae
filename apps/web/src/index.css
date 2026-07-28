@@ -10,6 +10,26 @@
   --color-brand: #1365d2;
   --color-brand-dark: #0d4fa0;
   --color-brand-light: #1a7ef1;
+
+  --animate-floating: floating 2.5s ease-in-out infinite;
+
+  @keyframes floating {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+
+    25% {
+      transform: translateY(-4px) scale(1.04);
+    }
+
+    50% {
+      transform: translateY(0) scale(1);
+    }
+
+    75% {
+      transform: translateY(4px) scale(0.98);
+    }
+  }
 }
 
 * {
