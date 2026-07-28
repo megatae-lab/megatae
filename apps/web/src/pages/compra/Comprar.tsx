@@ -100,7 +100,7 @@ interface LocationState extends Partial<HeroFormState> {
   planId?: number;
 }
 
-export function Comprar() {
+export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   const location = useLocation();
   const navigate = useNavigate();
   const initial = (location.state ?? {}) as LocationState;
@@ -108,7 +108,9 @@ export function Comprar() {
   const [nombre, setNombre] = useState(initial.nombre ?? "");
   const [email, setEmail] = useState(initial.email ?? "");
   const [telefono, setTelefono] = useState(initial.telefono ?? "");
-  const [compania, setCompania] = useState<CompaniaKey | "">(initial.compania ?? "");
+  const [compania, setCompania] = useState<CompaniaKey | "">(
+    fixedCompania ?? initial.compania ?? ""
+  );
   const [planId, setPlanId] = useState<number | null>(initial.planId ?? null);
   const [ladaKey, setLadaKey] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -131,6 +133,7 @@ export function Comprar() {
       line: theme.dot,
     }
     : undefined;
+
   function handleCompaniaChange(c: CompaniaKey) {
     setCompania(c);
     setPlanId(null);
@@ -198,32 +201,34 @@ export function Comprar() {
           <h1 className="text-white font-black text-2xl mb-6">Elige tu plan</h1>
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
-            {/* Compañía */}
-            <div>
-              <p className={`text-sm mb-2 transition-colors ${theme ? theme.label : "text-white/70"}`}>
-                Compañía
-              </p>
-              <div className={`flex gap-2 rounded-xl transition-all ${errors.compania ? "ring-2 ring-red-500/50 ring-offset-2 ring-offset-navy-800" : ""}`}>
-                {COMPANIAS.map((c) => {
-                  const t = THEME[c.key];
-                  const isSelected = compania === c.key;
-                  return (
-                    <button
-                      key={c.key}
-                      type="button"
-                      onClick={() => handleCompaniaChange(c.key)}
-                      className={`flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors ${isSelected
-                        ? `${t.borderSelected} ${t.bg} text-white`
-                        : "border-white/20 bg-white/5 text-white/60 hover:border-white/40"
-                        }`}
-                    >
-                      {c.label}
-                    </button>
-                  );
-                })}
+            {/* Compañía — solo se muestra el selector si NO viene fija */}
+            {!fixedCompania && (
+              <div>
+                <p className={`text-sm mb-2 transition-colors ${theme ? theme.label : "text-white/70"}`}>
+                  Compañía
+                </p>
+                <div className={`flex gap-2 rounded-xl transition-all ${errors.compania ? "ring-2 ring-red-500/50 ring-offset-2 ring-offset-navy-800" : ""}`}>
+                  {COMPANIAS.map((c) => {
+                    const t = THEME[c.key];
+                    const isSelected = compania === c.key;
+                    return (
+                      <button
+                        key={c.key}
+                        type="button"
+                        onClick={() => handleCompaniaChange(c.key)}
+                        className={`flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors ${isSelected
+                          ? `${t.borderSelected} ${t.bg} text-white`
+                          : "border-white/20 bg-white/5 text-white/60 hover:border-white/40"
+                          }`}
+                      >
+                        {c.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <FieldError msg={errors.compania} />
               </div>
-              <FieldError msg={errors.compania} />
-            </div>
+            )}
 
             {/* Planes */}
             {compania && theme && (
@@ -330,13 +335,12 @@ function PlanOption({
     <button
       type="button"
       onClick={onSelect}
-      className={`flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left ${
-        selected
+      className={`flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left ${selected
           ? `${theme.borderSelected} ${theme.bg}`
           : hasError
-          ? "border-red-500 bg-white/5 hover:border-red-400"
-          : "border-white/20 bg-white/5 hover:border-white/40"
-      }`}
+            ? "border-red-500 bg-white/5 hover:border-red-400"
+            : "border-white/20 bg-white/5 hover:border-white/40"
+        }`}
     >
       <div>
         <p className={`font-bold text-lg ${selected ? "text-white" : "text-white/80"}`}>
@@ -405,15 +409,13 @@ function LadaCombobox({
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Trigger */}
       <button
         type="button"
         onClick={handleOpen}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-colors text-left ${
-          hasError
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-colors text-left ${hasError
             ? "border-red-500 bg-navy-900"
             : `bg-navy-900 ${theme ? `border-white/20 ${theme.ring}` : "border-white/20 focus:border-brand"}`
-        }`}
+          }`}
       >
         <span className={selected ? "text-white" : "text-white/30"}>
           {selected ? selected.label : "Selecciona tu estado…"}
@@ -421,10 +423,8 @@ function LadaCombobox({
         <ChevronDown className={`w-4 h-4 shrink-0 text-white/40 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
-      {/* Dropdown */}
       {open && (
         <div className="absolute z-50 mt-1 w-full bg-navy-800 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
-          {/* Search input */}
           <div className="flex items-center gap-2 px-3 py-2.5 border-b border-white/10">
             <Search className="w-4 h-4 text-white/30 shrink-0" />
             <input
@@ -442,7 +442,6 @@ function LadaCombobox({
             )}
           </div>
 
-          {/* Options */}
           <ul className="max-h-52 overflow-y-auto">
             {filtered.length === 0 ? (
               <li className="px-4 py-3 text-white/30 text-sm">Sin resultados</li>
@@ -452,9 +451,8 @@ function LadaCombobox({
                   <button
                     type="button"
                     onClick={() => handleSelect(l.key)}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 ${
-                      l.key === value ? `font-semibold ${theme ? theme.text : "text-brand"}` : "text-white/80"
-                    }`}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 ${l.key === value ? `font-semibold ${theme ? theme.text : "text-brand"}` : "text-white/80"
+                      }`}
                   >
                     {l.label}
                   </button>
@@ -505,11 +503,10 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
-        className={`w-full bg-navy-900 border rounded-lg px-3 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none transition-colors ${
-          error
+        className={`w-full bg-navy-900 border rounded-lg px-3 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none transition-colors ${error
             ? "border-red-500 focus:border-red-400"
             : `border-white/20 ${theme ? theme.ring : "focus:border-brand"}`
-        }`}
+          }`}
       />
       <FieldError msg={error} />
     </div>

@@ -290,6 +290,7 @@ export function AdminSolicitudDetalle() {
   );
 }
 
+
 function AccionesEstado({
   estado,
   compania,
@@ -452,20 +453,19 @@ function AccionesEstado({
           <button
             onClick={onRecordatorio}
             disabled={recordatorioState === "loading" || recordatorioState === "sent"}
-            className={`w-full font-bold py-2.5 rounded-lg text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2 border ${
-              recordatorioState === "sent"
+            className={`w-full font-bold py-2.5 rounded-lg text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2 border ${recordatorioState === "sent"
                 ? "border-green-500/40 bg-green-500/10 text-green-400"
                 : recordatorioState === "error"
-                ? "border-red-500/40 bg-red-500/10 text-red-400"
-                : "border-white/20 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white"
-            }`}
+                  ? "border-red-500/40 bg-red-500/10 text-red-400"
+                  : "border-white/20 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white"
+              }`}
           >
             {recordatorioState === "loading" && <Loader className="w-4 h-4 animate-spin" />}
             {recordatorioState === "sent"
               ? "Recordatorio enviado"
               : recordatorioState === "error"
-              ? "Error al enviar — intenta de nuevo"
-              : "Recordar al cliente registro"}
+                ? "Error al enviar — intenta de nuevo"
+                : "Recordar al cliente registro"}
           </button>
           <ActionButton
             label="Cancelar solicitud"
@@ -528,9 +528,8 @@ function Row({
     <div className="flex justify-between gap-3 py-1.5 border-b border-white/5 last:border-0">
       <span className="text-white/40 text-xs">{label}</span>
       <span
-        className={`text-xs text-right ${
-          highlight ? "text-yellow-300 font-medium" : "text-white/80"
-        }`}
+        className={`text-xs text-right ${highlight ? "text-yellow-300 font-medium" : "text-white/80"
+          }`}
       >
         {value}
       </span>

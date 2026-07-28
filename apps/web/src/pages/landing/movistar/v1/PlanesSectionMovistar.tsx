@@ -17,11 +17,10 @@ const COMPANY_CFG: Record<
     }
 > = {
     MOVISTAR: {
-        accentColor: "#3B82F6",
-        strongColor: "#1D5FC4",
-        textColor: "#1D5FC4",
-        headerGradient: "linear-gradient(135deg, #4A90F0 0%, #1D5FC4 100%)",
-        esimIcon: "/assets/esim-azul.png",
+        accentColor: "#55d100",
+        strongColor: "#55d100",
+        textColor: "#55d100",
+        headerGradient: "linear-gradient(135deg, #55d100 0%, #3FA800 100%)", esimIcon: "/assets/esim-azul.png",
         textDark: false,
     },
     ATT: {

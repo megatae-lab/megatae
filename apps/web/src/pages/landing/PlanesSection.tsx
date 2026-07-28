@@ -17,11 +17,10 @@ const COMPANY_CFG: Record<
   }
 > = {
   MOVISTAR: {
-    accentColor: "#3B82F6",
-    strongColor: "#1D5FC4",
-    textColor: "#1D5FC4",
-    headerGradient: "linear-gradient(135deg, #4A90F0 0%, #1D5FC4 100%)",
-    esimIcon: "/assets/esim-azul.png",
+    accentColor: "#55d100",
+    strongColor: "#55d100",
+    textColor: "#55d100",
+    headerGradient: "linear-gradient(135deg, #55d100 0%, #3FA800 100%)", esimIcon: "/assets/esim-azul.png",
     textDark: false,
   },
   ATT: {
@@ -129,11 +128,10 @@ function MobileCarousel({ planes }: { planes: Plan[] }) {
           <button
             key={i}
             onClick={() => scrollTo(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === active
+            className={`rounded-full transition-all duration-300 ${i === active
                 ? "w-5 h-2 bg-brand"
                 : "w-2 h-2 bg-white/25"
-            }`}
+              }`}
           />
         ))}
       </div>
@@ -163,70 +161,70 @@ function PlanCard({ plan }: { plan: Plan }) {
           </span>
         </div>
       )}
-    <div
-      className="rounded-2xl p-0.5 shadow-xl transition-transform duration-200 group-hover:scale-[1.02] group-active:scale-[0.98]"
-      style={{ background: plan.destacado ? "linear-gradient(90deg, #FF6B35 0%, #F7397B 100%)" : "transparent" }}
-    >
-    <div className="relative flex flex-col rounded-[14px] overflow-hidden bg-white">
-      {/* Header band — logo */}
       <div
-        className="relative flex items-center justify-center py-3 px-4"
-        style={{ background: cfg.headerGradient }}
+        className="rounded-2xl p-0.5 shadow-xl transition-transform duration-200 group-hover:scale-[1.02] group-active:scale-[0.98]"
+        style={{ background: plan.destacado ? "linear-gradient(90deg, #FF6B35 0%, #F7397B 100%)" : "transparent" }}
       >
-        <CompanyLogo compania={plan.compania} />
-      </div>
+        <div className="relative flex flex-col rounded-[14px] overflow-hidden bg-white">
+          {/* Header band — logo */}
+          <div
+            className="relative flex items-center justify-center py-3 px-4"
+            style={{ background: cfg.headerGradient }}
+          >
+            <CompanyLogo compania={plan.compania} />
+          </div>
 
-      {/* eSIM chip */}
-      <div className="flex flex-col items-center pt-3 pb-2 px-4">
-        <img
-          src={cfg.esimIcon}
-          alt="eSIM"
-          className="w-20 h-20 object-contain"
-        />
-      </div>
+          {/* eSIM chip */}
+          <div className="flex flex-col items-center pt-3 pb-2 px-4">
+            <img
+              src={cfg.esimIcon}
+              alt="eSIM"
+              className="w-20 h-20 object-contain"
+            />
+          </div>
 
-      {/* Precio */}
-      <div className="flex flex-col items-center py-2 px-4 border-b border-gray-100">
-        <p className="text-xs font-semibold tracking-widest uppercase mb-0.5" style={{ color: cfg.textColor }}>Por solo</p>
-        <p className="text-5xl font-black leading-none" style={{ color: cfg.textColor }}>
-          <span className="text-2xl font-bold align-top mt-1 mr-0.5">$</span>{plan.precio}
-        </p>
-        <p className="text-gray-400 text-[10px] mt-0.5">MXN</p>
-        <div
-          className="mt-2 text-[11px] font-bold px-3 py-1 rounded-full"
-          style={{ backgroundColor: `${cfg.strongColor}18`, color: cfg.textColor, border: `1px solid ${cfg.strongColor}44` }}
-        >
-          Incluye recarga de ${plan.recarga} MXN
+          {/* Precio */}
+          <div className="flex flex-col items-center py-2 px-4 border-b border-gray-100">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-0.5" style={{ color: cfg.textColor }}>Por solo</p>
+            <p className="text-5xl font-black leading-none" style={{ color: cfg.textColor }}>
+              <span className="text-2xl font-bold align-top mt-1 mr-0.5">$</span>{plan.precio}
+            </p>
+            <p className="text-gray-400 text-[10px] mt-0.5">MXN</p>
+            <div
+              className="mt-2 text-[11px] font-bold px-3 py-1 rounded-full"
+              style={{ backgroundColor: `${cfg.strongColor}18`, color: cfg.textColor, border: `1px solid ${cfg.strongColor}44` }}
+            >
+              Incluye recarga de ${plan.recarga} MXN
+            </div>
+            {(plan.megas || plan.dias) && (
+              <p className="mt-1.5 text-[11px] font-semibold" style={{ color: cfg.textColor }}>
+                {[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")}
+              </p>
+            )}
+          </div>
+
+          {/* Features + botón */}
+          <div className="flex-1 flex flex-col p-3 gap-3">
+            {features.length > 0 && (
+              <ul className="flex flex-col gap-1">
+                {features.map((d) => (
+                  <li key={d} className="flex items-center gap-2 text-gray-600 text-xs">
+                    <FeatureIcon label={d} color={cfg.textColor} />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <button
+              onClick={goToComprar}
+              className="w-full mt-auto font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90 active:scale-95"
+              style={{ backgroundColor: cfg.strongColor, color: cfg.textDark ? "#000" : "#fff" }}
+            >
+              Me interesa
+            </button>
+          </div>
         </div>
-        {(plan.megas || plan.dias) && (
-          <p className="mt-1.5 text-[11px] font-semibold" style={{ color: cfg.textColor }}>
-            {[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")}
-          </p>
-        )}
       </div>
-
-      {/* Features + botón */}
-      <div className="flex-1 flex flex-col p-3 gap-3">
-        {features.length > 0 && (
-          <ul className="flex flex-col gap-1">
-            {features.map((d) => (
-              <li key={d} className="flex items-center gap-2 text-gray-600 text-xs">
-                <FeatureIcon label={d} color={cfg.textColor} />
-                {d}
-              </li>
-            ))}
-          </ul>
-        )}
-        <button
-          onClick={goToComprar}
-          className="w-full mt-auto font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90 active:scale-95"
-          style={{ backgroundColor: cfg.strongColor, color: cfg.textDark ? "#000" : "#fff" }}
-        >
-          Me interesa
-        </button>
-      </div>
-    </div>
-    </div>
     </div>
   );
 }
