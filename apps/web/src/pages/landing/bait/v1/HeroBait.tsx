@@ -39,7 +39,12 @@ export function Hero() {
             <img
                 src="/assets/bait_avatar.png"
                 alt="Maxi"
-                className="hidden md:block absolute bottom-0 left-1/2 translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
+                className="hidden md:block absolute bottom-0 left-[55%] translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
+            />
+            <img
+                src="/assets/logo-bait.png"
+                alt="Maxi"
+                className="hidden md:block absolute top-20 left-[44%] -translate-x-1/2 lg:translate-x-[-45%] h-[17%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
             />
             <div className="relative mx-auto max-w-full px-4 py-3 md:py-7 flex flex-col md:flex-row items-center gap-6 md:gap-10">
                 {/* Copy izquierdo */}
