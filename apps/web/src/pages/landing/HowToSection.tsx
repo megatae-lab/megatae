@@ -2,22 +2,22 @@ const STEPS = [
   {
     img: "/assets/icon-registro.png",
     title: "Paso 1",
-    desc: "Regístrate y elige tu compañía favorita.",
+    desc: "Regístrate y elige tú compañía favorita.",
   },
   {
     img: "/assets/icon-pago.png",
     title: "Paso 2",
-    desc: "Realiza tu pago y adjunta comprobante.",
+    desc: "Realiza tú pago y adjunta comprobante.",
   },
   {
     img: "/assets/icon-activacion.png",
     title: "Paso 3",
-    desc: "Validamos tu pago.",
+    desc: "Validamos tú pago.",
   },
   {
     img: "/assets/icon-recibe.png",
     title: "Paso 4",
-    desc: "¡Recibe tu eSIM por correo!",
+    desc: "¡Recibe tú eSIM por correo!",
   },
 ];
 

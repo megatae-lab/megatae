@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Loader, ExternalLink, AlertCircle, Upload } from "lucide-react";
+import { ArrowLeft, Loader, ExternalLink, AlertCircle, Upload, Download, X } from "lucide-react";
 import { api } from "../../lib/api.js";
 import type { EstadoSolicitud, HistorialItem } from "../../types.js";
 
@@ -50,6 +50,9 @@ export function AdminSolicitudDetalle() {
   const [showModal, setShowModal] = useState(false);
   const [observacion, setObservacion] = useState("");
   const [imgError, setImgError] = useState(false);
+  const [showComprobanteModal, setShowComprobanteModal] = useState(false);
+  const [descargando, setDescargando] = useState(false);
+
   const [qrLoading, setQrLoading] = useState(false);
   const [qrError, setQrError] = useState<string | undefined>();
   const [recordatorioState, setRecordatorioState] = useState<"idle" | "loading" | "sent" | "error">("idle");
@@ -116,6 +119,29 @@ export function AdminSolicitudDetalle() {
     } catch {
       setRecordatorioState("error");
       setTimeout(() => setRecordatorioState("idle"), 3000);
+    }
+  }
+
+  async function descargarComprobante() {
+    if (!s) return;
+    setDescargando(true);
+    try {
+      const res = await fetch(s.comprobante);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const ext = blob.type.split("/")[1] || "jpg";
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `comprobante-${s.id}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      // Fallback: si falla el fetch (p.ej. CORS), abre en pestaña nueva
+      window.open(s.comprobante, "_blank");
+    } finally {
+      setDescargando(false);
     }
   }
 
@@ -195,7 +221,8 @@ export function AdminSolicitudDetalle() {
                 <img
                   src={s.comprobante}
                   alt="Comprobante"
-                  className="w-full object-contain max-h-64"
+                  className="w-full object-contain max-h-64 cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setShowComprobanteModal(true)}
                   onError={() => setImgError(true)}
                 />
               ) : (
@@ -210,6 +237,22 @@ export function AdminSolicitudDetalle() {
                 </a>
               )}
             </div>
+
+            {s.estado === "REVISION_PAGO" && (
+              <button
+                onClick={descargarComprobante}
+                disabled={descargando}
+                className="w-full mb-3 border border-white/20 hover:border-brand/50 text-white/70 hover:text-white text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {descargando ? (
+                  <Loader className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+                {descargando ? "Descargando…" : "Descargar comprobante"}
+              </button>
+            )}
+
             <div className="bg-brand/10 border border-brand/20 rounded-lg px-3 py-2 text-center">
               <p className="text-white/50 text-xs">Monto esperado</p>
               <p className="text-white font-black text-2xl">${s.plan.precio} MXN</p>
@@ -285,6 +328,14 @@ export function AdminSolicitudDetalle() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal comprobante en grande, con zoom */}
+      {showComprobanteModal && !imgError && (
+        <ImageLightbox
+          src={s.comprobante}
+          onClose={() => setShowComprobanteModal(false)}
+        />
       )}
     </div>
   );
@@ -559,6 +610,86 @@ function QrPreview({ url }: { url: string }) {
         alt="QR eSIM"
         className="w-40 h-40 object-contain"
         onError={() => setErr(true)}
+      />
+    </div>
+  );
+}
+
+function ImageLightbox({ src, onClose }: { src: string; onClose: () => void }) {
+  const [zoomed, setZoomed] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const dragging = useRef(false);
+  const lastPointer = useRef({ x: 0, y: 0 });
+
+  function toggleZoom(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (zoomed) {
+      setZoomed(false);
+      setPos({ x: 0, y: 0 });
+    } else {
+      setZoomed(true);
+    }
+  }
+
+  function onPointerDown(e: React.MouseEvent) {
+    if (!zoomed) return;
+    e.stopPropagation();
+    dragging.current = true;
+    lastPointer.current = { x: e.clientX, y: e.clientY };
+  }
+
+  function onPointerMove(e: React.MouseEvent) {
+    if (!dragging.current) return;
+    const dx = e.clientX - lastPointer.current.x;
+    const dy = e.clientY - lastPointer.current.y;
+    lastPointer.current = { x: e.clientX, y: e.clientY };
+    setPos((p) => ({ x: p.x + dx, y: p.y + dy }));
+  }
+
+  function onPointerUp() {
+    dragging.current = false;
+  }
+
+  function onWheel(e: React.WheelEvent) {
+    // Scroll hacia arriba = acercar, hacia abajo = alejar
+    e.stopPropagation();
+    if (e.deltaY < 0 && !zoomed) setZoomed(true);
+    if (e.deltaY > 0 && zoomed) {
+      setZoomed(false);
+      setPos({ x: 0, y: 0 });
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4 overflow-hidden select-none"
+      onClick={onClose}
+      onWheel={onWheel}
+      onMouseMove={onPointerMove}
+      onMouseUp={onPointerUp}
+      onMouseLeave={onPointerUp}
+    >
+      <button
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        className="absolute top-4 right-4 text-white/60 hover:text-white p-2 z-10"
+      >
+        <X className="w-6 h-6" />
+      </button>
+      <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/40 text-xs">
+        Clic o scroll para {zoomed ? "alejar" : "acercar"} {zoomed && "· arrastra para mover"}
+      </p>
+      <img
+        src={src}
+        alt="Comprobante"
+        draggable={false}
+        onClick={toggleZoom}
+        onMouseDown={onPointerDown}
+        style={{
+          transform: `translate(${pos.x}px, ${pos.y}px) scale(${zoomed ? 2.5 : 1})`,
+          transition: dragging.current ? "none" : "transform 0.2s ease-out",
+          cursor: zoomed ? "grab" : "zoom-in",
+        }}
+        className="max-w-full max-h-full object-contain rounded-lg"
       />
     </div>
   );

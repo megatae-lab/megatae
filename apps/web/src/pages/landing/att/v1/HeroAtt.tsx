@@ -54,7 +54,7 @@ export function Hero() {
                         ¡eSIM AT&T GRATIS!
                     </h2>
                     <h1 className="text-3xl md:text-5xl lg:text-5xl px-5 mt-4 font-black text-white leading-tight">
-                        Contectate sin limites
+                        Conectate sin límites
                     </h1>
                     <h1 className="text-3xl md:text-5xl lg:text-5xl px-5 mt-2 font-black text-white leading-tight">
                         con la mejor red
