@@ -70,17 +70,17 @@ export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn,
         <Container style={{ maxWidth: 480, margin: "0 auto" }}>
 
           {/* Logo */}
-          <table align="center" role="presentation" style={{ margin: "0 auto 28px" }}>
+          <table align="center" role="presentation" style={{ margin: "0 auto 32px" }}>
             <tbody>
               <tr>
-                <td style={{ verticalAlign: "middle", paddingRight: 12 }}>
-                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={40} style={{ display: "block" }} /> : null}
+                <td style={{ verticalAlign: "middle", paddingRight: 16 }}>
+                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block" }} /> : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, margin: 0, lineHeight: "22px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, margin: 0, lineHeight: "24px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "34px" }}>
                     Global
                   </Text>
                 </td>
@@ -97,7 +97,7 @@ export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn,
           </Text>
 
           {/* Card */}
-          <div style={{ border: "1px solid rgba(255,255,255,0.35)", borderRadius: 20, padding: 24, marginBottom: 24 }}>
+          <div style={{ border: "1px solid #ffffff", borderRadius: 20, padding: 24, marginBottom: 24 }}>
             <table role="presentation" width="100%" style={{ borderCollapse: "collapse" }}>
               <tbody>
                 <tr>
@@ -108,7 +108,7 @@ export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn,
                       <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: "0 0 18px" }}>{compania}</Text>
                     )}
 
-                    <div style={{ border: "1px solid rgba(255,255,255,0.4)", borderRadius: 10, padding: "10px 14px", marginBottom: 14 }}>
+                    <div style={{ border: "1px solid #ffffff", borderRadius: 10, padding: "10px 14px", marginBottom: 14 }}>
                       <Text style={{ color: "#ffffff", fontSize: 12, margin: "0 0 6px" }}>Tu número asignado es:</Text>
                       {dn ? (
                         <table role="presentation" style={{ borderCollapse: "collapse" }}>
@@ -174,11 +174,11 @@ export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn,
               <tr>
                 <td width={56} align="center"><IconBox icon={icon("scan", 22)} background={theme.solid} /></td>
                 <td valign="middle">
-                  <div style={{ borderTop: "2px dashed rgba(255,255,255,0.5)", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
+                  <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
                 <td width={56} align="center"><IconBox icon={icon("settings", 22)} background={theme.solid} /></td>
                 <td valign="middle">
-                  <div style={{ borderTop: "2px dashed rgba(255,255,255,0.5)", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
+                  <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
                 <td width={56} align="center"><IconBox icon={icon("check", 22)} background={theme.solid} /></td>
               </tr>

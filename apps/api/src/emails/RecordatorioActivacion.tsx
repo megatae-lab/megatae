@@ -64,17 +64,17 @@ export function RecordatorioActivacion({ nombre, compania, companiaCode, dn, ico
         <Container style={{ maxWidth: 480, margin: "0 auto" }}>
 
           {/* Logo */}
-          <table align="center" role="presentation" style={{ margin: "0 auto 28px" }}>
+          <table align="center" role="presentation" style={{ margin: "0 auto 32px" }}>
             <tbody>
               <tr>
-                <td style={{ verticalAlign: "middle", paddingRight: 12 }}>
-                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={40} style={{ display: "block" }} /> : null}
+                <td style={{ verticalAlign: "middle", paddingRight: 16 }}>
+                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block" }} /> : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, margin: 0, lineHeight: "22px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, margin: 0, lineHeight: "24px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "34px" }}>
                     Global
                   </Text>
                 </td>
@@ -108,31 +108,37 @@ export function RecordatorioActivacion({ nombre, compania, companiaCode, dn, ico
             )}
 
             {dn ? (
-              <div style={{ background: theme.solid, borderRadius: 16, padding: "16px 20px" }}>
-                <table role="presentation" align="center" style={{ borderCollapse: "collapse" }}>
-                  <tbody>
-                    <tr>
-                      <td style={{ paddingRight: 12 }}>
-                        <table role="presentation" width={40} style={{ borderCollapse: "collapse" }}>
-                          <tbody>
-                            <tr>
-                              <td width={40} height={40} align="center" valign="middle" style={{ background: "rgba(255,255,255,0.18)", borderRadius: 20 }}>
-                                {icon("phone", 18)}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                      <td>
-                        <Text style={{ color: "#ffffff", fontSize: 12, margin: "0 0 2px" }}>Tu número asignado es:</Text>
-                        <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: 0, letterSpacing: 1 }}>
-                          {dn}
-                        </Text>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <table role="presentation" width="100%" style={{ borderCollapse: "collapse" }}>
+                <tbody>
+                  <tr>
+                    <td style={{ background: theme.solid, borderRadius: 16, padding: "16px 20px" }}>
+                      <table role="presentation" style={{ borderCollapse: "collapse" }}>
+                        <tbody>
+                          <tr>
+                            <td style={{ paddingRight: 12 }}>
+                              <table role="presentation" width={40} style={{ borderCollapse: "collapse" }}>
+                                <tbody>
+                                  <tr>
+                                    <td width={40} height={40} align="center" valign="middle" style={{ background: "rgba(255,255,255,0.18)", borderRadius: 20 }}>
+                                      {icon("phone", 18)}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                            <td>
+                              <Text style={{ color: "#ffffff", fontSize: 12, margin: "0 0 2px" }}>Tu número asignado es:</Text>
+                              <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: 0, letterSpacing: 1 }}>
+                                {dn}
+                              </Text>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             ) : null}
           </div>
 

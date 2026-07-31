@@ -43,17 +43,17 @@ export function SolicitudRecibida({ nombre, compania, precio, recarga, iconUrl, 
         <Container style={{ maxWidth: 480, margin: "0 auto" }}>
 
           {/* Logo */}
-          <table align="center" role="presentation" style={{ margin: "0 auto 28px" }}>
+          <table align="center" role="presentation" style={{ margin: "0 auto 32px" }}>
             <tbody>
               <tr>
-                <td style={{ verticalAlign: "middle", paddingRight: 12 }}>
-                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={40} style={{ display: "block" }} /> : null}
+                <td style={{ verticalAlign: "middle", paddingRight: 16 }}>
+                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block" }} /> : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, margin: 0, lineHeight: "22px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, margin: 0, lineHeight: "24px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "34px" }}>
                     Global
                   </Text>
                 </td>
@@ -88,14 +88,14 @@ export function SolicitudRecibida({ nombre, compania, precio, recarga, iconUrl, 
           </div>
 
           {/* Card: resumen de compra */}
-          <div style={{ border: "1px solid rgba(255,255,255,0.35)", borderRadius: 20, padding: 20, marginBottom: 24, textAlign: "center" }}>
+          <div style={{ border: "1px solid #ffffff", borderRadius: 20, padding: 20, marginBottom: 24, textAlign: "center" }}>
             {companiaLogoUrl ? (
               <Img src={companiaLogoUrl} alt={compania} height={32} style={{ display: "block", margin: "4px auto 20px" }} />
             ) : (
               <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: "0 0 20px" }}>{compania}</Text>
             )}
 
-            <div style={{ border: "1px solid rgba(255,255,255,0.3)", borderRadius: 14, padding: "16px 18px", textAlign: "left" }}>
+            <div style={{ border: "1px solid #ffffff", borderRadius: 14, padding: "16px 18px", textAlign: "left" }}>
               <table role="presentation" style={{ borderCollapse: "collapse" }}>
                 <tbody>
                   <tr>
@@ -103,14 +103,14 @@ export function SolicitudRecibida({ nombre, compania, precio, recarga, iconUrl, 
                       {icon("smartphone-nfc", 22)}
                     </td>
                     <td valign="top">
-                      <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 700, margin: "0 0 6px" }}>
+                      <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 700, lineHeight: "18px", margin: "0 0 4px" }}>
                         eSIM {compania}
                       </Text>
-                      <Text style={{ color: "#dbe6fb", fontSize: 13, margin: "0 0 2px" }}>Total pagado</Text>
-                      <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: "0 0 4px" }}>
+                      <Text style={{ color: "#dbe6fb", fontSize: 13, lineHeight: "16px", margin: "0 0 1px" }}>Total pagado</Text>
+                      <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, lineHeight: "22px", margin: "0 0 2px" }}>
                         ${precio} MXN
                       </Text>
-                      <Text style={{ color: "rgba(255,255,255,0.8)", fontSize: 12, margin: 0 }}>
+                      <Text style={{ color: "rgba(255,255,255,0.8)", fontSize: 12, lineHeight: "16px", margin: 0 }}>
                         Incluye recarga de ${recarga} MXN
                       </Text>
                     </td>
@@ -130,11 +130,11 @@ export function SolicitudRecibida({ nombre, compania, precio, recarga, iconUrl, 
               <tr>
                 <td width={56} align="center"><IconBox icon={icon("check", 22)} /></td>
                 <td valign="middle">
-                  <div style={{ borderTop: "2px dashed rgba(255,255,255,0.5)", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
+                  <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
                 <td width={56} align="center"><IconBox icon={icon("mail", 22)} /></td>
                 <td valign="middle">
-                  <div style={{ borderTop: "2px dashed rgba(255,255,255,0.5)", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
+                  <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
                 <td width={56} align="center"><IconBox icon={icon("smartphone-nfc", 22)} /></td>
               </tr>

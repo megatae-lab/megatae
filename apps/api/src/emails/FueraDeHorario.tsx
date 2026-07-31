@@ -20,16 +20,16 @@ export function FueraDeHorario({ nombre, iconUrl }: Props) {
           <table align="center" role="presentation" style={{ margin: "0 auto 32px" }}>
             <tbody>
               <tr>
-                <td style={{ verticalAlign: "middle", paddingRight: 12 }}>
+                <td style={{ verticalAlign: "middle", paddingRight: 16 }}>
                   {iconUrl ? (
-                    <Img src={iconUrl} alt="Megatae" width={44} style={{ display: "block" }} />
+                    <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block" }} />
                   ) : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, margin: 0, lineHeight: "26px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, margin: 0, lineHeight: "28px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "34px" }}>
                     Global
                   </Text>
                 </td>
