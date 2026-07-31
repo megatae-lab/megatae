@@ -85,6 +85,7 @@ solicitudesRouter.post("/", async (req, res, next) => {
       to: body.email,
       nombre: body.nombre,
       compania: COMPANY_DISPLAY[body.compania] ?? body.compania,
+      companiaCode: body.compania,
       precio: plan.precio.toString(),
       recarga: plan.recarga.toString(),
     }).catch((err) => {

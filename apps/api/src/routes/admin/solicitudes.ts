@@ -196,7 +196,13 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
 
     const solicitud = await prisma.solicitud.findUnique({
       where: { id },
-      select: { estado: true, email: true, nombre: true, compania: true },
+      select: {
+        estado: true,
+        email: true,
+        nombre: true,
+        compania: true,
+        plan: { select: { precio: true, recarga: true } },
+      },
     });
     if (!solicitud) { res.status(404).json({ error: "Solicitud no encontrada" }); return; }
     if (solicitud.estado !== "EN_ACTIVACION") {
@@ -223,6 +229,9 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
+      companiaCode: solicitud.compania,
+      precio: solicitud.plan.precio.toString(),
+      recarga: solicitud.plan.recarga.toString(),
       dn: dn || undefined,
       qrUrl,
     }).catch((err) => console.error("Error enviando correo QrEnviado:", err));
@@ -245,7 +254,7 @@ adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, n
 
     const solicitud = await prisma.solicitud.findUnique({
       where: { id },
-      select: { estado: true, email: true, nombre: true, compania: true },
+      select: { estado: true, email: true, nombre: true, compania: true, dn: true },
     });
     if (!solicitud) { res.status(404).json({ error: "Solicitud no encontrada" }); return; }
     if (solicitud.estado !== "QR_ENVIADO") {
@@ -257,6 +266,8 @@ adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, n
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
+      companiaCode: solicitud.compania,
+      dn: solicitud.dn ?? undefined,
     });
 
     res.json({ ok: true });

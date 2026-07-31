@@ -1,71 +1,91 @@
-import { Html, Head, Body, Container, Text, Hr, Preview, Img } from "@react-email/components";
+import { Html, Head, Body, Container, Text, Img, Preview } from "@react-email/components";
 
 interface Props {
   nombre: string;
-  logoUrl?: string;
+  iconUrl?: string;
 }
 
 const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const gradient = "linear-gradient(160deg, #123a9e 0%, #1f66e6 40%, #123a9e 65%, #030a1f 100%)";
 
-export function FueraDeHorario({ nombre, logoUrl }: Props) {
+export function FueraDeHorario({ nombre, iconUrl }: Props) {
   return (
     <Html lang="es">
       <Head />
-      <Preview>Tu solicitud está en buenas manos — te atendemos en horario laboral</Preview>
-      <Body style={{ fontFamily: font, backgroundColor: "#eef2f7", margin: 0, padding: "40px 16px" }}>
-        <Container style={{ maxWidth: 560, margin: "0 auto" }}>
+      <Preview>¡Uups! Nos encontraste fuera de horario — tu solicitud ya quedó registrada</Preview>
+      <Body style={{ fontFamily: font, background: gradient, backgroundColor: "#0a1230", margin: 0, padding: "48px 16px" }}>
+        <Container style={{ maxWidth: 480, margin: "0 auto" }}>
 
-          {/* Card */}
-          <div style={{ backgroundColor: "#ffffff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
+          {/* Logo */}
+          <table align="center" role="presentation" style={{ margin: "0 auto 32px" }}>
+            <tbody>
+              <tr>
+                <td style={{ verticalAlign: "middle", paddingRight: 12 }}>
+                  {iconUrl ? (
+                    <Img src={iconUrl} alt="Megatae" width={44} style={{ display: "block" }} />
+                  ) : null}
+                </td>
+                <td style={{ verticalAlign: "middle" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, margin: 0, lineHeight: "26px" }}>
+                    Megatae
+                  </Text>
+                  <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, margin: 0, lineHeight: "28px" }}>
+                    Global
+                  </Text>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-            {/* Header */}
-            <div style={{ backgroundColor: "#0f1b35", padding: "28px 40px", textAlign: "center" }}>
-              {logoUrl ? (
-                <Img src={logoUrl} alt="MEGATAE" width={140} style={{ margin: "0 auto" }} />
-              ) : (
-                <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 900, margin: 0 }}>MEGATAE</Text>
-              )}
-            </div>
+          {/* Headline */}
+          <Text style={{ color: "#ffffff", fontSize: 38, fontWeight: 900, textAlign: "center", margin: "0 0 4px" }}>
+            ¡Uups!
+          </Text>
+          <Text style={{ color: "#ffffff", fontSize: 24, fontWeight: 700, textAlign: "center", lineHeight: "30px", margin: "0 0 32px" }}>
+            Nos encontraste fuera de horario
+          </Text>
 
-            {/* Accent bar */}
-            <div style={{ height: 4, backgroundColor: "#f59e0b" }} />
-
-            {/* Body */}
-            <div style={{ padding: "36px 40px" }}>
-              <Text style={{ fontSize: 22, fontWeight: 800, color: "#0f1b35", margin: "0 0 8px" }}>
-                Hola, {nombre}
-              </Text>
-              <Text style={{ fontSize: 15, color: "#4b5563", lineHeight: 1.6, margin: "0 0 20px" }}>
-                Recibimos tu solicitud y está en buenas manos. En este momento estamos fuera de nuestro horario de atención, pero la revisaremos tan pronto como estemos disponibles.
-              </Text>
-
-              {/* Horario */}
-              <div style={{ backgroundColor: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "20px 24px", margin: "0 0 20px" }}>
-                <Text style={{ fontSize: 13, fontWeight: 700, color: "#92400e", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: 1 }}>
-                  Horario de atención
-                </Text>
-                <Text style={{ fontSize: 14, color: "#78350f", margin: "0 0 6px" }}>
-                  <strong>Lunes a sábado:</strong> 8:00 am – 11:00 pm
-                </Text>
-                <Text style={{ fontSize: 14, color: "#78350f", margin: 0 }}>
-                  <strong>Domingos:</strong> 9:00 am – 11:00 pm
-                </Text>
-              </div>
-
-              <Text style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.6, margin: 0 }}>
-                No necesitas hacer nada más. En cuanto iniciemos operaciones procesaremos tu solicitud y recibirás una actualización por correo.
-              </Text>
-            </div>
-
-            <Hr style={{ borderColor: "#e5e7eb", margin: 0 }} />
-
-            {/* Footer */}
-            <div style={{ padding: "20px 40px", textAlign: "center" }}>
-              <Text style={{ fontSize: 12, color: "#9ca3af", margin: 0 }}>
-                MEGATAE eSIM · megatae.mx
-              </Text>
-            </div>
+          {/* Card: solicitud registrada */}
+          <div style={{ backgroundColor: "rgba(4, 12, 36, 0.55)", borderRadius: 16, padding: "24px 28px", marginBottom: 20, textAlign: "center" }}>
+            <Text style={{ color: "#ffffff", fontSize: 17, fontWeight: 700, lineHeight: "24px", margin: "0 0 8px" }}>
+              No te preocupes, {nombre}, tu solicitud quedó registrada
+            </Text>
+            <Text style={{ color: "#cbd8f5", fontSize: 14, lineHeight: "21px", margin: 0 }}>
+              En cuanto iniciemos nuestro horario de atención, la revisaremos y te contactaremos
+            </Text>
           </div>
+
+          {/* Card: horario */}
+          <div style={{ backgroundColor: "rgba(255, 255, 255, 0.08)", border: "1px solid rgba(255, 255, 255, 0.15)", borderRadius: 16, padding: "24px 28px", marginBottom: 32, textAlign: "center" }}>
+            <Text style={{ color: "#ffffff", fontSize: 16, fontWeight: 700, margin: "0 0 16px" }}>
+              🗓️ Horario de atención 🗓️
+            </Text>
+            <Text style={{ color: "#dbe6fb", fontSize: 14, margin: "0 0 2px" }}>
+              Lunes a sábado
+            </Text>
+            <Text style={{ color: "#ffffff", fontSize: 15, fontWeight: 700, margin: "0 0 14px" }}>
+              9:00 am - 11:00 pm
+            </Text>
+            <Text style={{ color: "#dbe6fb", fontSize: 14, margin: "0 0 2px" }}>
+              Domingos
+            </Text>
+            <Text style={{ color: "#ffffff", fontSize: 15, fontWeight: 700, margin: 0 }}>
+              9:00 am - 11:00 pm
+            </Text>
+          </div>
+
+          {/* Closing */}
+          <Text style={{ color: "#ffffff", fontSize: 20, fontWeight: 700, textAlign: "center", margin: "0 0 4px" }}>
+            ¡Gracias por <span style={{ color: "#7db2ff" }}>tu paciencia</span>!
+          </Text>
+          <Text style={{ color: "#ffffff", fontSize: 20, fontWeight: 700, textAlign: "center", margin: "0 0 32px" }}>
+            Muy pronto estaremos contigo.
+          </Text>
+
+          {/* Footer */}
+          <Text style={{ color: "rgba(255, 255, 255, 0.45)", fontSize: 11, textAlign: "center", margin: 0 }}>
+            Megatae Global · megatae.mx
+          </Text>
 
         </Container>
       </Body>

@@ -9,18 +9,24 @@ import { FueraDeHorario } from "../emails/FueraDeHorario.js";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "no-reply@megatae.mx";
 const logoUrl = process.env.WEB_URL ? `${process.env.WEB_URL}/assets/logo-megatae.png` : undefined;
+const iconUrl = process.env.WEB_URL ? `${process.env.WEB_URL}/assets/logo.png` : undefined;
+const assetsBaseUrl = process.env.WEB_URL ? `${process.env.WEB_URL}/assets` : undefined;
+
+const COMPANY_LOGO_FILE: Record<string, string> = {
+  ATT: "logo-att.png",
+  MOVISTAR: "logo-movistar.png",
+  BAIT: "logo-bait.png",
+};
 
 export function isWithinBusinessHours(): boolean {
   const now = new Date();
   const mxDate = new Date(now.toLocaleString("en-US", { timeZone: "America/Mexico_City" }));
-  const day = mxDate.getDay(); // 0=domingo, 1=lunes ... 6=sábado
   const hour = mxDate.getHours();
-  if (day === 0) return hour >= 9 && hour < 23;
-  return hour >= 8 && hour < 23;
+  return hour >= 9 && hour < 23;
 }
 
 export async function sendFueraDeHorario(opts: { to: string; nombre: string }) {
-  const html = await render(<FueraDeHorario nombre={opts.nombre} logoUrl={logoUrl} />);
+  const html = await render(<FueraDeHorario nombre={opts.nombre} iconUrl={iconUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -48,10 +54,14 @@ export async function sendSolicitudRecibida(opts: {
   to: string;
   nombre: string;
   compania: string;
+  companiaCode: "ATT" | "MOVISTAR" | "BAIT";
   precio: string;
   recarga: string;
 }) {
-  const html = await render(<SolicitudRecibida {...opts} logoUrl={logoUrl} />);
+  const companiaLogoUrl = process.env.WEB_URL
+    ? `${process.env.WEB_URL}/assets/${COMPANY_LOGO_FILE[opts.companiaCode]}`
+    : undefined;
+  const html = await render(<SolicitudRecibida {...opts} iconUrl={iconUrl} companiaLogoUrl={companiaLogoUrl} assetsBaseUrl={assetsBaseUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -64,11 +74,16 @@ export async function sendQrEnviado(opts: {
   to: string;
   nombre: string;
   compania: string;
+  companiaCode: "ATT" | "MOVISTAR" | "BAIT";
+  precio: string;
+  recarga: string;
   dn?: string;
   qrUrl: string;
 }) {
-  const videoUrl = process.env.VIDEO_TUTORIAL_URL || undefined;
-  const html = await render(<QrEnviado {...opts} videoUrl={videoUrl} logoUrl={logoUrl} />);
+  const companiaLogoUrl = process.env.WEB_URL
+    ? `${process.env.WEB_URL}/assets/${COMPANY_LOGO_FILE[opts.companiaCode]}`
+    : undefined;
+  const html = await render(<QrEnviado {...opts} iconUrl={iconUrl} companiaLogoUrl={companiaLogoUrl} assetsBaseUrl={assetsBaseUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -81,8 +96,13 @@ export async function sendRecordatorioActivacion(opts: {
   to: string;
   nombre: string;
   compania: string;
+  companiaCode: "ATT" | "MOVISTAR" | "BAIT";
+  dn?: string;
 }) {
-  const html = await render(<RecordatorioActivacion nombre={opts.nombre} compania={opts.compania} logoUrl={logoUrl} />);
+  const companiaLogoUrl = process.env.WEB_URL
+    ? `${process.env.WEB_URL}/assets/${COMPANY_LOGO_FILE[opts.companiaCode]}`
+    : undefined;
+  const html = await render(<RecordatorioActivacion {...opts} iconUrl={iconUrl} companiaLogoUrl={companiaLogoUrl} assetsBaseUrl={assetsBaseUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
