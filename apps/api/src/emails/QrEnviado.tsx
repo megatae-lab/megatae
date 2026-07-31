@@ -28,8 +28,8 @@ const THEMES = {
     registroUrl: "https://mibait.com/registra-tu-linea",
   },
   MOVISTAR: {
-    gradient: "linear-gradient(160deg, #0d8a3f 0%, #22c55e 100%)",
-    solid: "#14532d",
+    gradient: "linear-gradient(160deg, #3fa800 0%, #55d100 45%, #2d7a00 100%)",
+    solid: "#2d7a00",
     registroUrl: "https://www.movistar.com.mx/vinculatulinea",
   },
 } as const;
@@ -129,7 +129,6 @@ export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn,
                     <table role="presentation" style={{ borderCollapse: "collapse", marginBottom: 2 }}>
                       <tbody>
                         <tr>
-                          <td style={{ paddingRight: 6 }}>{icon("dollar", 14)}</td>
                           <td><Text style={{ color: "#ffffff", fontSize: 13, margin: 0 }}>Total pagado</Text></td>
                         </tr>
                       </tbody>
@@ -205,7 +204,7 @@ export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn,
           </table>
 
           {/* Registra tu línea */}
-          <div style={{ background: theme.solid, borderRadius: 16, padding: "20px 22px", marginTop: 24, marginBottom: 24 }}>
+          <div style={{ background: "rgba(0,0,0,0.35)", borderRadius: 16, padding: "20px 22px", marginTop: 24, marginBottom: 24 }}>
             <table role="presentation" style={{ borderCollapse: "collapse" }}>
               <tbody>
                 <tr>

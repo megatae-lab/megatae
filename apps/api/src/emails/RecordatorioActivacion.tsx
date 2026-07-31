@@ -16,20 +16,17 @@ const linkColor = "#67e8f9";
 const THEMES = {
   ATT: {
     gradient: "linear-gradient(160deg, #4a2a8c 0%, #7c3fae 50%, #a566cf 100%)",
-    cardTint: "#7c3fae",
     solid: "#3f1f7a",
     registroUrl: "https://www.att.com.mx/vinculatulinearegistro/",
   },
   BAIT: {
     gradient: "linear-gradient(160deg, #f97316 0%, #fbbf24 100%)",
-    cardTint: "#f2971f",
     solid: "#111111",
     registroUrl: "https://mibait.com/registra-tu-linea",
   },
   MOVISTAR: {
-    gradient: "linear-gradient(160deg, #0d8a3f 0%, #22c55e 100%)",
-    cardTint: "#1f8a4c",
-    solid: "#123d22",
+    gradient: "linear-gradient(160deg, #3fa800 0%, #55d100 45%, #2d7a00 100%)",
+    solid: "#2d7a00",
     registroUrl: "https://www.movistar.com.mx/vinculatulinea",
   },
 } as const;
@@ -95,7 +92,7 @@ export function RecordatorioActivacion({ nombre, compania, companiaCode, dn, ico
           </Text>
 
           {/* Card: Tu eSIM */}
-          <div style={{ background: theme.cardTint, borderRadius: 16, padding: 20, marginBottom: 20 }}>
+          <div style={{ background: "rgba(0,0,0,0.35)", borderRadius: 16, padding: 20, marginBottom: 20 }}>
             <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 700, textAlign: "center", margin: "0 0 14px" }}>
               Tu eSIM
             </Text>
@@ -111,7 +108,7 @@ export function RecordatorioActivacion({ nombre, compania, companiaCode, dn, ico
               <table role="presentation" width="100%" style={{ borderCollapse: "collapse" }}>
                 <tbody>
                   <tr>
-                    <td style={{ background: theme.solid, borderRadius: 16, padding: "16px 20px" }}>
+                    <td style={{ background: "rgba(0,0,0,0.35)", borderRadius: 16, padding: "16px 20px" }}>
                       <table role="presentation" style={{ borderCollapse: "collapse" }}>
                         <tbody>
                           <tr>
@@ -146,7 +143,7 @@ export function RecordatorioActivacion({ nombre, compania, companiaCode, dn, ico
           <table role="presentation" width="100%" style={{ borderCollapse: "collapse", marginBottom: 24 }}>
             <tbody>
               <tr>
-                <td style={{ background: theme.solid, borderRadius: 12, padding: "14px 20px" }}>
+                <td style={{ background: "rgba(0,0,0,0.35)", borderRadius: 12, padding: "14px 20px" }}>
                   <table role="presentation" width="100%" style={{ borderCollapse: "collapse" }}>
                     <tbody>
                       <tr>

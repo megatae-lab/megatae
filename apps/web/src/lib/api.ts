@@ -1,5 +1,6 @@
 import type {
   AdminUser,
+  CompaniaKey,
   CuentaBancaria,
   EstadoSolicitud,
   Plan,
@@ -36,6 +37,22 @@ async function adminRequest<T>(path: string, opts?: RequestInit): Promise<T> {
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
   return body as T;
+}
+
+async function adminRequestBlob(path: string): Promise<Blob> {
+  const res = await fetch(`${BASE}${path}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  if (res.status === 401) {
+    clearSession();
+    window.location.replace("/admin/login");
+    throw new Error("Sesión expirada");
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `HTTP ${res.status}`);
+  }
+  return res.blob();
 }
 
 const JSON_HEADERS = { "Content-Type": "application/json" };
@@ -161,6 +178,22 @@ export const api = {
         }),
       recordatorio: (id: number): Promise<{ ok: boolean }> =>
         adminRequest(`/admin/solicitudes/${id}/recordatorio`, { method: "POST" }),
+    },
+    reportes: {
+      solicitudesXlsx: (filtros: {
+        desde?: string;
+        hasta?: string;
+        compania?: CompaniaKey;
+        estado?: EstadoSolicitud;
+      }): Promise<Blob> => {
+        const params = new URLSearchParams();
+        if (filtros.desde) params.set("desde", filtros.desde);
+        if (filtros.hasta) params.set("hasta", filtros.hasta);
+        if (filtros.compania) params.set("compania", filtros.compania);
+        if (filtros.estado) params.set("estado", filtros.estado);
+        const qs = params.toString();
+        return adminRequestBlob(`/admin/reportes/solicitudes.xlsx${qs ? `?${qs}` : ""}`);
+      },
     },
   },
   solicitudes: {

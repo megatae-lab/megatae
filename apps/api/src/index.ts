@@ -13,6 +13,7 @@ import { requireAuth } from "./middleware/auth.js";
 import { adminSolicitudesRouter } from "./routes/admin/solicitudes.js";
 import { adminPlanesRouter } from "./routes/admin/planes.js";
 import { adminCuentasRouter } from "./routes/admin/cuentas.js";
+import { adminReportesRouter } from "./routes/admin/reportes.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -59,6 +60,7 @@ app.use("/api/admin", requireAuth);
 app.use("/api/admin/solicitudes", adminSolicitudesRouter);
 app.use("/api/admin/planes", adminPlanesRouter);
 app.use("/api/admin/cuentas-bancarias", adminCuentasRouter);
+app.use("/api/admin/reportes", adminReportesRouter);
 
 // Error handler global
 app.use(

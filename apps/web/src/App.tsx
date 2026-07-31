@@ -17,6 +17,7 @@ import { AdminDashboard } from "./pages/admin/Dashboard.js";
 import { AdminSolicitudes } from "./pages/admin/Solicitudes.js";
 import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
+import { AdminReportes } from "./pages/admin/Reportes.js";
 import { useEffect } from "react";
 
 function PublicLayout() {
@@ -62,6 +63,7 @@ export function App() {
           <Route path="solicitudes" element={<AdminSolicitudes />} />
           <Route path="solicitudes/:id" element={<AdminSolicitudDetalle />} />
           <Route path="configuracion" element={<AdminConfiguracion />} />
+          <Route path="reportes" element={<AdminReportes />} />
         </Route>
       </Routes>
     </>
