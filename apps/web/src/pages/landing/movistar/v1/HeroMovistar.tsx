@@ -59,7 +59,7 @@ export function Hero() {
                     </h1>
                     <div className="hidden md:flex items-start gap-4 mt-3">
                         <p className="flex-1 text-white text-lg">
-                            Activa tu eSIM Movistar al realizar una recarga de $150 recibes $200 de tiempo aire.
+                            Activa tu eSIM Movistar al realizar una <strong>recarga de $150 recibe $200 de tiempo aire.</strong>
                         </p>
                     </div>
                     <img

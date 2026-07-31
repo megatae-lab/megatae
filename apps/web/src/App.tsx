@@ -11,6 +11,7 @@ import { ComprarBait } from "./pages/landing/bait/v1/ComprarBait.js";
 import { ComprarMovistar } from "./pages/landing/movistar/v1/ComprarMovistar.js";
 import { Pago } from "./pages/compra/Pago.js";
 import { Gracias } from "./pages/compra/Gracias.js";
+import { Conocenos } from "./pages/conocenos/conocenos.js";
 import { AdminLogin } from "./pages/admin/Login.js";
 import { AdminLayout } from "./components/AdminLayout.js";
 import { AdminDashboard } from "./pages/admin/Dashboard.js";
@@ -46,6 +47,7 @@ export function App() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route index element={<Landing />} />
+          <Route path="conocenos" element={<Conocenos />} />
           <Route path="comprar" element={<Comprar />} />
           <Route path="pago" element={<Pago />} />
           <Route path="gracias" element={<Gracias />} />

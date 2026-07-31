@@ -53,7 +53,7 @@ export function Hero() {
                         ¡eSIM Bait GRATIS!
                     </h2>
                     <h1 className="text-3xl inline-block bg-[#000000] md:text-5xl lg:text-5xl px-5 mt-4 font-black text-white leading-tight rounded-sm shadow-[0_8px_20px_rgba(0,0,0,0.35)]">
-                        Navega sin limites
+                        Navega sin límites
                     </h1>
                     <h1 className="text-3xl inline-block bg-[#1e92e0] md:text-5xl lg:text-5xl px-5 mt-2 font-black text-white leading-tight rounded-sm shadow-[0_8px_20px_rgba(0,0,0,0.35)]">
                         con la mejor conexión
