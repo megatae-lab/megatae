@@ -122,6 +122,7 @@ adminSolicitudesRouter.patch("/:id/estado", async (req: AuthRequest, res, next) 
 
     if (estadoNuevo === "PAGO_RECHAZADO") {
       sendPagoRechazado({
+        folio: id,
         to: solicitud.email,
         nombre: solicitud.nombre,
         compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
@@ -226,6 +227,7 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
     ]);
 
     sendQrEnviado({
+      folio: id,
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
@@ -263,6 +265,7 @@ adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, n
     }
 
     await sendRecordatorioActivacion({
+      folio: id,
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,

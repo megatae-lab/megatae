@@ -25,8 +25,8 @@ export function isWithinBusinessHours(): boolean {
   return hour >= 9 && hour < 23;
 }
 
-export async function sendFueraDeHorario(opts: { to: string; nombre: string }) {
-  const html = await render(<FueraDeHorario nombre={opts.nombre} iconUrl={iconUrl} />);
+export async function sendFueraDeHorario(opts: { to: string; nombre: string; folio: number }) {
+  const html = await render(<FueraDeHorario folio={opts.folio} nombre={opts.nombre} iconUrl={iconUrl} />);
   await resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -36,6 +36,7 @@ export async function sendFueraDeHorario(opts: { to: string; nombre: string }) {
 }
 
 export async function sendPagoRechazado(opts: {
+  folio: number;
   to: string;
   nombre: string;
   compania: string;
@@ -51,6 +52,7 @@ export async function sendPagoRechazado(opts: {
 }
 
 export async function sendSolicitudRecibida(opts: {
+  folio: number;
   to: string;
   nombre: string;
   compania: string;
@@ -71,6 +73,7 @@ export async function sendSolicitudRecibida(opts: {
 }
 
 export async function sendQrEnviado(opts: {
+  folio: number;
   to: string;
   nombre: string;
   compania: string;
@@ -93,6 +96,7 @@ export async function sendQrEnviado(opts: {
 }
 
 export async function sendRecordatorioActivacion(opts: {
+  folio: number;
   to: string;
   nombre: string;
   compania: string;

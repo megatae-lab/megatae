@@ -1,6 +1,7 @@
 import { Html, Head, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
 
 interface Props {
+  folio: number;
   nombre: string;
   compania: string;
   companiaCode: "ATT" | "MOVISTAR" | "BAIT";
@@ -54,7 +55,7 @@ function IconBox({ icon, background }: { icon: React.ReactNode; background: stri
   );
 }
 
-export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn, qrUrl, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
+export function QrEnviado({ folio, nombre, compania, companiaCode, precio, recarga, dn, qrUrl, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
   const theme = THEMES[companiaCode];
 
   const icon = (name: string, size: number) =>
@@ -231,7 +232,9 @@ export function QrEnviado({ nombre, compania, companiaCode, precio, recarga, dn,
 
           {/* Footer */}
           <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, textAlign: "center", margin: 0 }}>
-            Megatae Global · Si no realizaste esta solicitud, ignora este mensaje.
+            Megatae Global · Folio #{folio}
+            <br />
+            Si no realizaste esta solicitud, ignora este mensaje.
           </Text>
 
         </Container>

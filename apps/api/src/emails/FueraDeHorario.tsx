@@ -1,6 +1,7 @@
 import { Html, Head, Body, Container, Text, Img, Preview } from "@react-email/components";
 
 interface Props {
+  folio: number;
   nombre: string;
   iconUrl?: string;
 }
@@ -8,7 +9,7 @@ interface Props {
 const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
 const gradient = "linear-gradient(160deg, #123a9e 0%, #1f66e6 40%, #123a9e 65%, #030a1f 100%)";
 
-export function FueraDeHorario({ nombre, iconUrl }: Props) {
+export function FueraDeHorario({ folio, nombre, iconUrl }: Props) {
   return (
     <Html lang="es">
       <Head />
@@ -84,7 +85,9 @@ export function FueraDeHorario({ nombre, iconUrl }: Props) {
 
           {/* Footer */}
           <Text style={{ color: "rgba(255, 255, 255, 0.45)", fontSize: 11, textAlign: "center", margin: 0 }}>
-            Megatae Global · megatae.mx
+            Megatae Global · Folio #{folio}
+            <br />
+            megatae.mx
           </Text>
 
         </Container>

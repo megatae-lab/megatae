@@ -1,6 +1,7 @@
 import { Html, Head, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
 
 interface Props {
+  folio: number;
   nombre: string;
   compania: string;
   companiaCode: "ATT" | "MOVISTAR" | "BAIT";
@@ -45,7 +46,7 @@ function IconBox({ icon, background }: { icon: React.ReactNode; background: stri
   );
 }
 
-export function RecordatorioActivacion({ nombre, compania, companiaCode, dn, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
+export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, dn, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
   const theme = THEMES[companiaCode];
 
   const icon = (name: string, size: number) =>
@@ -201,7 +202,9 @@ export function RecordatorioActivacion({ nombre, compania, companiaCode, dn, ico
 
           {/* Footer */}
           <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, textAlign: "center", margin: 0 }}>
-            Megatae Global · Este recordatorio es requerido por la normativa LMTR vigente en México.
+            Megatae Global · Folio #{folio}
+            <br />
+            Este recordatorio es requerido por la normativa LMTR vigente en México.
           </Text>
 
         </Container>

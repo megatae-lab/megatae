@@ -1,6 +1,7 @@
 import { Html, Head, Body, Container, Text, Img, Preview } from "@react-email/components";
 
 interface Props {
+  folio: number;
   nombre: string;
   compania: string;
   precio: string;
@@ -29,7 +30,7 @@ function IconBox({ icon }: { icon: React.ReactNode }) {
   );
 }
 
-export function SolicitudRecibida({ nombre, compania, precio, recarga, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
+export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
   const icon = (name: string, size: number) =>
     assetsBaseUrl ? (
       <Img src={`${assetsBaseUrl}/mail-${name}.png`} width={size} height={size} style={{ display: "block" }} />
@@ -170,7 +171,9 @@ export function SolicitudRecibida({ nombre, compania, precio, recarga, iconUrl, 
 
           {/* Footer */}
           <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, textAlign: "center", margin: 0 }}>
-            Megatae Global · Si no realizaste esta solicitud, ignora este mensaje.
+            Megatae Global · Folio #{folio}
+            <br />
+            Si no realizaste esta solicitud, ignora este mensaje.
           </Text>
 
         </Container>
