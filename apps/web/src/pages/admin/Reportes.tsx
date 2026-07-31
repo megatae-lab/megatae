@@ -93,14 +93,14 @@ export function AdminReportes() {
   }
 
   return (
-    <div className="p-6 max-w-2xl">
+    <div className="p-6">
       <h1 className="text-white font-black text-2xl mb-2">Reportes</h1>
       <p className="text-white/40 text-sm mb-6">
         Descarga la información de solicitudes de eSIM en Excel, con los filtros que necesites.
       </p>
 
       <div className="bg-navy-800 border border-white/10 rounded-xl p-6">
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div>
             <label className="block text-white/50 text-xs font-medium mb-1.5">Desde</label>
             <input
@@ -119,9 +119,6 @@ export function AdminReportes() {
               className={INPUT_CLASS}
             />
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-6">
           <div>
             <label className="block text-white/50 text-xs font-medium mb-1.5">Compañía</label>
             <select
