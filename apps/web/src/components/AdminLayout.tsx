@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Navigate, useNavigate } from "react-router-dom";
-import { ListTodo, Settings, LogOut } from "lucide-react";
+import { ListTodo, Settings, LogOut, FileDown } from "lucide-react";
 import { getAdminUser, clearSession } from "../lib/auth.js";
 
 export function AdminLayout() {
@@ -38,6 +38,20 @@ export function AdminLayout() {
           >
             <ListTodo className="w-4 h-4 shrink-0" strokeWidth={1.5} />
             Solicitudes
+          </NavLink>
+
+          <NavLink
+            to="/admin/reportes"
+            className={({ isActive }) =>
+              `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-brand/20 text-white"
+                  : "text-white/50 hover:text-white hover:bg-white/5"
+              }`
+            }
+          >
+            <FileDown className="w-4 h-4 shrink-0" strokeWidth={1.5} />
+            Reportes
           </NavLink>
 
           {admin.rol === "PRO" && (
