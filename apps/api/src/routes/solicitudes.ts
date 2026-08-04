@@ -82,9 +82,11 @@ solicitudesRouter.post("/", async (req, res, next) => {
 
     // Fire-and-forget: un error de correo no debe revertir la solicitud ya guardada
     sendSolicitudRecibida({
+      folio: solicitud.id,
       to: body.email,
       nombre: body.nombre,
       compania: COMPANY_DISPLAY[body.compania] ?? body.compania,
+      companiaCode: body.compania,
       precio: plan.precio.toString(),
       recarga: plan.recarga.toString(),
     }).catch((err) => {
@@ -92,7 +94,7 @@ solicitudesRouter.post("/", async (req, res, next) => {
     });
 
     if (!isWithinBusinessHours()) {
-      sendFueraDeHorario({ to: body.email, nombre: body.nombre }).catch((err) => {
+      sendFueraDeHorario({ folio: solicitud.id, to: body.email, nombre: body.nombre }).catch((err) => {
         console.error("Error enviando correo FueraDeHorario:", err);
       });
     }
