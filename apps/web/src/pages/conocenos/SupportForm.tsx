@@ -1,36 +1,27 @@
-import { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { useState } from "react";
+
 const STEPS = [
-    {
-        img: "/assets/ingresos.png",
-
-    },
-    {
-        img: "/assets/pagos.png",
-
-    },
-    {
-        img: "/assets/negocio.png",
-
-    },
+    { img: "/assets/ingresos.png" },
+    { img: "/assets/pagos.png" },
+    { img: "/assets/negocio.png" },
 ];
 
 export function SopportForm() {
-    const form = useRef<HTMLFormElement>(null);
     const [loading, setLoading] = useState(false);
+
     const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!form.current) return;
+
+        const form = e.currentTarget;
+
         try {
             setLoading(true);
-            await emailjs.sendForm(
-                import.meta.env.VITE_EMAILJS_SERVICE_ID,
-                import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-                form.current,
-                import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-            );
+
+            // Aquí irá la llamada a tu backend
+            // await fetch(...)
+
             alert("Mensaje enviado correctamente.");
-            form.current.reset();
+            form.reset();
         } catch (error) {
             console.error(error);
             alert("Ocurrió un error al enviar el mensaje.");
@@ -53,26 +44,26 @@ export function SopportForm() {
                         "radial-gradient(circle at 20% 50%, #0057ff33 0%, transparent 60%)",
                 }}
             />
-            <div className="relative mx-16 max-w-6xl min-h-75 md:min-h-87.5 lg:min-h-100 px-4 py-10 md:py-24">                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
-                {/* Imágenes */}
-                {STEPS.map((step, i) => (
-                    <div
-                        key={i}
-                        className="flex items-center justify-center"
-                    >
-                        <img
-                            src={step.img}
-                            alt=""
-                            className="w-full h-auto object-contain drop-shadow-lg"
-                        />
-                    </div>
-                ))}
-            </div>
+
+            <div className="relative mx-16 max-w-6xl min-h-75 md:min-h-87.5 lg:min-h-100 px-4 py-10 md:py-24">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+                    {STEPS.map((step, i) => (
+                        <div
+                            key={i}
+                            className="flex items-center justify-center"
+                        >
+                            <img
+                                src={step.img}
+                                alt=""
+                                className="w-full h-auto object-contain drop-shadow-lg"
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div className="bg-[url('/assets/banner-formulario.jpg')] bg-cover bg-center py-8 sm:py-10 md:py-12 px-4 overflow-hidden">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-                    {/* Imagen */}
                     <div className="flex justify-center order-2 md:order-1">
                         <img
                             src="/assets/contactanos.png"
@@ -80,15 +71,14 @@ export function SopportForm() {
                             className="w-full max-w-70 sm:max-w-sm md:max-w-md lg:max-w-full h-auto"
                         />
                     </div>
-                    {/* Formulario */}
-                    <div className="order-1 md:order-2">
 
+                    <div className="order-1 md:order-2">
                         <div className="bg-black rounded-3xl p-8 shadow-2xl max-w-xl mx-auto">
                             <h2 className="text-2xl font-bold text-white mb-8">
                                 Estamos para ayudarte
                             </h2>
+
                             <form
-                                ref={form}
                                 onSubmit={sendEmail}
                                 className="space-y-1"
                             >
@@ -104,10 +94,12 @@ export function SopportForm() {
                                         className="w-full rounded-xl bg-[#12346B] border border-blue-700 px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
+
                                 <div>
                                     <label className="block text-gray-300 mb-2">
                                         Correo electrónico
                                     </label>
+
                                     <input
                                         type="email"
                                         name="correo"
@@ -115,10 +107,12 @@ export function SopportForm() {
                                         className="w-full rounded-xl bg-[#12346B] border border-blue-700 px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
+
                                 <div>
                                     <label className="block text-gray-300 mb-2">
                                         Número telefónico
                                     </label>
+
                                     <input
                                         type="tel"
                                         name="telefono"
@@ -128,10 +122,12 @@ export function SopportForm() {
                                         className="w-full rounded-xl bg-[#12346B] border border-blue-700 px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
+
                                 <div>
                                     <label className="block text-gray-300 mb-2">
                                         Escríbenos tu mensaje
                                     </label>
+
                                     <textarea
                                         name="mensaje"
                                         rows={5}
@@ -139,6 +135,7 @@ export function SopportForm() {
                                         className="w-full rounded-xl bg-[#12346B] border border-blue-700 px-4 py-1 text-white resize-none outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
+
                                 <button
                                     type="submit"
                                     disabled={loading}
