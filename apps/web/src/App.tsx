@@ -11,7 +11,7 @@ import { ComprarBait } from "./pages/landing/bait/v1/ComprarBait.js";
 import { ComprarMovistar } from "./pages/landing/movistar/v1/ComprarMovistar.js";
 import { Pago } from "./pages/compra/Pago.js";
 import { Gracias } from "./pages/compra/Gracias.js";
-import { Conocenos } from "./pages/conocenos/conocenos.js";
+import { Conocenos } from "./pages/conocenos/Conocenos.js";
 import { AdminLogin } from "./pages/admin/Login.js";
 import { AdminLayout } from "./components/AdminLayout.js";
 import { AdminDashboard } from "./pages/admin/Dashboard.js";
@@ -19,6 +19,7 @@ import { AdminSolicitudes } from "./pages/admin/Solicitudes.js";
 import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
 import { useEffect } from "react";
+import { Registro } from "./pages/registro/Registro.js";
 
 function PublicLayout() {
   return (
@@ -48,6 +49,7 @@ export function App() {
         <Route element={<PublicLayout />}>
           <Route index element={<Landing />} />
           <Route path="conocenos" element={<Conocenos />} />
+          <Route path="registro" element={<Registro />} />
           <Route path="comprar" element={<Comprar />} />
           <Route path="pago" element={<Pago />} />
           <Route path="gracias" element={<Gracias />} />

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 export function Hero() {
 
     return (
-        <section id="hero" className="relative bg-[url('/assets/banner_megatae.png')] bg-cover bg-center overflow-hidden">
+        <section id="hero" className="relative bg-[url('/assets/banner_megatae.jpg')] bg-cover bg-center overflow-hidden">
             {/* Fondo decorativo */}
             <div className="absolute inset-0 bg-linear-to-br pointer-events-none" />
             <div className="absolute inset-0 opacity-20 pointer-events-none"
@@ -30,7 +30,7 @@ export function Hero() {
 
                 {/* Título */}
                 <motion.h1
-                    className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black text-white leading-tight max-w-5xl"
+                    className="text-3xl mb-12 sm:text-4xl md:text-5xl lg:text-5xl font-black text-white leading-tight max-w-5xl"
                     initial={{ opacity: 0, y: 80 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
