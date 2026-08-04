@@ -9,7 +9,7 @@ export function Navbar() {
 
   const NAV_LINKS = [
     { label: "Inicio", to: homePath, active: true },
-    { label: "Registra tu Línea", to: "#", active: false },
+    { label: "Registra tu Línea", to: "registro", active: true },
     { label: "Conócenos", to: "conocenos", active: true },
   ];
 

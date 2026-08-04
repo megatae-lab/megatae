@@ -20,6 +20,7 @@ import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
 import { AdminReportes } from "./pages/admin/Reportes.js";
 import { useEffect } from "react";
+import { Registro } from "./pages/registro/Registro.js";
 
 function PublicLayout() {
   return (
@@ -49,6 +50,7 @@ export function App() {
         <Route element={<PublicLayout />}>
           <Route index element={<Landing />} />
           <Route path="conocenos" element={<Conocenos />} />
+          <Route path="registro" element={<Registro />} />
           <Route path="comprar" element={<Comprar />} />
           <Route path="pago" element={<Pago />} />
           <Route path="gracias" element={<Gracias />} />
