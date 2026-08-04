@@ -11,7 +11,7 @@ export function Hero() {
             />
 
             {/* Banner superior */}
-            <CtaBanner text="Únete a Megatae" />
+            {/* <CtaBanner text="Únete a Megatae" /> */}
 
             <div className="relative mx-auto max-w-7xl px-4 py-10 md:py-7 flex flex-col items-center justify-center text-center">
 
@@ -19,7 +19,7 @@ export function Hero() {
                 <motion.img
                     src="/assets/logo.png"
                     alt="eSIM"
-                    className="w-48 sm:w-72 md:w-80 lg:w-96 h-auto object-contain drop-shadow-2xl mb-6"
+                    className="w-56 sm:w-72 md:w-80 lg:w-96 h-auto object-contain drop-shadow-2xl mb-6 mt-11"
                     initial={{ opacity: 0, y: -90, scale: 0.9 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{
@@ -49,22 +49,22 @@ export function Hero() {
             </div>
 
             {/* Banner inferior */}
-            <CtaBanner text="Lleva tu negocio al siguiente nivel" />
+            {/* <CtaBanner text="Lleva tu negocio al siguiente nivel" /> */}
         </section>
     );
 }
 
 
-function CtaBanner({ text }: { text: string }) {
-    return (
-        <div className="relative z-10 bg-brand py-2 text-center">
-            <button
-                onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
-                className="text-white text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
-            >
-                {text}
-            </button>
-        </div>
-    );
-}
+// function CtaBanner({ text }: { text: string }) {
+//     return (
+//         <div className="relative z-10 bg-brand py-2 text-center">
+//             <button
+//                 onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
+//                 className="text-white text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
+//             >
+//                 {text}
+//             </button>
+//         </div>
+//     );
+// }
 

@@ -6,6 +6,9 @@ const STEPS = [
     { img: "/assets/negocio.png" },
 ];
 
+// Reemplaza esto con tu access key de https://web3forms.com
+const WEB3FORMS_ACCESS_KEY = "55d1cd28-a935-46e5-aabb-9407186b8511";
+
 export function SopportForm() {
     const [loading, setLoading] = useState(false);
 
@@ -13,15 +16,28 @@ export function SopportForm() {
         e.preventDefault();
 
         const form = e.currentTarget;
+        const formData = new FormData(form);
+        formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+
+        // Opcional: personaliza el asunto del correo que recibirás
+        formData.append("subject", "Nuevo mensaje de contacto - Sitio web");
 
         try {
             setLoading(true);
 
-            // Aquí irá la llamada a tu backend
-            // await fetch(...)
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData,
+            });
 
-            alert("Mensaje enviado correctamente.");
-            form.reset();
+            const data = await response.json();
+
+            if (data.success) {
+                alert("Mensaje enviado correctamente.");
+                form.reset();
+            } else {
+                throw new Error(data.message || "Error desconocido");
+            }
         } catch (error) {
             console.error(error);
             alert("Ocurrió un error al enviar el mensaje.");
@@ -45,17 +61,17 @@ export function SopportForm() {
                 }}
             />
 
-            <div className="relative mx-16 max-w-6xl min-h-75 md:min-h-87.5 lg:min-h-100 px-4 py-10 md:py-24">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+            <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 md:px-8 md:py-16 lg:py-24">
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:gap-12 items-center justify-items-center">
                     {STEPS.map((step, i) => (
                         <div
                             key={i}
-                            className="flex items-center justify-center"
+                            className="flex w-full justify-center"
                         >
                             <img
                                 src={step.img}
                                 alt=""
-                                className="w-full h-auto object-contain drop-shadow-lg"
+                                className="w-full max-w-52 sm:max-w-75 md:max-w-full h-auto object-contain drop-shadow-lg"
                             />
                         </div>
                     ))}

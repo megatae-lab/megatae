@@ -52,10 +52,10 @@ export function Navbar() {
         </div>
 
         {/* CTA - solo desktop */}
-        <button className="hidden md:flex shrink-0 items-center gap-2 bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
+        {/* <button className="hidden md:flex shrink-0 items-center gap-2 bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
           <IconUser />
           Ser socio
-        </button>
+        </button> */}
 
         {/* Botón hamburgues */}
         <button
@@ -120,10 +120,10 @@ export function Navbar() {
 
           {/* Botón + redes abajo */}
           <div className="mt-auto flex flex-col gap-4">
-            <button className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
+            {/* <button className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
               <IconUser />
               Ser socio
-            </button>
+            </button> */}
 
             <div className="flex items-center justify-center gap-4 pt-5 border-t border-white/10">
               <SocialLink href="https://www.facebook.com/megataeglobal?locale=es_LA" label="Facebook" icon={<IconFacebook />} />
@@ -149,13 +149,13 @@ function SocialLink({ href, label, icon }: { href: string; label: string; icon: 
   );
 }
 
-function IconUser() {
-  return (
-    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z" />
-    </svg>
-  );
-}
+// function IconUser() {
+//   return (
+//     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+//       <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z" />
+//     </svg>
+//   );
+// }
 
 function IconFacebook() {
   return (

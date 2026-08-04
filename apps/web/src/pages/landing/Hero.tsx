@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
 import { AvisoPrivacidadModal } from "../../components/AvisoPrivacidadModal";
-
 import type { CompaniaKey, HeroFormState } from "../../types.js";
 
 const COMPANIAS: { key: CompaniaKey; label: string }[] = [
