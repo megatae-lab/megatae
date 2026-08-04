@@ -1,6 +1,6 @@
-import { Hero } from "./Hero";
-import { Carousel } from "./CustomerCarousel";
-import { SopportForm } from "./SupportForm";
+import { Hero } from "./Hero.js";
+import { Carousel } from "./CustomerCarousel.js";
+import { SopportForm } from "./SupportForm.js";
 
 export function Conocenos() {
   return (
