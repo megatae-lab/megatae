@@ -30,7 +30,7 @@ export function Carousel() {
             </div>
 
             {/* Banner inferior */}
-            <CtaBanner text="Únete a Megatae" />
+            {/* <CtaBanner text="Únete a Megatae" /> */}
             <div className="bg-[url('/assets/banner-carousel.png')] bg-cover bg-center py-8 sm:py-10 md:py-12 px-4 overflow-hidden">
                 <div className="mx-auto max-w-7xl text-center">
 
@@ -42,7 +42,7 @@ export function Carousel() {
                                         key={s.name}
                                         src={s.src}
                                         alt={s.name}
-                                        className="block h-24 w-24 sm:h-40 sm:w-40 md:h-56 md:w-56 lg:h-75 lg:w-75 object-contain"
+                                        className="block h-52 w-52 sm:h-40 sm:w-40 md:h-56 md:w-56 lg:h-75 lg:w-75 object-contain"
                                     />
                                 ))}
                             </div>
@@ -52,13 +52,13 @@ export function Carousel() {
                                         key={s.name + "-dup"}
                                         src={s.src}
                                         alt=""
-                                        className="block h-24 w-24 sm:h-40 sm:w-40 md:h-56 md:w-56 lg:h-75 lg:w-75 object-contain"
+                                        className="block h-52 w-52 sm:h-40 sm:w-40 md:h-56 md:w-56 lg:h-75 lg:w-75 object-contain"
                                     />
                                 ))}
                             </div>
                         </div>
                     </div>
-                    <h1 className="text-lg sm:text-8xl md:text-4xl lg:text-4xl font-black text-white mt-5 sm:mt-7 leading-tight px-2">
+                    <h1 className="text-lg sm:text-8xl md:text-4xl lg:text-4xl font-black text-white mt-8 sm:mt-7 leading-tight px-2">
                         Ellos ya multiplicaron sus ingresos. <span className="text-brand-light">¿Tú que esperas?</span>
                     </h1>
                 </div>
@@ -78,7 +78,7 @@ export function Carousel() {
                 </style>
             </div>
 
-            <CtaBanner text="Lleva tu negocio al siguiente nivel" />
+            {/* <CtaBanner text="Lleva tu negocio al siguiente nivel" /> */}
         </section>
     );
 }
@@ -143,7 +143,7 @@ function MapImage() {
             ref={ref}
             src="/assets/map.png"
             alt=""
-            className="w-full max-w-70 sm:max-w-sm md:max-w-md lg:max-w-lg h-auto"
+            className="w-full max-w-96 sm:max-w-sm md:max-w-md lg:max-w-7xl h-auto"
             style={{
                 opacity: visible ? 1 : 0,
                 transform: `translateY(${visible ? offset : 40}px) scale(${scale})`,
@@ -241,15 +241,15 @@ function StatCard({ value, suffix, label, delay = 0 }: StatCardProps) {
     );
 }
 
-function CtaBanner({ text }: { text: string }) {
-    return (
-        <div className="relative z-10 bg-brand py-2 text-center px-4">
-            <button
-                onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
-                className="text-white text-xs sm:text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
-            >
-                {text}
-            </button>
-        </div>
-    );
-}
+// function CtaBanner({ text }: { text: string }) {
+//     return (
+//         <div className="relative z-10 bg-brand py-2 text-center px-4">
+//             <button
+//                 onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
+//                 className="text-white text-xs sm:text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
+//             >
+//                 {text}
+//             </button>
+//         </div>
+//     );
+// }

@@ -13,13 +13,15 @@ import { Pago } from "./pages/compra/Pago.js";
 import { Gracias } from "./pages/compra/Gracias.js";
 import { Conocenos } from "./pages/conocenos/Conocenos.js";
 import { AdminLogin } from "./pages/admin/Login.js";
+import { PageLoader } from './components/PageLoader.js'
 import { AdminLayout } from "./components/AdminLayout.js";
 import { AdminDashboard } from "./pages/admin/Dashboard.js";
 import { AdminSolicitudes } from "./pages/admin/Solicitudes.js";
 import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
-import { useEffect } from "react";
 import { Registro } from "./pages/registro/Registro.js";
+import { initAnalytics, trackPageView } from "./lib/analytics.js";
+import { useEffect } from "react";
 
 function PublicLayout() {
   return (
@@ -41,10 +43,28 @@ function ScrollToTop() {
   return null;
 }
 
+// 👇 Nuevo componente: dispara trackPageView en cada cambio de ruta
+function AnalyticsTracker() {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    trackPageView(`${pathname}${search}`);
+  }, [pathname, search]);
+
+  return null;
+}
+
 export function App() {
+  // 👇 Carga los scripts de GTM/GA4 una sola vez al montar la app
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
   return (
     <>
       <ScrollToTop />
+      <AnalyticsTracker />
+      <PageLoader />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route index element={<Landing />} />

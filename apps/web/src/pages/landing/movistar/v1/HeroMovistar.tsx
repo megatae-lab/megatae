@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
+import { AvisoPrivacidadModal } from "../../../../components/AvisoPrivacidadModal";
 import type { HeroFormState } from "../../../../types";
 
 export function Hero() {
@@ -12,7 +13,7 @@ export function Hero() {
         compania: "MOVISTAR",
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
-
+    const [showAviso, setShowAviso] = useState(false);
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         const next: Record<string, string> = {};
@@ -29,108 +30,123 @@ export function Hero() {
     }
 
     return (
-        <section id="hero" className="relative bg-[url('/assets/fondo-banner-movistar.png')] bg-cover bg-center overflow-hidden">
-            {/* Fondo decorativo */}
-            <div className="absolute inset-0 bg-linear-to-br pointer-events-none" />
-            <div className="absolute inset-0 opacity-20 pointer-events-none"
-                style={{ backgroundImage: "radial-gradient(circle at 20% 50%, #0057ff33 0%, transparent 60%)" }}
+        <>
+            <AvisoPrivacidadModal
+                isOpen={showAviso}
+                onClose={() => setShowAviso(false)}
             />
-            <CtaBanner text="Solicite aquí su eSIM gratis" />
-            <img
-                src="/assets/maxi_avatar.png"
-                alt="Maxi"
-                className="hidden md:block absolute bottom-0 left-[55%] -translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
-            />
-            <img
-                src="/assets/logo-movistar.png"
-                alt="Maxi"
-                className="hidden md:block absolute top-20 left-[45%] -translate-x-1/2 lg:translate-x-[-45%] h-[10%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
-            />
-            <div className="relative mx-auto max-w-full px-4 py-3 md:py-7 flex flex-col md:flex-row items-center gap-6 md:gap-10">
-                {/* Copy izquierdo */}
-                <div className="flex-2 basis-0 md:pl-6 min-w-0 md:min-w-64 text-center md:text-left z-20 md:mr-16">
-                    <h2 className="inline-block bg-[#16c13b] text-white font-extrabold text-2xl md:text-3xl px-4 py-2 shadow-xl rounded-sm animate-floating">
-                        ¡eSIM Movistar GRATIS!
-                    </h2>
-                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
-                        Conecta tu mundo
-                        <br />
-                        <span className="text-green-500">sin fronteras</span>
-                    </h1>
-                    <div className="hidden md:flex items-start gap-4 mt-3">
-                        <p className="flex-1 text-white text-lg">
-                            Activa tu eSIM Movistar al realizar una <strong>recarga de $150 recibe $200 de tiempo aire.</strong>
-                        </p>
-                    </div>
-                    <img
-                        src="/assets/beneficios_movistar.png"
-                        alt="eSIM"
-                        className="hidden md:block mx-auto w-[80%] h-32 object-contain drop-shadow-2xl shrink-0"
-                    />
-                </div>
 
-                <div className="hidden md:block flex-1" aria-hidden="true" />
-
-                {/* Formulario derecho */}
-                <div className="w-full max-w-sm md:pr-7 shrink-0 z-20">
-                    <div className="bg-black border border-white/10 rounded-2xl p-4 md:p-6 shadow-2xl">
-                        <h2 className="text-white font-bold text-lg md:text-xl mb-4">Comienza tu experiencia</h2>
-                        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3 md:gap-4">
-                            <FormField
-                                label="Nombre Completo"
-                                type="text"
-                                value={form.nombre}
-                                onChange={(v) => { setForm((p) => ({ ...p, nombre: v })); setErrors((p) => ({ ...p, nombre: "" })); }}
-                                error={errors.nombre}
-                            />
-                            <FormField
-                                label="Correo Electrónico"
-                                type="email"
-                                value={form.email}
-                                onChange={(v) => { setForm((p) => ({ ...p, email: v })); setErrors((p) => ({ ...p, email: "" })); }}
-                                error={errors.email}
-                            />
-                            <FormField
-                                label="Número Telefónico"
-                                type="tel"
-                                maxLength={10}
-                                value={form.telefono}
-                                onChange={(v) => {
-                                    const digits = v.replace(/\D/g, "").slice(0, 10);
-                                    setForm((p) => ({ ...p, telefono: digits }));
-                                    setErrors((p) => ({ ...p, telefono: "" }));
-                                }}
-                                error={errors.telefono}
-                            />
-
-                            {/* Selector de compañía */}
-                            <div>
-                                <p className="text-sm mb-2 text-white/70">
-                                    Compañía telefónica
-                                </p>
-
-                                <div className="w-full py-2.5 rounded-xl border border-brand bg-brand/20 text-white text-center font-semibold">
-                                    Movistar
-                                </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-lg transition-colors mt-1"
-                            >
-                                Continuar
-                            </button>
-                            <p className="text-white/40 text-xs text-center">
-                                No compartimos tu información con terceros.
+            <section id="hero" className="relative bg-[url('/assets/fondo-banner-movistar.png')] bg-cover bg-center overflow-hidden">
+                {/* Fondo decorativo */}
+                <div className="absolute inset-0 bg-linear-to-br pointer-events-none" />
+                <div className="absolute inset-0 opacity-20 pointer-events-none"
+                    style={{ backgroundImage: "radial-gradient(circle at 20% 50%, #0057ff33 0%, transparent 60%)" }}
+                />
+                <CtaBanner text="Solicite aquí su eSIM gratis" />
+                <img
+                    src="/assets/maxi_avatar.png"
+                    alt="Maxi"
+                    className="hidden md:block absolute bottom-0 left-[55%] -translate-x-1/2 lg:translate-x-[-45%] h-[110%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
+                />
+                <img
+                    src="/assets/logo-movistar.png"
+                    alt="Maxi"
+                    className="hidden md:block absolute top-20 left-[45%] -translate-x-1/2 lg:translate-x-[-45%] h-[10%] max-h-125 w-auto object-contain drop-shadow-2xl pointer-events-none select-none z-10"
+                />
+                <div className="relative mx-auto max-w-full px-4 py-3 md:py-7 flex flex-col md:flex-row items-center gap-6 md:gap-10">
+                    {/* Copy izquierdo */}
+                    <div className="flex-2 basis-0 md:pl-6 min-w-0 md:min-w-64 text-center md:text-left z-20 md:mr-16">
+                        <h2 className="inline-block bg-[#16c13b] text-white font-extrabold text-2xl md:text-3xl px-4 py-2 shadow-xl rounded-sm animate-floating">
+                            ¡eSIM Movistar GRATIS!
+                        </h2>
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
+                            Conecta tu mundo
+                            <br />
+                            <span className="text-green-500">sin fronteras</span>
+                        </h1>
+                        <div className="hidden md:flex items-start gap-4 mt-3">
+                            <p className="flex-1 text-white text-lg">
+                                Activa tu eSIM Movistar al realizar una <strong>recarga de $150 recibe $200 de tiempo aire.</strong>
                             </p>
-                        </form>
+                        </div>
+                        <img
+                            src="/assets/beneficios_movistar.png"
+                            alt="eSIM"
+                            className="hidden md:block mx-auto w-[80%] h-32 object-contain drop-shadow-2xl shrink-0"
+                        />
+                    </div>
+
+                    <div className="hidden md:block flex-1" aria-hidden="true" />
+
+                    {/* Formulario derecho */}
+                    <div className="w-full max-w-sm md:pr-7 shrink-0 z-20">
+                        <div className="bg-black border border-white/10 rounded-2xl p-4 md:p-6 shadow-2xl">
+                            <h2 className="text-white font-bold text-lg md:text-xl mb-4">Comienza tu experiencia</h2>
+                            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3 md:gap-4">
+                                <FormField
+                                    label="Nombre Completo"
+                                    type="text"
+                                    value={form.nombre}
+                                    onChange={(v) => { setForm((p) => ({ ...p, nombre: v })); setErrors((p) => ({ ...p, nombre: "" })); }}
+                                    error={errors.nombre}
+                                />
+                                <FormField
+                                    label="Correo Electrónico"
+                                    type="email"
+                                    value={form.email}
+                                    onChange={(v) => { setForm((p) => ({ ...p, email: v })); setErrors((p) => ({ ...p, email: "" })); }}
+                                    error={errors.email}
+                                />
+                                <FormField
+                                    label="Número Telefónico"
+                                    type="tel"
+                                    maxLength={10}
+                                    value={form.telefono}
+                                    onChange={(v) => {
+                                        const digits = v.replace(/\D/g, "").slice(0, 10);
+                                        setForm((p) => ({ ...p, telefono: digits }));
+                                        setErrors((p) => ({ ...p, telefono: "" }));
+                                    }}
+                                    error={errors.telefono}
+                                />
+
+                                {/* Selector de compañía */}
+                                <div>
+                                    <p className="text-sm mb-2 text-white/70">
+                                        Compañía telefónica
+                                    </p>
+
+                                    <div className="w-full py-2.5 rounded-xl border border-brand bg-brand/20 text-white text-center font-semibold">
+                                        Movistar
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-lg transition-colors mt-1"
+                                >
+                                    Continuar
+                                </button>
+                                <p className="text-white/40 text-xs text-center">
+                                    No compartimos tu información con terceros.
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAviso(true)}
+                                    className="text-white/40 text-xs text-center hover:cursor-pointer"
+                                >
+                                    Ver aviso de privacidad
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Banner inferior */}
-            <CtaBanner text="Activa tu eSIM con tu compañía favorita" />
-        </section>
+                {/* Banner inferior */}
+                <CtaBanner text="Activa tu eSIM con tu compañía favorita" />
+            </section>
+        </>
+
     );
 }
 

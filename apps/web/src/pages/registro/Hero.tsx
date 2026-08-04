@@ -22,12 +22,7 @@ const operadores: Operador[] = [
         logoSrc: "/assets/att-sim.png",
         url: "https://www.att.com.mx/vinculatulinea/",
     },
-    {
-        nombre: "Telcel",
-        logoSrc: "/assets/telcel-sim.png",
-        url: "https://www.mitelcel.com/mitelcel/registro",
-    },
-];
+   ];
 
 export function Hero() {
     return (
@@ -99,7 +94,7 @@ export function Hero() {
                         </h3>
                         <div className="mt-3 hidden h-px w-full bg-white/30 sm:block" />
 
-                        <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                        <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
                             {operadores.map((op) => (
                                 <a
                                     key={op.nombre}

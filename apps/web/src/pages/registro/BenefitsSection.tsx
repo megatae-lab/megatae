@@ -50,7 +50,9 @@ export function BenefitsSection() {
             de forma rápida y segura.
           </p>
 
-          <button className="mt-7 w-full rounded-lg bg-sky-400 px-6 py-3 text-sm font-semibold text-[#0a1e42] transition hover:bg-sky-300 sm:w-auto">
+          <button
+            onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
+            className="mt-7 w-full rounded-lg bg-sky-400 px-6 py-3 text-sm font-semibold text-[#0a1e42] transition hover:bg-sky-300 sm:w-auto">
             Regístrate ahora
           </button>
         </div>
