@@ -23,7 +23,6 @@ import { AdminReportes } from "./pages/admin/Reportes.js";
 import { useEffect } from "react";
 import { Registro } from "./pages/registro/Registro.js";
 import { initAnalytics, trackPageView } from "./lib/analytics.js";
-import { useEffect } from "react";
 
 function PublicLayout() {
   return (
