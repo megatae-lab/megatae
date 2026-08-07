@@ -47,14 +47,14 @@ export function FueraDeHorario({ folio, nombre, iconUrl, assetsBaseUrl }: Props)
               <tr>
                 <td style={{ verticalAlign: "middle", paddingRight: 16 }}>
                   {iconUrl ? (
-                    <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block" }} />
+                    <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block", filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.35))" }} />
                   ) : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 700, textAlign: "right", margin: 0, lineHeight: "24px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 700, textAlign: "right", margin: 0, lineHeight: "24px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Global
                   </Text>
                 </td>

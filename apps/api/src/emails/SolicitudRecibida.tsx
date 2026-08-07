@@ -74,13 +74,13 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
             <tbody>
               <tr>
                 <td style={{ verticalAlign: "middle", paddingRight: 16 }}>
-                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block" }} /> : null}
+                  {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block", filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.35))" }} /> : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "34px" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 700, textAlign: "right", margin: 0, lineHeight: "24px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Global
                   </Text>
                 </td>
@@ -99,7 +99,7 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
               <tbody>
                 <tr>
                   <td valign="top" style={{ paddingRight: 14 }}>
-                    {icon("user-check-v2", 26)}
+                    {icon("user-check-v2", 36)}
                   </td>
                   <td valign="top">
                     <Text style={{ color: "#ffffff", fontSize: 15, fontWeight: 800, margin: "0 0 4px" }}>
@@ -127,7 +127,7 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
                 <tbody>
                   <tr>
                     <td valign="top" style={{ paddingRight: 12 }}>
-                      {iconWH("esim-nfc", 20, 24)}
+                      {iconWH("esim-nfc", 28, 34)}
                     </td>
                     <td valign="top">
                       <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 700, lineHeight: "18px", margin: "0 0 4px" }}>
@@ -155,15 +155,15 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
           <table role="presentation" width="100%" style={{ borderCollapse: "collapse", marginBottom: 8 }}>
             <tbody>
               <tr>
-                <td width={56} align="center"><IconBox icon={iconWH("check-v2", 22, 20)} /></td>
+                <td width={56} align="center"><IconBox icon={iconWH("check-v2", 30, 27)} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={iconWH("mail-v2", 24, 18)} /></td>
+                <td width={56} align="center"><IconBox icon={iconWH("mail-v2", 32, 24)} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={iconWH("usar", 21, 22)} /></td>
+                <td width={56} align="center"><IconBox icon={iconWH("usar", 30, 31)} /></td>
               </tr>
               <tr>
                 <td width={56} align="center" style={{ paddingTop: 10 }}>

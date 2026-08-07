@@ -24,10 +24,10 @@ export function PagoRechazado({ folio, nombre, compania, observacion, logoUrl }:
           {/* Header */}
           <div style={{ background: "#022554", padding: "24px 36px" }}>
             {logoUrl ? (
-              <Img src={logoUrl} alt="MEGATAE" height={44} style={{ display: "block" }} />
+              <Img src={logoUrl} alt="MEGATAE" height={44} style={{ display: "block", filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.35))" }} />
             ) : (
               <>
-                <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px", margin: 0 }}>
+                <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px", margin: 0, textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                   MEGATAE
                 </Text>
                 <Text style={{ color: "#7aa8e8", fontSize: 12, margin: "4px 0 0", letterSpacing: "1.5px", textTransform: "uppercase" }}>
