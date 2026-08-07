@@ -1,4 +1,4 @@
-import { Html, Head, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
+import { Html, Head, Font, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
 
 interface Props {
   folio: number;
@@ -11,7 +11,7 @@ interface Props {
   assetsBaseUrl?: string;
 }
 
-const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const font = "'Baloo 2', Helvetica, Arial, sans-serif";
 const linkColor = "#67e8f9";
 
 const THEMES = {
@@ -34,10 +34,10 @@ const THEMES = {
 
 function IconBox({ icon, background }: { icon: React.ReactNode; background: string }) {
   return (
-    <table role="presentation" width={56} style={{ borderCollapse: "collapse" }}>
+    <table role="presentation" width={50} style={{ borderCollapse: "collapse" }}>
       <tbody>
         <tr>
-          <td width={56} height={56} align="center" valign="middle" style={{ background, borderRadius: 14 }}>
+          <td width={50} height={50} align="center" valign="middle" style={{ background, borderRadius: 13 }}>
             {icon}
           </td>
         </tr>
@@ -54,9 +54,35 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
       <Img src={`${assetsBaseUrl}/mail-${name}.png`} width={size} height={size} style={{ display: "block" }} />
     ) : null;
 
+  const iconWH = (name: string, width: number, height: number) =>
+    assetsBaseUrl ? (
+      <Img src={`${assetsBaseUrl}/mail-${name}.png`} width={width} height={height} style={{ display: "block" }} />
+    ) : null;
+
   return (
     <Html lang="es">
-      <Head />
+      <Head>
+        <Font
+          fontFamily="Baloo 2"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yppo_lc.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Baloo 2"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={800}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdiayppo_lc.woff2",
+            format: "woff2",
+          }}
+        />
+      </Head>
       <Preview>Registra tu línea {compania} — los beneficios de tu eSIM te esperan</Preview>
       <Body style={{ fontFamily: font, background: theme.gradient, backgroundColor: theme.solid, margin: 0, padding: "48px 16px" }}>
         <Container style={{ maxWidth: 480, margin: "0 auto" }}>
@@ -114,11 +140,11 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
                         <tbody>
                           <tr>
                             <td style={{ paddingRight: 12 }}>
-                              <table role="presentation" width={40} style={{ borderCollapse: "collapse" }}>
+                              <table role="presentation" width={50} style={{ borderCollapse: "collapse" }}>
                                 <tbody>
                                   <tr>
-                                    <td width={40} height={40} align="center" valign="middle" style={{ background: "rgba(255,255,255,0.18)", borderRadius: 20 }}>
-                                      {icon("phone", 18)}
+                                    <td width={50} height={50} align="center" valign="middle" style={{ background: "rgba(255,255,255,0.18)", borderRadius: 25 }}>
+                                      {icon("phone", 26)}
                                     </td>
                                   </tr>
                                 </tbody>
@@ -174,19 +200,19 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
             <tbody>
               <tr>
                 <td width="33%" align="center">
-                  <IconBox icon={icon("wifi-phone", 22)} background={theme.solid} />
+                  <IconBox icon={iconWH("wifi-phone-v2", 19, 31)} background={theme.solid} />
                   <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: "10px 0 0" }}>
                     Conéctate donde quieras
                   </Text>
                 </td>
                 <td width="33%" align="center">
-                  <IconBox icon={icon("shield-lock", 22)} background={theme.solid} />
+                  <IconBox icon={iconWH("shield-lock", 28, 33)} background={theme.solid} />
                   <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: "10px 0 0" }}>
                     Red confiable y segura
                   </Text>
                 </td>
                 <td width="33%" align="center">
-                  <IconBox icon={icon("gauge", 22)} background={theme.solid} />
+                  <IconBox icon={iconWH("gauge-v2", 28, 27)} background={theme.solid} />
                   <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: "10px 0 0" }}>
                     Navegación rápida
                   </Text>

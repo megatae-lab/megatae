@@ -1,4 +1,4 @@
-import { Html, Head, Body, Container, Text, Img, Preview } from "@react-email/components";
+import { Html, Head, Font, Body, Container, Text, Img, Preview } from "@react-email/components";
 
 interface Props {
   folio: number;
@@ -11,7 +11,7 @@ interface Props {
   assetsBaseUrl?: string;
 }
 
-const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const font = "'Baloo 2', Helvetica, Arial, sans-serif";
 const gradient = "linear-gradient(160deg, #123a9e 0%, #1f66e6 40%, #123a9e 65%, #030a1f 100%)";
 const accent = "#2563eb";
 const highlight = "#7db2ff";
@@ -36,9 +36,35 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
       <Img src={`${assetsBaseUrl}/mail-${name}.png`} width={size} height={size} style={{ display: "block" }} />
     ) : null;
 
+  const iconWH = (name: string, width: number, height: number) =>
+    assetsBaseUrl ? (
+      <Img src={`${assetsBaseUrl}/mail-${name}.png`} width={width} height={height} style={{ display: "block" }} />
+    ) : null;
+
   return (
     <Html lang="es">
-      <Head />
+      <Head>
+        <Font
+          fontFamily="Baloo 2"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yppo_lc.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Baloo 2"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={800}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdiayppo_lc.woff2",
+            format: "woff2",
+          }}
+        />
+      </Head>
       <Preview>Recibimos tu solicitud de eSIM {compania} — estamos validando tu pago</Preview>
       <Body style={{ fontFamily: font, background: gradient, backgroundColor: "#0a1230", margin: 0, padding: "48px 16px" }}>
         <Container style={{ maxWidth: 480, margin: "0 auto" }}>
@@ -73,7 +99,7 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
               <tbody>
                 <tr>
                   <td valign="top" style={{ paddingRight: 14 }}>
-                    {icon("user-check", 26)}
+                    {icon("user-check-v2", 26)}
                   </td>
                   <td valign="top">
                     <Text style={{ color: "#ffffff", fontSize: 15, fontWeight: 800, margin: "0 0 4px" }}>
@@ -91,7 +117,7 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
           {/* Card: resumen de compra */}
           <div style={{ border: "1px solid #ffffff", borderRadius: 20, padding: 20, marginBottom: 24, textAlign: "center" }}>
             {companiaLogoUrl ? (
-              <Img src={companiaLogoUrl} alt={compania} height={32} style={{ display: "block", margin: "4px auto 20px" }} />
+              <Img src={companiaLogoUrl} alt={compania} height={48} style={{ display: "block", margin: "4px auto 20px" }} />
             ) : (
               <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: "0 0 20px" }}>{compania}</Text>
             )}
@@ -101,7 +127,7 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
                 <tbody>
                   <tr>
                     <td valign="top" style={{ paddingRight: 12 }}>
-                      {icon("smartphone-nfc", 22)}
+                      {iconWH("esim-nfc", 20, 24)}
                     </td>
                     <td valign="top">
                       <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 700, lineHeight: "18px", margin: "0 0 4px" }}>
@@ -129,15 +155,15 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
           <table role="presentation" width="100%" style={{ borderCollapse: "collapse", marginBottom: 8 }}>
             <tbody>
               <tr>
-                <td width={56} align="center"><IconBox icon={icon("check", 22)} /></td>
+                <td width={56} align="center"><IconBox icon={iconWH("check-v2", 22, 20)} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={icon("mail", 22)} /></td>
+                <td width={56} align="center"><IconBox icon={iconWH("mail-v2", 24, 18)} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={icon("smartphone-nfc", 22)} /></td>
+                <td width={56} align="center"><IconBox icon={iconWH("usar", 21, 22)} /></td>
               </tr>
               <tr>
                 <td width={56} align="center" style={{ paddingTop: 10 }}>

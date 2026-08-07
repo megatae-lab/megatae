@@ -1,4 +1,4 @@
-import { Html, Head, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
+import { Html, Head, Font, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
 
 interface Props {
   folio: number;
@@ -14,23 +14,26 @@ interface Props {
   assetsBaseUrl?: string;
 }
 
-const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const font = "'Baloo 2', Helvetica, Arial, sans-serif";
 const linkColor = "#67e8f9";
 
 const THEMES = {
   ATT: {
     gradient: "linear-gradient(160deg, #4a2a8c 0%, #7c3fae 50%, #a566cf 100%)",
     solid: "#5b2a99",
+    accent: "#8e01ff",
     registroUrl: "https://www.att.com.mx/vinculatulinearegistro/",
   },
   BAIT: {
     gradient: "linear-gradient(160deg, #f97316 0%, #fbbf24 100%)",
     solid: "#111111",
+    accent: "#d0a800",
     registroUrl: "https://mibait.com/registra-tu-linea",
   },
   MOVISTAR: {
     gradient: "linear-gradient(160deg, #3fa800 0%, #55d100 45%, #2d7a00 100%)",
     solid: "#2d7a00",
+    accent: "#009e00",
     registroUrl: "https://www.movistar.com.mx/vinculatulinea",
   },
 } as const;
@@ -55,7 +58,7 @@ function IconBox({ icon, background }: { icon: React.ReactNode; background: stri
   );
 }
 
-export function QrEnviado({ folio, nombre, compania, companiaCode, precio, recarga, dn, qrUrl, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
+export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, qrUrl, iconUrl, companiaLogoUrl, assetsBaseUrl }: Props) {
   const theme = THEMES[companiaCode];
 
   const icon = (name: string, size: number) =>
@@ -63,9 +66,37 @@ export function QrEnviado({ folio, nombre, compania, companiaCode, precio, recar
       <Img src={`${assetsBaseUrl}/mail-${name}.png`} width={size} height={size} style={{ display: "block" }} />
     ) : null;
 
+  const iconWH = (name: string, width: number, height: number) =>
+    assetsBaseUrl ? (
+      <Img src={`${assetsBaseUrl}/mail-${name}.png`} width={width} height={height} style={{ display: "block" }} />
+    ) : null;
+
+  const guideUrl = assetsBaseUrl ? `${assetsBaseUrl}/como-instalar-tu-esim.pdf` : undefined;
+
   return (
     <Html lang="es">
-      <Head />
+      <Head>
+        <Font
+          fontFamily="Baloo 2"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yppo_lc.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Baloo 2"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={800}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdiayppo_lc.woff2",
+            format: "woff2",
+          }}
+        />
+      </Head>
       <Preview>Tu eSIM {compania} está lista — escanea el QR para activarla</Preview>
       <Body style={{ fontFamily: font, background: theme.gradient, backgroundColor: theme.solid, margin: 0, padding: "48px 16px" }}>
         <Container style={{ maxWidth: 480, margin: "0 auto" }}>
@@ -94,7 +125,7 @@ export function QrEnviado({ folio, nombre, compania, companiaCode, precio, recar
             ¡Tu eSIM {compania} está lista!
           </Text>
           <Text style={{ color: "#ffffff", fontSize: 15, textAlign: "center", margin: "0 0 24px" }}>
-            Hola {nombre}, escanea el código QR para activar tu línea
+            Escanea el código QR para activar tu línea
           </Text>
 
           {/* Card */}
@@ -130,6 +161,7 @@ export function QrEnviado({ folio, nombre, compania, companiaCode, precio, recar
                     <table role="presentation" style={{ borderCollapse: "collapse", marginBottom: 2 }}>
                       <tbody>
                         <tr>
+                          <td style={{ paddingRight: 8 }}>{icon("smartphone-nfc", 16)}</td>
                           <td><Text style={{ color: "#ffffff", fontSize: 13, margin: 0 }}>Total pagado</Text></td>
                         </tr>
                       </tbody>
@@ -164,6 +196,13 @@ export function QrEnviado({ folio, nombre, compania, companiaCode, precio, recar
             </table>
           </div>
 
+          {/* Aviso Wi-Fi */}
+          <div style={{ background: "#ffffff", borderRadius: 10, padding: "10px 14px", maxWidth: 220, marginTop: -30, marginBottom: 24 }}>
+            <Text style={{ color: "#111111", fontSize: 12, fontWeight: 700, lineHeight: "16px", margin: 0 }}>
+              Conéctate a una red Wi-Fi estable <span style={{ color: theme.accent }}>antes de instalar</span> tu eSIM.
+            </Text>
+          </div>
+
           {/* Cómo activarla */}
           <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, textAlign: "center", margin: "0 0 20px" }}>
             ¿Cómo activarla?
@@ -172,37 +211,67 @@ export function QrEnviado({ folio, nombre, compania, companiaCode, precio, recar
           <table role="presentation" width="100%" style={{ borderCollapse: "collapse", marginBottom: 8 }}>
             <tbody>
               <tr>
-                <td width={56} align="center"><IconBox icon={icon("scan", 22)} background={theme.solid} /></td>
+                <td width={48} align="center"><IconBox icon={iconWH("configurar", 22, 22)} background={theme.solid} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={icon("settings", 22)} background={theme.solid} /></td>
+                <td width={48} align="center"><IconBox icon={iconWH("escanear", 15, 22)} background={theme.solid} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={icon("check", 22)} background={theme.solid} /></td>
+                <td width={48} align="center"><IconBox icon={iconWH("confirmar", 22, 22)} background={theme.solid} /></td>
+                <td valign="middle">
+                  <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
+                </td>
+                <td width={48} align="center"><IconBox icon={iconWH("usar", 21, 22)} background={theme.solid} /></td>
               </tr>
               <tr>
-                <td width={56} align="center" style={{ paddingTop: 10 }}>
-                  <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: 0 }}>
-                    Escanea este código QR
+                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                  <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
+                    Abre la configuración de tu teléfono
                   </Text>
                 </td>
                 <td />
-                <td width={56} align="center" style={{ paddingTop: 10 }}>
-                  <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: 0 }}>
-                    Sigue los pasos en tu dispositivo
+                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                  <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
+                    Escanea el código QR
                   </Text>
                 </td>
                 <td />
-                <td width={56} align="center" style={{ paddingTop: 10 }}>
-                  <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: 0 }}>
-                    Activa tu línea y disfrutar
+                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                  <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
+                    Confirma la instalación
+                  </Text>
+                </td>
+                <td />
+                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                  <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
+                    Activa y comienza a usarla
                   </Text>
                 </td>
               </tr>
             </tbody>
           </table>
+
+          {/* Guía de instalación */}
+          {guideUrl ? (
+            <Link href={guideUrl} style={{ display: "block", textDecoration: "none" }}>
+              <table role="presentation" width="100%" style={{ borderCollapse: "collapse", marginBottom: 24 }}>
+                <tbody>
+                  <tr>
+                    <td style={{ background: "#2563eb", borderRadius: 10, padding: "12px 16px", textAlign: "center" }}>
+                      <Text style={{ color: "#ffffff", fontSize: 13, margin: "0 0 2px" }}>
+                        ¿Necesitas ayuda para instalar tu eSIM?
+                      </Text>
+                      <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 800, margin: 0 }}>
+                        Abrir guía de instalación
+                      </Text>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </Link>
+          ) : null}
 
           {/* Registra tu línea */}
           <div style={{ background: "rgba(0,0,0,0.35)", borderRadius: 16, padding: "20px 22px", marginTop: 24, marginBottom: 24 }}>
