@@ -1,4 +1,4 @@
-import { Html, Head, Body, Container, Text, Preview, Img } from "@react-email/components";
+import { Html, Head, Font, Body, Container, Text, Preview, Img } from "@react-email/components";
 
 interface Props {
   folio: number;
@@ -8,12 +8,43 @@ interface Props {
   logoUrl?: string;
 }
 
-const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const font = "'Poppins', Helvetica, Arial, sans-serif";
 
 export function PagoRechazado({ folio, nombre, compania, observacion, logoUrl }: Props) {
   return (
     <Html lang="es">
-      <Head />
+      <Head>
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={400}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={800}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDD4Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+      </Head>
       <Preview>Tu comprobante de pago para eSIM {compania} no pudo ser verificado</Preview>
       <Body style={{ fontFamily: font, backgroundColor: "#eef2f7", margin: 0, padding: "40px 16px" }}>
         <Container style={{ maxWidth: 560, margin: "0 auto" }}>

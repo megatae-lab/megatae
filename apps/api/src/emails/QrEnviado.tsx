@@ -14,7 +14,7 @@ interface Props {
   assetsBaseUrl?: string;
 }
 
-const font = "'Baloo 2', Helvetica, Arial, sans-serif";
+const font = "'Poppins', Helvetica, Arial, sans-serif";
 const linkColor = "#67e8f9";
 
 const THEMES = {
@@ -31,7 +31,7 @@ const THEMES = {
     registroUrl: "https://mibait.com/registra-tu-linea",
   },
   MOVISTAR: {
-    gradient: "linear-gradient(160deg, #3fa800 0%, #55d100 45%, #2d7a00 100%)",
+    gradient: "linear-gradient(180deg, #00d200 0%, #008800 100%)",
     solid: "#2d7a00",
     accent: "#009e00",
     registroUrl: "https://www.movistar.com.mx/vinculatulinea",
@@ -40,12 +40,12 @@ const THEMES = {
 
 function IconBox({ icon, background }: { icon: React.ReactNode; background: string }) {
   return (
-    <table role="presentation" width={56} style={{ borderCollapse: "collapse" }}>
+    <table role="presentation" width={58} style={{ borderCollapse: "collapse" }}>
       <tbody>
         <tr>
           <td
-            width={56}
-            height={56}
+            width={58}
+            height={52}
             align="center"
             valign="middle"
             style={{ background, borderRadius: 14 }}
@@ -77,22 +77,52 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
     <Html lang="es">
       <Head>
         <Font
-          fontFamily="Baloo 2"
+          fontFamily="Poppins"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
-          fontWeight={700}
+          fontWeight={400}
           fontStyle="normal"
           webFont={{
-            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yppo_lc.woff2",
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2",
             format: "woff2",
           }}
         />
         <Font
-          fontFamily="Baloo 2"
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={500}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={600}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           fontWeight={800}
           fontStyle="normal"
           webFont={{
-            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdiayppo_lc.woff2",
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDD4Z1xlFQ.woff2",
             format: "woff2",
           }}
         />
@@ -109,10 +139,10 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
                   {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block", filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.35))" }} /> : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, margin: 0, lineHeight: "28px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 700, textAlign: "right", margin: 0, lineHeight: "24px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 500, textAlign: "right", letterSpacing: "0.5px", margin: 0, lineHeight: "18px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Global
                   </Text>
                 </td>
@@ -121,7 +151,7 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
           </table>
 
           {/* Headline */}
-          <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, textAlign: "center", margin: "0 0 6px" }}>
+          <Text style={{ color: "#ffffff", fontSize: 30, fontWeight: 700, textAlign: "center", lineHeight: "35px", margin: "0 0 6px" }}>
             ¡Tu eSIM {compania} está lista!
           </Text>
           <Text style={{ color: "#ffffff", fontSize: 15, textAlign: "center", margin: "0 0 24px" }}>
@@ -133,20 +163,20 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
             <table role="presentation" width="100%" style={{ borderCollapse: "collapse" }}>
               <tbody>
                 <tr>
-                  <td width="52%" valign="top">
+                  <td width="52%" valign="top" align="center" style={{ textAlign: "center" }}>
                     {companiaLogoUrl ? (
-                      <Img src={companiaLogoUrl} alt={compania} height={36} style={{ display: "block", marginBottom: 18 }} />
+                      <Img src={companiaLogoUrl} alt={compania} height={45} style={{ display: "block", margin: "0 auto 18px" }} />
                     ) : (
                       <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: "0 0 18px" }}>{compania}</Text>
                     )}
 
-                    <div style={{ border: "1px solid #ffffff", borderRadius: 10, padding: "10px 14px", marginBottom: 14 }}>
+                    <div style={{ border: "1px solid #ffffff", borderRadius: 10, padding: "10px 14px", marginBottom: 14, textAlign: "center" }}>
                       <Text style={{ color: "#ffffff", fontSize: 12, margin: "0 0 6px" }}>Tu número asignado es:</Text>
                       {dn ? (
-                        <table role="presentation" style={{ borderCollapse: "collapse" }}>
+                        <table role="presentation" align="center" style={{ borderCollapse: "collapse" }}>
                           <tbody>
                             <tr>
-                              <td style={{ paddingRight: 8 }}>{icon("phone", 16)}</td>
+                              <td style={{ paddingRight: 8 }}>{icon("phone", 28)}</td>
                               <td>
                                 <Text style={{ color: "#ffffff", fontSize: 16, fontWeight: 700, margin: 0, letterSpacing: 1 }}>
                                   {dn}
@@ -158,18 +188,18 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
                       ) : null}
                     </div>
 
-                    <table role="presentation" style={{ borderCollapse: "collapse", marginBottom: 2 }}>
+                    <table role="presentation" align="center" style={{ borderCollapse: "collapse", marginBottom: 2 }}>
                       <tbody>
                         <tr>
-                          <td style={{ paddingRight: 8 }}>{icon("smartphone-nfc", 16)}</td>
+                          <td style={{ paddingRight: 8 }}>{iconWH("smartphone-nfc", 22, 26)}</td>
                           <td><Text style={{ color: "#ffffff", fontSize: 13, margin: 0 }}>Total pagado</Text></td>
                         </tr>
                       </tbody>
                     </table>
-                    <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: "0 0 4px" }}>
+                    <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, textAlign: "center", margin: "0 0 4px" }}>
                       ${precio} MXN
                     </Text>
-                    <Text style={{ color: "rgba(255,255,255,0.8)", fontSize: 12, margin: 0 }}>
+                    <Text style={{ color: "rgba(255,255,255,0.8)", fontSize: 12, textAlign: "center", margin: 0 }}>
                       Incluye recarga de ${recarga} MXN
                     </Text>
                   </td>
@@ -211,40 +241,40 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
           <table role="presentation" width="100%" style={{ borderCollapse: "collapse", marginBottom: 8 }}>
             <tbody>
               <tr>
-                <td width={48} align="center"><IconBox icon={iconWH("configurar", 22, 22)} background={theme.solid} /></td>
+                <td width={60} align="center"><IconBox icon={iconWH("configurar", 36, 36)} background={theme.solid} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={48} align="center"><IconBox icon={iconWH("escanear", 15, 22)} background={theme.solid} /></td>
+                <td width={60} align="center"><IconBox icon={iconWH("escanear", 22, 34)} background={theme.solid} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={48} align="center"><IconBox icon={iconWH("confirmar", 22, 22)} background={theme.solid} /></td>
+                <td width={60} align="center"><IconBox icon={iconWH("confirmar", 31, 32)} background={theme.solid} /></td>
                 <td valign="middle">
                   <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={48} align="center"><IconBox icon={iconWH("usar", 21, 22)} background={theme.solid} /></td>
+                <td width={60} align="center"><IconBox icon={iconWH("usar", 34, 36)} background={theme.solid} /></td>
               </tr>
               <tr>
-                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                <td width={60} align="center" style={{ paddingTop: 10 }}>
                   <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
                     Abre la configuración de tu teléfono
                   </Text>
                 </td>
                 <td />
-                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                <td width={60} align="center" style={{ paddingTop: 10 }}>
                   <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
                     Escanea el código QR
                   </Text>
                 </td>
                 <td />
-                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                <td width={60} align="center" style={{ paddingTop: 10 }}>
                   <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
                     Confirma la instalación
                   </Text>
                 </td>
                 <td />
-                <td width={48} align="center" style={{ paddingTop: 10 }}>
+                <td width={60} align="center" style={{ paddingTop: 10 }}>
                   <Text style={{ color: "#ffffff", fontSize: 11, fontWeight: 700, textAlign: "center", lineHeight: "15px", margin: 0 }}>
                     Activa y comienza a usarla
                   </Text>
@@ -279,7 +309,7 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
               <tbody>
                 <tr>
                   <td valign="top" style={{ paddingRight: 14 }}>
-                    {icon("id-card", 26)}
+                    {icon("id-card", 40)}
                   </td>
                   <td valign="top">
                     <Text style={{ color: "#ffffff", fontSize: 15, fontWeight: 800, margin: "0 0 6px" }}>

@@ -11,7 +11,7 @@ interface Props {
   assetsBaseUrl?: string;
 }
 
-const font = "'Baloo 2', Helvetica, Arial, sans-serif";
+const font = "'Poppins', Helvetica, Arial, sans-serif";
 const linkColor = "#67e8f9";
 
 const THEMES = {
@@ -26,7 +26,7 @@ const THEMES = {
     registroUrl: "https://mibait.com/registra-tu-linea",
   },
   MOVISTAR: {
-    gradient: "linear-gradient(160deg, #3fa800 0%, #55d100 45%, #2d7a00 100%)",
+    gradient: "linear-gradient(180deg, #00d200 0%, #008800 100%)",
     solid: "#2d7a00",
     registroUrl: "https://www.movistar.com.mx/vinculatulinea",
   },
@@ -63,22 +63,52 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
     <Html lang="es">
       <Head>
         <Font
-          fontFamily="Baloo 2"
+          fontFamily="Poppins"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
-          fontWeight={700}
+          fontWeight={400}
           fontStyle="normal"
           webFont={{
-            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yppo_lc.woff2",
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2",
             format: "woff2",
           }}
         />
         <Font
-          fontFamily="Baloo 2"
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={500}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={600}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           fontWeight={800}
           fontStyle="normal"
           webFont={{
-            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdiayppo_lc.woff2",
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDD4Z1xlFQ.woff2",
             format: "woff2",
           }}
         />
@@ -95,10 +125,10 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
                   {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block", filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.35))" }} /> : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, margin: 0, lineHeight: "28px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 700, textAlign: "right", margin: 0, lineHeight: "24px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 500, textAlign: "right", letterSpacing: "0.5px", margin: 0, lineHeight: "18px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Global
                   </Text>
                 </td>
@@ -107,7 +137,7 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
           </table>
 
           {/* Headline */}
-          <Text style={{ color: "#ffffff", fontSize: 28, fontWeight: 800, textAlign: "center", margin: "0 0 16px" }}>
+          <Text style={{ color: "#ffffff", fontSize: 30, fontWeight: 700, textAlign: "center", lineHeight: "35px", margin: "0 0 16px" }}>
             ¡Registra tu línea ya!
           </Text>
           <Text style={{ color: "#ffffff", fontSize: 14, textAlign: "center", lineHeight: "21px", margin: "0 0 12px" }}>
@@ -124,7 +154,7 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
               Tu eSIM
             </Text>
             {companiaLogoUrl ? (
-              <Img src={companiaLogoUrl} alt={compania} height={36} style={{ display: "block", margin: "0 auto 20px" }} />
+              <Img src={companiaLogoUrl} alt={compania} height={42} style={{ display: "block", margin: "0 auto 20px" }} />
             ) : (
               <Text style={{ color: "#ffffff", fontSize: 20, fontWeight: 800, textAlign: "center", margin: "0 0 20px" }}>
                 {compania}
@@ -135,8 +165,8 @@ export function RecordatorioActivacion({ folio, nombre, compania, companiaCode, 
               <table role="presentation" width="100%" style={{ borderCollapse: "collapse" }}>
                 <tbody>
                   <tr>
-                    <td style={{ background: "rgba(0,0,0,0.35)", borderRadius: 16, padding: "16px 20px" }}>
-                      <table role="presentation" style={{ borderCollapse: "collapse" }}>
+                    <td style={{ background: "rgba(0,0,0,0.35)", borderRadius: 16, padding: "16px 20px", textAlign: "center" }}>
+                      <table role="presentation" align="center" style={{ borderCollapse: "collapse" }}>
                         <tbody>
                           <tr>
                             <td style={{ paddingRight: 12 }}>

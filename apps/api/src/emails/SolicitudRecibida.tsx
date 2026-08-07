@@ -11,17 +11,21 @@ interface Props {
   assetsBaseUrl?: string;
 }
 
-const font = "'Baloo 2', Helvetica, Arial, sans-serif";
+const font = "'Poppins', Helvetica, Arial, sans-serif";
 const gradient = "linear-gradient(160deg, #123a9e 0%, #1f66e6 40%, #123a9e 65%, #030a1f 100%)";
-const accent = "#2563eb";
+const noise =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+const accent = "#3b82f6";
 const highlight = "#7db2ff";
+const cardBg = "rgba(255,255,255,0.08)";
+const cardBorder = "1px solid rgba(255,255,255,0.25)";
 
 function IconBox({ icon }: { icon: React.ReactNode }) {
   return (
-    <table role="presentation" width={56} style={{ borderCollapse: "collapse" }}>
+    <table role="presentation" width={44} style={{ borderCollapse: "collapse" }}>
       <tbody>
         <tr>
-          <td width={56} height={56} align="center" valign="middle" style={{ background: accent, borderRadius: 14 }}>
+          <td width={44} height={44} align="center" valign="middle" style={{ background: accent, borderRadius: 22 }}>
             {icon}
           </td>
         </tr>
@@ -45,28 +49,58 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
     <Html lang="es">
       <Head>
         <Font
-          fontFamily="Baloo 2"
+          fontFamily="Poppins"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
-          fontWeight={700}
+          fontWeight={400}
           fontStyle="normal"
           webFont={{
-            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yppo_lc.woff2",
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2",
             format: "woff2",
           }}
         />
         <Font
-          fontFamily="Baloo 2"
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={500}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={600}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
           fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
           fontWeight={800}
           fontStyle="normal"
           webFont={{
-            url: "https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdiayppo_lc.woff2",
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDD4Z1xlFQ.woff2",
             format: "woff2",
           }}
         />
       </Head>
       <Preview>Recibimos tu solicitud de eSIM {compania} — estamos validando tu pago</Preview>
-      <Body style={{ fontFamily: font, background: gradient, backgroundColor: "#0a1230", margin: 0, padding: "48px 16px" }}>
+      <Body style={{ fontFamily: font, background: `${noise}, ${gradient}`, backgroundColor: "#0a1230", margin: 0, padding: "48px 16px" }}>
         <Container style={{ maxWidth: 480, margin: "0 auto" }}>
 
           {/* Logo */}
@@ -77,10 +111,10 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
                   {iconUrl ? <Img src={iconUrl} alt="Megatae" width={64} style={{ display: "block", filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.35))" }} /> : null}
                 </td>
                 <td style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#ffffff", fontSize: 32, fontWeight: 800, margin: 0, lineHeight: "32px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, margin: 0, lineHeight: "28px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Megatae
                   </Text>
-                  <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 700, textAlign: "right", margin: 0, lineHeight: "24px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
+                  <Text style={{ color: "#ffffff", fontSize: 14, fontWeight: 500, textAlign: "right", letterSpacing: "0.5px", margin: 0, lineHeight: "18px", textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                     Global
                   </Text>
                 </td>
@@ -89,12 +123,12 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
           </table>
 
           {/* Headline */}
-          <Text style={{ color: "#ffffff", fontSize: 26, fontWeight: 800, textAlign: "center", margin: "0 0 24px" }}>
+          <Text style={{ color: "#ffffff", fontSize: 30, fontWeight: 700, textAlign: "center", lineHeight: "35px", margin: "0 0 24px" }}>
             ¡Felicidades por tu compra!
           </Text>
 
           {/* Card: verificando pago */}
-          <div style={{ backgroundColor: "rgba(4, 12, 36, 0.55)", borderRadius: 16, padding: 20, marginBottom: 20 }}>
+          <div style={{ background: cardBg, border: cardBorder, borderRadius: 16, padding: 20, marginBottom: 20 }}>
             <table role="presentation" style={{ borderCollapse: "collapse" }}>
               <tbody>
                 <tr>
@@ -115,14 +149,14 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
           </div>
 
           {/* Card: resumen de compra */}
-          <div style={{ border: "1px solid #ffffff", borderRadius: 20, padding: 20, marginBottom: 24, textAlign: "center" }}>
+          <div style={{ background: cardBg, border: cardBorder, borderRadius: 20, padding: 20, marginBottom: 24, textAlign: "center" }}>
             {companiaLogoUrl ? (
               <Img src={companiaLogoUrl} alt={compania} height={48} style={{ display: "block", margin: "4px auto 20px" }} />
             ) : (
               <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: 800, margin: "0 0 20px" }}>{compania}</Text>
             )}
 
-            <div style={{ border: "1px solid #ffffff", borderRadius: 14, padding: "16px 18px", textAlign: "left" }}>
+            <div style={{ background: cardBg, border: cardBorder, borderRadius: 14, padding: "16px 18px", textAlign: "left" }}>
               <table role="presentation" style={{ borderCollapse: "collapse" }}>
                 <tbody>
                   <tr>
@@ -155,32 +189,32 @@ export function SolicitudRecibida({ folio, nombre, compania, precio, recarga, ic
           <table role="presentation" width="100%" style={{ borderCollapse: "collapse", marginBottom: 8 }}>
             <tbody>
               <tr>
-                <td width={56} align="center"><IconBox icon={iconWH("check-v2", 30, 27)} /></td>
+                <td width="28%" align="center"><IconBox icon={iconWH("check-v2", 22, 20)} /></td>
                 <td valign="middle">
-                  <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
+                  <div style={{ borderTop: "1px dashed rgba(255,255,255,0.4)", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={iconWH("mail-v2", 32, 24)} /></td>
+                <td width="28%" align="center"><IconBox icon={iconWH("mail-v2", 24, 18)} /></td>
                 <td valign="middle">
-                  <div style={{ borderTop: "2px dashed #ffffff", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
+                  <div style={{ borderTop: "1px dashed rgba(255,255,255,0.4)", fontSize: 0, lineHeight: 0 }}>&nbsp;</div>
                 </td>
-                <td width={56} align="center"><IconBox icon={iconWH("usar", 30, 31)} /></td>
+                <td width="28%" align="center"><IconBox icon={icon("phone", 22)} /></td>
               </tr>
               <tr>
-                <td width={56} align="center" style={{ paddingTop: 10 }}>
+                <td width="28%" align="center" style={{ paddingTop: 10 }}>
                   <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: 0 }}>
-                    1.- Validamos tu pago
+                    1. Validamos tu pago
                   </Text>
                 </td>
                 <td />
-                <td width={56} align="center" style={{ paddingTop: 10 }}>
+                <td width="28%" align="center" style={{ paddingTop: 10 }}>
                   <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: 0 }}>
-                    2.- Te enviamos tu eSIM y la activas
+                    2. Enviamos tu eSIM
                   </Text>
                 </td>
                 <td />
-                <td width={56} align="center" style={{ paddingTop: 10 }}>
+                <td width="28%" align="center" style={{ paddingTop: 10 }}>
                   <Text style={{ color: "#ffffff", fontSize: 12, fontWeight: 700, textAlign: "center", lineHeight: "16px", margin: 0 }}>
-                    3.- Registras tu línea
+                    3. Registras tu línea
                   </Text>
                 </td>
               </tr>
