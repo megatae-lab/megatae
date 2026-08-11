@@ -1,18 +1,50 @@
-import { Html, Head, Body, Container, Text, Preview, Img } from "@react-email/components";
+import { Html, Head, Font, Body, Container, Text, Preview, Img } from "@react-email/components";
 
 interface Props {
+  folio: number;
   nombre: string;
   compania: string;
   observacion: string;
   logoUrl?: string;
 }
 
-const font = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const font = "'Poppins', Helvetica, Arial, sans-serif";
 
-export function PagoRechazado({ nombre, compania, observacion, logoUrl }: Props) {
+export function PagoRechazado({ folio, nombre, compania, observacion, logoUrl }: Props) {
   return (
     <Html lang="es">
-      <Head />
+      <Head>
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={400}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={700}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+        <Font
+          fontFamily="Poppins"
+          fallbackFontFamily={["Helvetica", "Arial", "sans-serif"]}
+          fontWeight={800}
+          fontStyle="normal"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDD4Z1xlFQ.woff2",
+            format: "woff2",
+          }}
+        />
+      </Head>
       <Preview>Tu comprobante de pago para eSIM {compania} no pudo ser verificado</Preview>
       <Body style={{ fontFamily: font, backgroundColor: "#eef2f7", margin: 0, padding: "40px 16px" }}>
         <Container style={{ maxWidth: 560, margin: "0 auto" }}>
@@ -23,10 +55,10 @@ export function PagoRechazado({ nombre, compania, observacion, logoUrl }: Props)
           {/* Header */}
           <div style={{ background: "#022554", padding: "24px 36px" }}>
             {logoUrl ? (
-              <Img src={logoUrl} alt="MEGATAE" height={44} style={{ display: "block" }} />
+              <Img src={logoUrl} alt="MEGATAE" height={44} style={{ display: "block", filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.35))" }} />
             ) : (
               <>
-                <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px", margin: 0 }}>
+                <Text style={{ color: "#ffffff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px", margin: 0, textShadow: "0 3px 4px rgba(0,0,0,0.35)" }}>
                   MEGATAE
                 </Text>
                 <Text style={{ color: "#7aa8e8", fontSize: 12, margin: "4px 0 0", letterSpacing: "1.5px", textTransform: "uppercase" }}>
@@ -77,7 +109,9 @@ export function PagoRechazado({ nombre, compania, observacion, logoUrl }: Props)
           {/* Footer */}
           <div style={{ background: "#f7fafc", borderTop: "1px solid #e2e8f0", borderRadius: "0 0 8px 8px", padding: "20px 36px" }}>
             <Text style={{ color: "#a0aec0", fontSize: 11, margin: 0, lineHeight: "18px" }}>
-              Megatae Global · Si no realizaste esta solicitud, ignora este mensaje.
+              Megatae Global · Folio #{folio}
+              <br />
+              Si no realizaste esta solicitud, ignora este mensaje.
             </Text>
           </div>
 

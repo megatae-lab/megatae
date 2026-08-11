@@ -5,7 +5,7 @@ export interface AdminPayload {
   id: number;
   email: string;
   nombre: string;
-  rol: "PRO" | "GENERAL";
+  rol: "PRO" | "GENERAL" | "RECARGAS";
 }
 
 export interface AuthRequest extends Request {
