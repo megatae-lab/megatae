@@ -44,8 +44,9 @@ export function Hero() {
 
       <section
         id="hero"
-        className="relative bg-[url('/assets/fondo-banner-1.png')] bg-cover bg-center overflow-hidden"
-      >      {/* Fondo decorativo */}
+        className="hidden md:block relative bg-[url('/assets/fondo-banner-1.png')] bg-cover bg-center overflow-hidden"
+      >
+        {/* Fondo decorativo */}
         <div className="absolute inset-0 bg-linear-to-br pointer-events-none" />
         <div className="absolute inset-0 opacity-20 pointer-events-none"
           style={{ backgroundImage: "radial-gradient(circle at 20% 50%, #0057ff33 0%, transparent 60%)" }}
