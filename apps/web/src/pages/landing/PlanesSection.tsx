@@ -1,4 +1,3 @@
-import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/api.js";
@@ -20,7 +19,8 @@ const COMPANY_CFG: Record<
     accentColor: "#55d100",
     strongColor: "#55d100",
     textColor: "#55d100",
-    headerGradient: "linear-gradient(135deg, #55d100 0%, #3FA800 100%)", esimIcon: "/assets/esim-azul.png",
+    headerGradient: "linear-gradient(135deg, #55d100 0%, #3FA800 100%)",
+    esimIcon: "/assets/esim-azul.png",
     textDark: false,
   },
   ATT: {
@@ -55,9 +55,9 @@ export function PlanesSection() {
   const planes = [...rawPlanes].sort((a, b) => (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0));
 
   return (
-    <section id="planes" className="bg-navy-900 py-16">
+    <section id="planes" className="bg-navy-900 py-3">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-2 px-4">
+        <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-0.5 px-4">
           Elige tu compañía favorita
         </h2>
         <p className="text-center text-white/60 mb-10 px-4">
@@ -77,65 +77,16 @@ export function PlanesSection() {
               ))}
             </div>
 
-            {/* Mobile — carousel horizontal */}
-            <MobileCarousel planes={planes} />
+            {/* Mobile — grid 2 columnas, mismo contenido que desktop */}
+            <div className="md:hidden px-3 grid grid-cols-2 gap-3">
+              {planes.map((plan) => (
+                <PlanCard key={plan.id} plan={plan} />
+              ))}
+            </div>
           </>
         )}
       </div>
     </section>
-  );
-}
-
-function MobileCarousel({ planes }: { planes: Plan[] }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-
-  function onScroll() {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardWidth = el.scrollWidth / planes.length;
-    const index = Math.round(el.scrollLeft / cardWidth);
-    setActive(Math.min(Math.max(index, 0), planes.length - 1));
-  }
-
-  function scrollTo(i: number) {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardWidth = el.scrollWidth / planes.length;
-    el.scrollTo({ left: cardWidth * i, behavior: "smooth" });
-  }
-
-  return (
-    <div className="md:hidden">
-      <div
-        ref={scrollRef}
-        onScroll={onScroll}
-        className="overflow-x-auto scrollbar-hide pb-4"
-        style={{ scrollSnapType: "x mandatory" }}
-      >
-        <div className="flex gap-4" style={{ width: "max-content", padding: "0 14vw" }}>
-          {planes.map((plan) => (
-            <div key={plan.id} style={{ width: "72vw", maxWidth: 280, scrollSnapAlign: "center" }} className="pt-6">
-              <PlanCard plan={plan} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bullets */}
-      <div className="flex justify-center gap-2 mt-2">
-        {planes.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => scrollTo(i)}
-            className={`rounded-full transition-all duration-300 ${i === active
-                ? "w-5 h-2 bg-brand"
-                : "w-2 h-2 bg-white/25"
-              }`}
-          />
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -175,7 +126,7 @@ function PlanCard({ plan }: { plan: Plan }) {
           </div>
 
           {/* eSIM chip */}
-          <div className="flex flex-col items-center pt-3 pb-2 px-4">
+          <div className="hidden md:flex flex-col items-center pt-3 pb-2 px-4">
             <img
               src={cfg.esimIcon}
               alt="eSIM"

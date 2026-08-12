@@ -44,7 +44,6 @@ function ScrollToTop() {
   return null;
 }
 
-// 👇 Nuevo componente: dispara trackPageView en cada cambio de ruta
 function AnalyticsTracker() {
   const { pathname, search } = useLocation();
 
@@ -56,7 +55,6 @@ function AnalyticsTracker() {
 }
 
 export function App() {
-  // 👇 Carga los scripts de GTM/GA4 una sola vez al montar la app
   useEffect(() => {
     initAnalytics();
   }, []);

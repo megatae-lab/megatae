@@ -2,7 +2,7 @@ const STEPS = [
   {
     img: "/assets/icon-identificador.png",
     title: "Paso 1",
-    desc: "Identifica  tu compañia.",
+    desc: "Identifica  tu compañía.",
   },
   {
     img: "/assets/icon-oficial.png",
@@ -31,7 +31,7 @@ export function HowToSection() {
     <section className="bg-navy-900 py-12 px-4">
       <div className="mx-auto max-w-4xl text-center">
         <h2 className="text-white font-black text-2xl md:text-4xl mb-1">
-          ¿Como registrar tu Línea?
+          ¿Cómo registrar tu Línea?
         </h2>
         <p className="text-white/60 text-sm mb-10">Sigue estos 5 sencillos pasos</p>
 
