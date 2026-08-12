@@ -187,7 +187,6 @@ export function AdminSolicitudDetalle() {
           {/* Datos cliente */}
           <Card title="Datos del cliente">
             <Row label="Correo" value={s.email} />
-            <Row label="Teléfono" value={s.telefono} />
             <Row label="Compañía" value={COMPANIA_LABEL[s.compania] ?? s.compania} />
             {s.lada && <Row label="LADA" value={s.lada} />}
             {s.estadoMx && <Row label="Estado" value={s.estadoMx} />}
