@@ -107,7 +107,6 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 
   const [nombre, setNombre] = useState(initial.nombre ?? "");
   const [email, setEmail] = useState(initial.email ?? "");
-  const [telefono, setTelefono] = useState(initial.telefono ?? "");
   const [compania, setCompania] = useState<CompaniaKey | "">(
     fixedCompania ?? initial.compania ?? ""
   );
@@ -150,8 +149,6 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
     if (compania === "ATT" && !ladaKey) next.lada = "Selecciona el estado donde quieres tu número.";
     if (!nombre.trim()) next.nombre = "Escribe tu nombre completo.";
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = "Escribe un correo válido (ej. nombre@correo.com).";
-    if (!telefono.trim() || telefono.length < 10) next.telefono = "Escribe tu número a 10 dígitos.";
-
     if (Object.keys(next).length > 0) {
       setErrors(next);
       return;
@@ -164,7 +161,6 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
       state: {
         nombre,
         email,
-        telefono,
         compania,
         planId,
         lada: ladaEntry?.lada,
@@ -289,18 +285,9 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                 theme={theme} error={errors.nombre}
               />
               <Field
-                label="Correo electrónico" type="email" value={email}
+                label="Correo electrónico (Tu código QR llegará a este correo electrónico)" type="email" value={email}
                 onChange={(v) => { setEmail(v); setErrors((p) => ({ ...p, email: "" })); }}
                 theme={theme} error={errors.email}
-              />
-              <Field
-                label="Número de teléfono" type="tel" value={telefono}
-                onChange={(v) => {
-                  const digits = v.replace(/\D/g, "").slice(0, 10);
-                  setTelefono(digits);
-                  setErrors((p) => ({ ...p, telefono: "" }));
-                }}
-                theme={theme} maxLength={10} error={errors.telefono}
               />
             </div>
 

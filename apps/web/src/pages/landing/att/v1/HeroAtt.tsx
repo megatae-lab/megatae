@@ -9,7 +9,6 @@ export function Hero() {
     const [form, setForm] = useState<HeroFormState>({
         nombre: "",
         email: "",
-        telefono: "",
         compania: "ATT",
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -20,8 +19,6 @@ export function Hero() {
         if (!form.nombre.trim()) next.nombre = "Escribe tu nombre completo.";
         if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
             next.email = "Escribe un correo válido (ej. nombre@correo.com).";
-        if (!form.telefono || form.telefono.length < 10)
-            next.telefono = "Escribe tu número a 10 dígitos.";
         if (!form.compania) next.compania = "Elige una compañía para continuar.";
 
         if (Object.keys(next).length > 0) { setErrors(next); return; }
@@ -99,19 +96,7 @@ export function Hero() {
                                     onChange={(v) => { setForm((p) => ({ ...p, email: v })); setErrors((p) => ({ ...p, email: "" })); }}
                                     error={errors.email}
                                 />
-                                <FormField
-                                    label="Número Telefónico"
-                                    type="tel"
-                                    maxLength={10}
-                                    value={form.telefono}
-                                    onChange={(v) => {
-                                        const digits = v.replace(/\D/g, "").slice(0, 10);
-                                        setForm((p) => ({ ...p, telefono: digits }));
-                                        setErrors((p) => ({ ...p, telefono: "" }));
-                                    }}
-                                    error={errors.telefono}
-                                />
-
+                             
                                 {/* Selector de compañía */}
                                 <div>
                                     <p className="text-sm mb-2 text-white/70">
