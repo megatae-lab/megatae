@@ -71,7 +71,6 @@ const THEME: Record<CompaniaKey, CompaniaTheme> = {
 interface PagoState {
   nombre: string;
   email: string;
-  telefono: string;
   compania: CompaniaKey;
   planId: number;
   lada?: string;
@@ -155,7 +154,6 @@ export function Pago() {
       const result = await api.solicitudes.create({
         nombre: state.nombre,
         email: state.email,
-        telefono: state.telefono,
         compania: state.compania,
         planId: state.planId,
         lada: state.lada,
@@ -190,7 +188,6 @@ export function Pago() {
               state: {
                 nombre: state.nombre,
                 email: state.email,
-                telefono: state.telefono,
                 compania: state.compania,
                 planId: state.planId,
               },

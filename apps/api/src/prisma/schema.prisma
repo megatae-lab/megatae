@@ -48,7 +48,7 @@ model Solicitud {
   id          Int             @id @default(autoincrement())
   nombre      String
   email       String
-  telefono    String
+  telefono    String?
   ciudad      String?
   estadoMx    String?
   lada        String?

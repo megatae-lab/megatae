@@ -40,7 +40,6 @@ const solicitudSchema = z
   .object({
     nombre: z.string().min(2, "Nombre muy corto"),
     email: z.string().email("Correo inválido"),
-    telefono: z.string().min(10, "Teléfono inválido"),
     ciudad: z.string().optional(),
     estadoMx: z.string().optional(),
     lada: z.string().optional(),
@@ -70,7 +69,6 @@ solicitudesRouter.post("/", async (req, res, next) => {
       data: {
         nombre: body.nombre,
         email: body.email,
-        telefono: body.telefono,
         ciudad: body.ciudad,
         estadoMx: body.estadoMx,
         lada,

@@ -23,7 +23,6 @@ export interface Plan {
 export interface HeroFormState {
   nombre: string;
   email: string;
-  telefono: string;
   compania: CompaniaKey | "";
 }
 
@@ -68,7 +67,7 @@ export interface HistorialItem {
 }
 
 export interface SolicitudDetalle extends SolicitudResumen {
-  telefono: string;
+  telefono: string | null;
   ciudad: string | null;
   estadoMx: string | null;
   lada: string | null;
@@ -82,7 +81,6 @@ export interface SolicitudDetalle extends SolicitudResumen {
 export interface SolicitudPayload {
   nombre: string;
   email: string;
-  telefono: string;
   ciudad?: string;
   estadoMx?: string;
   lada?: string;
