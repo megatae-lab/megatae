@@ -171,7 +171,7 @@ function PlanCard({ plan }: { plan: Plan }) {
               className="w-full mt-auto font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90 active:scale-95"
               style={{ backgroundColor: cfg.strongColor, color: cfg.textDark ? "#000" : "#fff" }}
             >
-              Me interesa
+              Comprar eSIM
             </button>
           </div>
         </div>
