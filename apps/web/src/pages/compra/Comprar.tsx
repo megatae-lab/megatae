@@ -177,6 +177,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   return (
     <div className="min-h-screen bg-navy-900 py-10 px-4">
       <div className="mx-auto max-w-lg">
+
         <Stepper steps={STEPS} current={0} theme={stepperTheme} />
 
         <div
