@@ -177,15 +177,6 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   return (
     <div className="min-h-screen bg-navy-900 py-10 px-4">
       <div className="mx-auto max-w-lg">
-        <button
-          type="button"
-          onClick={() => navigate("/")}
-          className="flex items-center gap-1.5 text-white/40 hover:text-white text-sm transition-colors mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver al inicio
-        </button>
-
         <Stepper steps={STEPS} current={0} theme={stepperTheme} />
 
         <div
