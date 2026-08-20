@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, ChevronDown, Search, X, ArrowLeft } from "lucide-react";
+import { AlertCircle, ChevronDown, Search, X } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { Stepper, type StepperTheme } from "../../components/Stepper.js";
 import type { CompaniaKey, HeroFormState, Plan } from "../../types.js";
