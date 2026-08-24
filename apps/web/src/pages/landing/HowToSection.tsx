@@ -47,10 +47,7 @@ export function HowToSection() {
         <div className="mt-10">
           <a
             href="#hero"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
-            }}
+            onClick={() => (window.location.href = "/comprar")}
             className="inline-block border-2 border-brand text-white hover:bg-brand font-bold px-8 py-3 rounded-full text-sm transition-colors"
           >
             Me interesa

@@ -29,7 +29,7 @@ export function Carousel() {
                 </div>
             </div>
 
-            {/* Banner inferior */}
+            {/* Banner superior */}
             {/* <CtaBanner text="Únete a Megatae" /> */}
             <div className="bg-[url('/assets/banner-carousel.png')] bg-cover bg-center py-8 sm:py-10 md:py-12 px-4 overflow-hidden">
                 <div className="mx-auto max-w-7xl text-center">
@@ -78,6 +78,7 @@ export function Carousel() {
                 </style>
             </div>
 
+            {/* Banner superior */}
             {/* <CtaBanner text="Lleva tu negocio al siguiente nivel" /> */}
         </section>
     );
@@ -241,12 +242,13 @@ function StatCard({ value, suffix, label, delay = 0 }: StatCardProps) {
     );
 }
 
+
 // function CtaBanner({ text }: { text: string }) {
 //     return (
-//         <div className="relative z-10 bg-brand py-2 text-center px-4">
+//         <div className="bg-brand py-2 text-center">
 //             <button
-//                 onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
-//                 className="text-white text-xs sm:text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
+//                 onClick={() => (window.location.href = "/vende-recargas")}
+//                 className="text-white text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
 //             >
 //                 {text}
 //             </button>

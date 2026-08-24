@@ -23,12 +23,12 @@ export function Landing() {
   return (
     <>
       <Hero />
+      <DevicesSection />
       <PlanesSection />
       <LeadMagnet />
       <HowToSection />
       <BenefitsSection />
       <CtaBanner />
-      <DevicesSection />
       <StoresSection />
     </>
   );

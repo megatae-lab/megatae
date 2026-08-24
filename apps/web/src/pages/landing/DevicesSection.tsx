@@ -130,6 +130,8 @@ const DEVICE_LIST: BrandGroup[] = [
   },
 ];
 
+const TARGET_SECTION_ID = "planes";
+
 export function DevicesSection() {
   const [query, setQuery] = useState("");
   const [searched, setSearched] = useState("");
@@ -151,10 +153,28 @@ export function DevicesSection() {
 
   function handleSearch() {
     setSearched(query);
+
+    const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const hasMatch =
+      words.length > 0 &&
+      DEVICE_LIST.some((g) =>
+        g.models.some((m) => {
+          const text = (g.brand + " " + m).toLowerCase();
+          return words.every((w) => text.includes(w));
+        })
+      );
+
+    if (hasMatch) {
+      setTimeout(() => {
+        document
+          .getElementById(TARGET_SECTION_ID)
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 900);
+    }
   }
 
   return (
-    <section className="bg-navy-900 py-16 px-4" id="dispositivos">
+    <section className="bg-navy-700 py-6 px-4" id="dispositivos">
       <div className="mx-auto max-w-xl">
         <h2 className="text-white font-black text-3xl text-center mb-2">
           ¿Tu dispositivo es compatible?
