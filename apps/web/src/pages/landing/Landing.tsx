@@ -10,9 +10,7 @@ function CtaBanner() {
   return (
     <div className="bg-brand py-2 text-center">
       <button
-        onClick={() =>
-          document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })
-        }
+        onClick={() => (window.location.href = "/comprar")}
         className="text-white text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
       >
         Activa tu eSIM con tu compañía favorita
@@ -25,12 +23,12 @@ export function Landing() {
   return (
     <>
       <Hero />
+      <DevicesSection />
       <PlanesSection />
       <LeadMagnet />
       <HowToSection />
       <BenefitsSection />
       <CtaBanner />
-      <DevicesSection />
       <StoresSection />
     </>
   );

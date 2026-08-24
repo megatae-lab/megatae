@@ -210,9 +210,8 @@ export function Pago() {
               .filter(Boolean);
             return (
               <div
-                className={`border rounded-2xl px-5 py-4 transition-colors ${
-                  theme ? `${theme.panelBorder} bg-navy-800` : "border-white/10 bg-navy-800"
-                }`}
+                className={`border rounded-2xl px-5 py-4 transition-colors ${theme ? `${theme.panelBorder} bg-navy-800` : "border-white/10 bg-navy-800"
+                  }`}
               >
                 <div className="flex items-center justify-between gap-4 mb-3">
                   <div>
@@ -265,6 +264,28 @@ export function Pago() {
               Transfiere exactamente el monto de tu plan a una de estas cuentas.
             </p>
 
+            {import.meta.env.VITE_MERCADOPAGO_URL && (
+              <>
+                <a
+                  href={import.meta.env.VITE_MERCADOPAGO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2.5 bg-[#009ee3] hover:bg-[#007bbf] transition-colors rounded-xl px-4 py-3.5"
+                >
+                  <CreditCard className="w-5 h-5 text-white shrink-0" strokeWidth={2} />
+                  <span className="text-white font-bold text-sm">Pagar con Mercado Pago</span>
+                </a>
+                <br />
+                <p className="text-white/30 text-xs text-center -mt-1">
+                  Abre Mercado Pago en una nueva pestaña. Vuelve aquí para adjuntar tu comprobante.
+                </p>
+                <div className="flex items-center gap-3 my-1">
+                  <div className="flex-1 h-px bg-white/10" />
+                  <span className="text-white/30 text-xs uppercase tracking-widest">o</span>
+                  <div className="flex-1 h-px bg-white/10" />
+                </div>
+              </>
+            )}
             {cuentas.length === 0 ? (
               <p className="text-white/40 text-sm">Cargando cuentas…</p>
             ) : (
@@ -300,27 +321,6 @@ export function Pago() {
                   </div>
                 ))}
 
-                {import.meta.env.VITE_MERCADOPAGO_URL && (
-                  <>
-                    <div className="flex items-center gap-3 my-1">
-                      <div className="flex-1 h-px bg-white/10" />
-                      <span className="text-white/30 text-xs uppercase tracking-widest">o</span>
-                      <div className="flex-1 h-px bg-white/10" />
-                    </div>
-                    <a
-                      href={import.meta.env.VITE_MERCADOPAGO_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2.5 bg-[#009ee3] hover:bg-[#007bbf] transition-colors rounded-xl px-4 py-3.5"
-                    >
-                      <CreditCard className="w-5 h-5 text-white shrink-0" strokeWidth={2} />
-                      <span className="text-white font-bold text-sm">Pagar con Mercado Pago</span>
-                    </a>
-                    <p className="text-white/30 text-xs text-center -mt-1">
-                      Abre Mercado Pago en una nueva pestaña. Vuelve aquí para adjuntar tu comprobante.
-                    </p>
-                  </>
-                )}
               </div>
             )}
           </div>

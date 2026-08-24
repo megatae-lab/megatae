@@ -12,6 +12,7 @@ import { ComprarMovistar } from "./pages/landing/movistar/v1/ComprarMovistar.js"
 import { Pago } from "./pages/compra/Pago.js";
 import { Gracias } from "./pages/compra/Gracias.js";
 import { Conocenos } from "./pages/conocenos/Conocenos.js";
+import { VendeRecargas } from "./pages/recargas/Recargas.js";
 import { AdminLogin } from "./pages/admin/Login.js";
 import { PageLoader } from './components/PageLoader.js'
 import { AdminLayout } from "./components/AdminLayout.js";
@@ -21,7 +22,7 @@ import { AdminSolicitudDetalle } from "./pages/admin/SolicitudDetalle.js";
 import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
 import { AdminReportes } from "./pages/admin/Reportes.js";
 import { useEffect } from "react";
-import { Registro } from "./pages/registro/Registro.js";
+import { Registro } from "./pages/vinculacion/Registro.js";
 import { initAnalytics, trackPageView } from "./lib/analytics.js";
 
 function PublicLayout() {
@@ -68,6 +69,7 @@ export function App() {
         <Route element={<PublicLayout />}>
           <Route index element={<Landing />} />
           <Route path="conocenos" element={<Conocenos />} />
+          <Route path="vende-recargas" element={<VendeRecargas />} />
           <Route path="registro" element={<Registro />} />
           <Route path="comprar" element={<Comprar />} />
           <Route path="pago" element={<Pago />} />

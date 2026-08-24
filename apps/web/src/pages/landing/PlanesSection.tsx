@@ -55,7 +55,7 @@ export function PlanesSection() {
   const planes = [...rawPlanes].sort((a, b) => (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0));
 
   return (
-    <section id="planes" className="bg-navy-900 py-3">
+    <section id="planes" className="bg-navy-900 py-10">
       <div className="mx-auto max-w-7xl">
         <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-0.5 px-4">
           Elige tu compañía favorita
