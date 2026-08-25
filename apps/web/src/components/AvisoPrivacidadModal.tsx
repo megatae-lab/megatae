@@ -81,17 +81,6 @@ export function AvisoPrivacidadModal({
             <li>Identificación oficial</li>
           </ul>
 
-          <p className="mb-3">
-            Usted podrá modificar o solicitar la eliminación de sus datos de
-            nuestra base de datos enviando un correo a{" "}
-            <a
-              href="mailto:administracion@megataeglobal.com"
-              className="text-blue-600 underline"
-            >
-              administracion@megataeglobal.com
-            </a>
-          </p>
-
           <p className="text-xs text-gray-500">
             <strong>Importante:</strong> Cualquier modificación a este Aviso de
             Privacidad podrá consultarse directamente en megatae.mx.
