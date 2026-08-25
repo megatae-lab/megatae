@@ -190,30 +190,35 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
             {/* Compañía — solo se muestra el selector si NO viene fija */}
-            {!fixedCompania && (
+           {!fixedCompania && (
               <div>
                 <p className={`text-sm mb-2 transition-colors ${theme ? theme.label : "text-white/70"}`}>
                   Compañía
                 </p>
-                <div className={`flex gap-2 rounded-xl transition-all ${errors.compania ? "ring-2 ring-red-500/50 ring-offset-2 ring-offset-navy-800" : ""}`}>
-                  {COMPANIAS.map((c) => {
-                    const t = THEME[c.key];
-                    const isSelected = compania === c.key;
-                    return (
+
+                {!compania ? (
+                  <div className={`flex gap-2 rounded-xl transition-all ${errors.compania ? "ring-2 ring-red-500/50 ring-offset-2 ring-offset-navy-800" : ""}`}>
+                    {COMPANIAS.map((c) => (
                       <button
                         key={c.key}
                         type="button"
                         onClick={() => handleCompaniaChange(c.key)}
-                        className={`flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors ${isSelected
-                          ? `${t.borderSelected} ${t.bg} text-white`
-                          : "border-white/20 bg-white/5 text-white/60 hover:border-white/40"
-                          }`}
+                        className="flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors border-white/20 bg-white/5 text-white/60 hover:border-white/40"
                       >
                         {c.label}
                       </button>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div
+                    className={`flex items-center justify-between px-4 py-2 rounded-lg border ${theme!.borderSelected} ${theme!.bg}`}
+                  >
+                    <span className="text-white text-sm font-semibold">
+                      {COMPANIAS.find((c) => c.key === compania)?.label}
+                    </span>
+                  </div>
+                )}
+
                 <FieldError msg={errors.compania} />
               </div>
             )}
