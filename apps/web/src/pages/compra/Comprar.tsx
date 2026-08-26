@@ -320,10 +320,10 @@ function PlanOption({
       type="button"
       onClick={onSelect}
       className={`flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left ${selected
-          ? `${theme.borderSelected} ${theme.bg}`
-          : hasError
-            ? "border-red-500 bg-white/5 hover:border-red-400"
-            : "border-white/20 bg-white/5 hover:border-white/40"
+        ? `${theme.borderSelected} ${theme.bg}`
+        : hasError
+          ? "border-red-500 bg-white/5 hover:border-red-400"
+          : "border-white/20 bg-white/5 hover:border-white/40"
         }`}
     >
       <div>
@@ -397,8 +397,8 @@ function LadaCombobox({
         type="button"
         onClick={handleOpen}
         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-colors text-left ${hasError
-            ? "border-red-500 bg-navy-900"
-            : `bg-navy-900 ${theme ? `border-white/20 ${theme.ring}` : "border-white/20 focus:border-brand"}`
+          ? "border-red-500 bg-navy-900"
+          : `bg-navy-900 ${theme ? `border-white/20 ${theme.ring}` : "border-white/20 focus:border-brand"}`
           }`}
       >
         <span className={selected ? "text-white" : "text-white/30"}>
@@ -488,8 +488,8 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
         className={`w-full bg-navy-900 border rounded-lg px-3 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none transition-colors ${error
-            ? "border-red-500 focus:border-red-400"
-            : `border-white/20 ${theme ? theme.ring : "focus:border-brand"}`
+          ? "border-red-500 focus:border-red-400"
+          : `border-white/20 ${theme ? theme.ring : "focus:border-brand"}`
           }`}
       />
       <FieldError msg={error} />
