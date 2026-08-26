@@ -195,25 +195,30 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                 <p className={`text-sm mb-2 transition-colors ${theme ? theme.label : "text-white/70"}`}>
                   Compañía
                 </p>
-                <div className={`flex gap-2 rounded-xl transition-all ${errors.compania ? "ring-2 ring-red-500/50 ring-offset-2 ring-offset-navy-800" : ""}`}>
-                  {COMPANIAS.map((c) => {
-                    const t = THEME[c.key];
-                    const isSelected = compania === c.key;
-                    return (
+
+                {!compania ? (
+                  <div className={`flex gap-2 rounded-xl transition-all ${errors.compania ? "ring-2 ring-red-500/50 ring-offset-2 ring-offset-navy-800" : ""}`}>
+                    {COMPANIAS.map((c) => (
                       <button
                         key={c.key}
                         type="button"
                         onClick={() => handleCompaniaChange(c.key)}
-                        className={`flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors ${isSelected
-                          ? `${t.borderSelected} ${t.bg} text-white`
-                          : "border-white/20 bg-white/5 text-white/60 hover:border-white/40"
-                          }`}
+                        className="flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors border-white/20 bg-white/5 text-white/60 hover:border-white/40"
                       >
                         {c.label}
                       </button>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div
+                    className={`flex items-center justify-between px-4 py-2 rounded-lg border ${theme!.borderSelected} ${theme!.bg}`}
+                  >
+                    <span className="text-white text-sm font-semibold">
+                      {COMPANIAS.find((c) => c.key === compania)?.label}
+                    </span>
+                  </div>
+                )}
+
                 <FieldError msg={errors.compania} />
               </div>
             )}
@@ -315,10 +320,10 @@ function PlanOption({
       type="button"
       onClick={onSelect}
       className={`flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left ${selected
-          ? `${theme.borderSelected} ${theme.bg}`
-          : hasError
-            ? "border-red-500 bg-white/5 hover:border-red-400"
-            : "border-white/20 bg-white/5 hover:border-white/40"
+        ? `${theme.borderSelected} ${theme.bg}`
+        : hasError
+          ? "border-red-500 bg-white/5 hover:border-red-400"
+          : "border-white/20 bg-white/5 hover:border-white/40"
         }`}
     >
       <div>
@@ -392,8 +397,8 @@ function LadaCombobox({
         type="button"
         onClick={handleOpen}
         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-colors text-left ${hasError
-            ? "border-red-500 bg-navy-900"
-            : `bg-navy-900 ${theme ? `border-white/20 ${theme.ring}` : "border-white/20 focus:border-brand"}`
+          ? "border-red-500 bg-navy-900"
+          : `bg-navy-900 ${theme ? `border-white/20 ${theme.ring}` : "border-white/20 focus:border-brand"}`
           }`}
       >
         <span className={selected ? "text-white" : "text-white/30"}>
@@ -483,8 +488,8 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxLength}
         className={`w-full bg-navy-900 border rounded-lg px-3 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none transition-colors ${error
-            ? "border-red-500 focus:border-red-400"
-            : `border-white/20 ${theme ? theme.ring : "focus:border-brand"}`
+          ? "border-red-500 focus:border-red-400"
+          : `border-white/20 ${theme ? theme.ring : "focus:border-brand"}`
           }`}
       />
       <FieldError msg={error} />
