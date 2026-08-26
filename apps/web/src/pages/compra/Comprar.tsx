@@ -190,7 +190,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
             {/* Compañía — solo se muestra el selector si NO viene fija */}
-            {!fixedCompania && (
+           {!fixedCompania && (
               <div>
                 <p className={`text-sm mb-2 transition-colors ${theme ? theme.label : "text-white/70"}`}>
                   Compañía
