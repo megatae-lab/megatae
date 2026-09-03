@@ -87,7 +87,7 @@ export function PlanesSection() {
 
   return (
     <section id="planes" className="bg-navy-900 py-10">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-3xl">
         <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-0.5 px-4">
           Elige tu compañía favorita
         </h2>
@@ -100,10 +100,7 @@ export function PlanesSection() {
             <div className="w-8 h-8 border-2 border-brand border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          // Una sola grilla responsiva: el mismo diseño de tarjeta escala bien
-          // en mobile (2 columnas) y desktop (hasta 5 columnas), así que ya no
-          // hace falta duplicar el bloque desktop/mobile como antes.
-          <div className="grid px-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid px-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-5">
             {planes.map((plan) => (
               <PlanCard key={plan.id} plan={plan} />
             ))}
