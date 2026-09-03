@@ -1,4 +1,4 @@
-import { Hero } from "./Hero.js";
+// import { Hero } from "./Hero.js";
 import { PlanesSection } from "./PlanesSection.js";
 import { LeadMagnet } from "./LeadMagnet.js";
 import { HowToSection } from "./HowToSection.js";
@@ -22,7 +22,6 @@ function CtaBanner() {
 export function Landing() {
   return (
     <>
-      <Hero />
       <DevicesSection />
       <PlanesSection />
       <LeadMagnet />
