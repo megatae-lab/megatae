@@ -174,7 +174,7 @@ export function DevicesSection() {
   }
 
   return (
-    <section className="bg-navy-700 py-6 px-4" id="dispositivos">
+    <section className="bg-[url('/assets/fondo-banner-1.png')] bg-cover bg-center overflow-hidden py-16 px-4" id="dispositivos">
       <div className="mx-auto max-w-xl">
         <h2 className="text-white font-black text-3xl text-center mb-2">
           ¿Tu dispositivo es compatible?
