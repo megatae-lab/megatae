@@ -46,9 +46,15 @@ const COMPANY_LOGO: Record<CompaniaKey, string> = {
   BAIT: "/assets/logo-bait.png",
 };
 
-// Apps por compañía, como en el diseño de referencia.
-// Los íconos vienen de la librería react-icons (paquete "fa6"), así que
-// no hace falta subir ningún asset propio.
+function hexToRgba(hex: string, alpha: number) {
+  const clean = hex.replace("#", "");
+  const bigint = parseInt(clean, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 type AppKey = "whatsapp" | "telegram" | "facebook" | "instagram" | "x" | "tiktok" | "youtube" | "vix";
 
 const COMPANY_APPS: Record<CompaniaKey, AppKey[]> = {
@@ -69,9 +75,6 @@ const APP_STYLE: Record<AppKey, { bg: string; label: string; Icon: React.Compone
   vix: { bg: "#1B1B4B", label: "Vix", Icon: FaCirclePlay },
 };
 
-// Texto fijo debajo de los íconos de apps, igual que en el diseño de
-// referencia — no depende de que "descripcion" mencione la palabra
-// "redes"/"apps", porque el texto real que manda la API varía.
 const APPS_LABEL: Record<CompaniaKey, string> = {
   BAIT: "Redes sociales ilimitadas",
   MOVISTAR: "Apps ilimitadas",
@@ -87,6 +90,51 @@ export function PlanesSection() {
 
   return (
     <section id="planes" className="bg-navy-900 py-10">
+      <style>{`
+  @keyframes pulseGlow {
+    0% {
+      box-shadow: 0 0 0 0 var(--pulse-color);
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.035);
+    }
+    70% {
+      box-shadow: 0 0 0 14px rgba(0, 0, 0, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+      transform: scale(1);
+    }
+  }
+  @keyframes shineSweep {
+    0% { left: -60%; }
+    55% { left: 130%; }
+    100% { left: 130%; }
+  }
+  .pulse-cta {
+    position: relative;
+    overflow: hidden;
+    animation: pulseGlow 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  .pulse-cta::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+    animation: shineSweep 2.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-cta,
+    .pulse-cta::after {
+      animation: none;
+    }
+  }
+`}</style>
       <div className="mx-auto max-w-3xl">
         <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-0.5 px-4">
           Elige tu compañía favorita
@@ -226,11 +274,17 @@ function PlanCard({ plan }: { plan: Plan }) {
           )}
         </div>
 
-        {/* Botón Comprar eSIM */}
+
         <button
           onClick={goToComprar}
-          className="w-full mt-4 font-bold py-2.5 rounded-full text-sm transition-all hover:opacity-90 active:scale-95"
-          style={{ backgroundColor: cfg.strongColor, color: cfg.textDark ? "#000" : "#fff" }}
+          className="pulse-cta relative overflow-hidden w-full mt-4 font-bold py-2.5 rounded-full text-sm transition-all hover:opacity-90 active:scale-95"
+          style={
+            {
+              backgroundColor: cfg.strongColor,
+              color: cfg.textDark ? "#000" : "#fff",
+              "--pulse-color": hexToRgba(cfg.strongColor, 0.55),
+            } as React.CSSProperties
+          }
         >
           Comprar eSIM
         </button>
