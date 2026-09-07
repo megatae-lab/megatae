@@ -29,10 +29,12 @@ adminSolicitudesRouter.get("/", async (req, res, next) => {
       orderBy: { createdAt: "asc" },
       select: {
         id: true,
+        publicCode: true,
         nombre: true,
         email: true,
         compania: true,
         estado: true,
+        metodoPago: true,
         createdAt: true,
         updatedAt: true,
         plan: { select: { precio: true, recarga: true } },
@@ -85,7 +87,7 @@ adminSolicitudesRouter.patch("/:id/estado", async (req: AuthRequest, res, next) 
 
     const solicitud = await prisma.solicitud.findUnique({
       where: { id },
-      select: { estado: true, email: true, nombre: true, compania: true, dn: true },
+      select: { estado: true, email: true, nombre: true, compania: true, dn: true, publicCode: true },
     });
     if (!solicitud) { res.status(404).json({ error: "Solicitud no encontrada" }); return; }
 
@@ -122,7 +124,7 @@ adminSolicitudesRouter.patch("/:id/estado", async (req: AuthRequest, res, next) 
 
     if (estadoNuevo === "PAGO_RECHAZADO") {
       sendPagoRechazado({
-        folio: id,
+        folio: solicitud.publicCode,
         to: solicitud.email,
         nombre: solicitud.nombre,
         compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
@@ -202,6 +204,7 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
         email: true,
         nombre: true,
         compania: true,
+        publicCode: true,
         plan: { select: { precio: true, recarga: true } },
       },
     });
@@ -227,7 +230,7 @@ adminSolicitudesRouter.post("/:id/qr", async (req: AuthRequest, res, next) => {
     ]);
 
     sendQrEnviado({
-      folio: id,
+      folio: solicitud.publicCode,
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
@@ -256,7 +259,7 @@ adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, n
 
     const solicitud = await prisma.solicitud.findUnique({
       where: { id },
-      select: { estado: true, email: true, nombre: true, compania: true, dn: true },
+      select: { estado: true, email: true, nombre: true, compania: true, dn: true, publicCode: true },
     });
     if (!solicitud) { res.status(404).json({ error: "Solicitud no encontrada" }); return; }
     if (solicitud.estado !== "QR_ENVIADO") {
@@ -265,7 +268,7 @@ adminSolicitudesRouter.post("/:id/recordatorio", async (req: AuthRequest, res, n
     }
 
     await sendRecordatorioActivacion({
-      folio: id,
+      folio: solicitud.publicCode,
       to: solicitud.email,
       nombre: solicitud.nombre,
       compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,

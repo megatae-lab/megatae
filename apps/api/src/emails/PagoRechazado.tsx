@@ -1,7 +1,7 @@
 import { Html, Head, Font, Body, Container, Text, Preview, Img } from "@react-email/components";
 
 interface Props {
-  folio: number;
+  folio: string;
   nombre: string;
   compania: string;
   observacion: string;
@@ -109,7 +109,7 @@ export function PagoRechazado({ folio, nombre, compania, observacion, logoUrl }:
           {/* Footer */}
           <div style={{ background: "#f7fafc", borderTop: "1px solid #e2e8f0", borderRadius: "0 0 8px 8px", padding: "20px 36px" }}>
             <Text style={{ color: "#a0aec0", fontSize: 11, margin: 0, lineHeight: "18px" }}>
-              Megatae Global · Folio #{folio}
+              Megatae Global · Folio {folio}
               <br />
               Si no realizaste esta solicitud, ignora este mensaje.
             </Text>

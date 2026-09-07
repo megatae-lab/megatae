@@ -1,7 +1,7 @@
 import { Html, Head, Font, Body, Container, Text, Img, Link, Preview } from "@react-email/components";
 
 interface Props {
-  folio: number;
+  folio: string;
   nombre: string;
   compania: string;
   companiaCode: "ATT" | "MOVISTAR" | "BAIT";
@@ -331,7 +331,7 @@ export function QrEnviado({ folio, compania, companiaCode, precio, recarga, dn, 
 
           {/* Footer */}
           <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, textAlign: "center", margin: 0 }}>
-            Megatae Global · Folio #{folio}
+            Megatae Global · Folio {folio}
             <br />
             Si no realizaste esta solicitud, ignora este mensaje.
           </Text>

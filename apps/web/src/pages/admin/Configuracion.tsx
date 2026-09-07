@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Loader, ChevronUp, ChevronDown, Pencil } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { getAdminUser } from "../../lib/auth.js";
+import { TRANSFERENCIA_HABILITADA } from "../../lib/features.js";
 import type { Plan, CuentaBancaria } from "../../types.js";
 
 const COMPANIA_LABEL: Record<string, string> = {
@@ -14,6 +15,10 @@ const COMPANIA_OPTIONS = [
   { value: "MOVISTAR", label: "Movistar" },
   { value: "BAIT", label: "Bait" },
 ];
+
+const TABS = (["planes", "cuentas"] as const).filter(
+  (t) => t !== "cuentas" || TRANSFERENCIA_HABILITADA
+);
 
 export function AdminConfiguracion() {
   const admin = getAdminUser();
@@ -37,7 +42,7 @@ export function AdminConfiguracion() {
 
       {/* Tabs */}
       <div className="flex gap-1 bg-navy-950/60 rounded-xl p-1 mb-6 w-fit">
-        {(["planes", "cuentas"] as const).map((t) => (
+        {TABS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -53,7 +58,7 @@ export function AdminConfiguracion() {
       </div>
 
       {tab === "planes" && <PlanesPanel />}
-      {tab === "cuentas" && <CuentasPanel />}
+      {tab === "cuentas" && TRANSFERENCIA_HABILITADA && <CuentasPanel />}
     </div>
   );
 }

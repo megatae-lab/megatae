@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, ChevronDown, Search, X } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { Stepper, type StepperTheme } from "../../components/Stepper.js";
+import { PagoSeccion } from "./PagoSeccion.js";
 import type { CompaniaKey, HeroFormState, Plan } from "../../types.js";
 
-const STEPS = ["Tus datos", "Pago", "Confirmación"];
+const STEPS = ["Datos y pago", "Confirmación"];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const COMPANIAS: { key: CompaniaKey; label: string }[] = [
   { key: "ATT", label: "AT&T" },
@@ -14,7 +16,7 @@ const COMPANIAS: { key: CompaniaKey; label: string }[] = [
   { key: "BAIT", label: "Bait" },
 ];
 
-interface CompaniaTheme {
+export interface CompaniaTheme {
   border: string;
   borderSelected: string;
   bg: string;
@@ -102,7 +104,7 @@ interface LocationState extends Partial<HeroFormState> {
 
 export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   const location = useLocation();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const initial = (location.state ?? {}) as LocationState;
 
   const [nombre, setNombre] = useState(initial.nombre ?? "");
@@ -112,7 +114,8 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   );
   const [planId, setPlanId] = useState<number | null>(initial.planId ?? null);
   const [ladaKey, setLadaKey] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const pagoCancelado = searchParams.get("stripe") === "cancelado";
 
   const { data: planes = [] } = useQuery({
     queryKey: ["planes"],
@@ -137,42 +140,20 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
     setCompania(c);
     setPlanId(null);
     setLadaKey("");
-    setErrors((prev) => ({ ...prev, compania: "", plan: "", lada: "" }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const next: Record<string, string> = {};
-    if (!compania) next.compania = "Elige una compañía para continuar.";
-    if (compania && !planId) next.plan = "Elige uno de los planes disponibles.";
-    if (compania === "ATT" && !ladaKey) next.lada = "Selecciona el estado donde quieres tu número.";
-    if (!nombre.trim()) next.nombre = "Escribe tu nombre completo.";
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = "Escribe un correo válido (ej. nombre@correo.com).";
-    if (Object.keys(next).length > 0) {
-      setErrors(next);
-      return;
-    }
-
-    setErrors({});
-    const ladaEntry = LADAS_MX.find((l) => l.key === ladaKey);
-    const selectedPlan = planes.find((p) => p.id === planId);
-    navigate("/pago", {
-      state: {
-        nombre,
-        email,
-        compania,
-        planId,
-        lada: ladaEntry?.lada,
-        estadoMx: ladaEntry?.estado,
-        planPrecio: selectedPlan?.precio,
-        planRecarga: selectedPlan?.recarga,
-        planMegas: selectedPlan?.megas,
-        planDias: selectedPlan?.dias,
-        planDescripcion: selectedPlan?.descripcion ?? null,
-      },
-    });
-  }
+  // Sin botón de submit intermedio: la sección de pago aparece sola en
+  // cuanto los datos de arriba son válidos (ver docs/PROGRESS.md).
+  const ladaEntry = LADAS_MX.find((l) => l.key === ladaKey);
+  const emailInvalido = email.trim().length > 0 && !EMAIL_RE.test(email.trim());
+  const emailError = emailInvalido ? "Escribe un correo válido (ej. nombre@correo.com)." : undefined;
+  const datosCompletos =
+    !!compania &&
+    !!planId &&
+    (compania !== "ATT" || !!ladaKey) &&
+    nombre.trim().length >= 2 &&
+    email.trim().length > 0 &&
+    !emailInvalido;
 
   return (
     <div className="min-h-screen bg-navy-900 py-10 px-4">
@@ -188,7 +169,13 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
         >
           <h1 className="text-white font-black text-2xl mb-6">Elige tu plan</h1>
 
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+          {pagoCancelado && (
+            <p className="mb-5 text-yellow-300 text-sm bg-yellow-400/10 border border-yellow-400/20 rounded-lg px-3 py-2">
+              Cancelaste el pago con tarjeta. Puedes intentarlo de nuevo o pagar por transferencia.
+            </p>
+          )}
+
+          <div className="flex flex-col gap-6">
             {/* Compañía — solo se muestra el selector si NO viene fija */}
            {!fixedCompania && (
               <div>
@@ -197,7 +184,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                 </p>
 
                 {!compania ? (
-                  <div className={`flex gap-2 rounded-xl transition-all ${errors.compania ? "ring-2 ring-red-500/50 ring-offset-2 ring-offset-navy-800" : ""}`}>
+                  <div className="flex gap-2 rounded-xl">
                     {COMPANIAS.map((c) => (
                       <button
                         key={c.key}
@@ -218,8 +205,6 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                     </span>
                   </div>
                 )}
-
-                <FieldError msg={errors.compania} />
               </div>
             )}
 
@@ -236,17 +221,12 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                         key={p.id}
                         plan={p}
                         selected={planId === p.id}
-                        hasError={!!errors.plan}
-                        onSelect={() => {
-                          setPlanId(p.id);
-                          setErrors((prev) => ({ ...prev, plan: "" }));
-                        }}
+                        onSelect={() => setPlanId(p.id)}
                         theme={theme}
                       />
                     ))}
                   </div>
                 )}
-                <FieldError msg={errors.plan} />
               </div>
             )}
 
@@ -258,14 +238,9 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                 </label>
                 <LadaCombobox
                   value={ladaKey}
-                  onChange={(v) => {
-                    setLadaKey(v);
-                    setErrors((prev) => ({ ...prev, lada: "" }));
-                  }}
-                  hasError={!!errors.lada}
+                  onChange={setLadaKey}
                   theme={theme}
                 />
-                <FieldError msg={errors.lada} />
               </div>
             )}
 
@@ -278,25 +253,39 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
               </p>
               <Field
                 label="Nombre completo" type="text" value={nombre}
-                onChange={(v) => { setNombre(v); setErrors((p) => ({ ...p, nombre: "" })); }}
-                theme={theme} error={errors.nombre}
+                onChange={setNombre}
+                theme={theme}
               />
               <Field
                 label="Correo electrónico (Tu código QR llegará a este correo electrónico)" type="email" value={email}
-                onChange={(v) => { setEmail(v); setErrors((p) => ({ ...p, email: "" })); }}
-                theme={theme} error={errors.email}
+                onChange={setEmail}
+                theme={theme} error={emailError}
               />
             </div>
-
-            <button
-              type="submit"
-              className={`w-full text-white font-bold py-3 rounded-lg transition-colors ${theme ? theme.button : "bg-brand hover:bg-brand-dark"
-                }`}
-            >
-              Continuar al pago
-            </button>
-          </form>
+          </div>
         </div>
+
+        {datosCompletos && compania && planId && (() => {
+          const selectedPlan = planes.find((p) => p.id === planId);
+          return (
+            <div className="mt-4">
+              <PagoSeccion
+                theme={theme!}
+                nombre={nombre}
+                email={email}
+                compania={compania}
+                planId={planId}
+                lada={ladaEntry?.lada}
+                estadoMx={ladaEntry?.estado}
+                planPrecio={selectedPlan?.precio}
+                planRecarga={selectedPlan?.recarga}
+                planMegas={selectedPlan?.megas}
+                planDias={selectedPlan?.dias}
+                planDescripcion={selectedPlan?.descripcion ?? null}
+              />
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
@@ -305,13 +294,11 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 function PlanOption({
   plan,
   selected,
-  hasError,
   onSelect,
   theme,
 }: {
   plan: Plan;
   selected: boolean;
-  hasError: boolean;
   onSelect: () => void;
   theme: CompaniaTheme;
 }) {
@@ -321,9 +308,7 @@ function PlanOption({
       onClick={onSelect}
       className={`flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left ${selected
         ? `${theme.borderSelected} ${theme.bg}`
-        : hasError
-          ? "border-red-500 bg-white/5 hover:border-red-400"
-          : "border-white/20 bg-white/5 hover:border-white/40"
+        : "border-white/20 bg-white/5 hover:border-white/40"
         }`}
     >
       <div>
@@ -350,12 +335,10 @@ function PlanOption({
 function LadaCombobox({
   value,
   onChange,
-  hasError,
   theme,
 }: {
   value: string;
   onChange: (key: string) => void;
-  hasError: boolean;
   theme: CompaniaTheme | null;
 }) {
   const [open, setOpen] = useState(false);
@@ -396,9 +379,7 @@ function LadaCombobox({
       <button
         type="button"
         onClick={handleOpen}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-colors text-left ${hasError
-          ? "border-red-500 bg-navy-900"
-          : `bg-navy-900 ${theme ? `border-white/20 ${theme.ring}` : "border-white/20 focus:border-brand"}`
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-colors text-left bg-navy-900 ${theme ? `border-white/20 ${theme.ring}` : "border-white/20 focus:border-brand"
           }`}
       >
         <span className={selected ? "text-white" : "text-white/30"}>

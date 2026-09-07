@@ -153,7 +153,7 @@ function FilaSolicitud({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
           <span className="text-white font-semibold text-sm truncate">{s.nombre}</span>
-          <span className="text-white/30 text-xs shrink-0">#{s.id}</span>
+          <span className="text-white/30 text-xs font-mono shrink-0">{s.publicCode}</span>
         </div>
         <div className="flex items-center gap-2 text-xs text-white/40">
           <span>{COMPANIA_LABEL[s.compania] ?? s.compania}</span>

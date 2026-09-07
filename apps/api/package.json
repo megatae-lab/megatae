@@ -11,8 +11,11 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "tsx src/prisma/seed.ts",
+    "db:vaciar": "tsx src/prisma/vaciar.ts",
+    "db:backfill-public-code": "tsx src/prisma/backfill-public-code.ts",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "test": "vitest run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1086.0",
@@ -39,6 +42,7 @@
     "prisma": "^6.11.0",
     "react": "^19.2.7",
     "resend": "^6.17.2",
+    "stripe": "^22.6.1",
     "typescript": "^5.8.3",
     "zod": "^3.25.76"
   },
@@ -47,6 +51,9 @@
     "seed": "tsx src/prisma/seed.ts"
   },
   "devDependencies": {
-    "tsx": "^4.20.3"
+    "tsx": "^4.20.3",
+    "vitest": "^3.2.4",
+    "supertest": "^7.1.4",
+    "@types/supertest": "^6.0.3"
   }
 }

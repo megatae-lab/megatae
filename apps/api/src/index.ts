@@ -4,10 +4,12 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import rateLimit from "express-rate-limit";
 import { logger } from "./lib/logger.js";
+import { validateStripeEnv } from "./lib/env.js";
 import { planesRouter } from "./routes/planes.js";
 import { leadsRouter } from "./routes/leads.js";
 import { cuentasRouter } from "./routes/cuentas.js";
 import { solicitudesRouter } from "./routes/solicitudes.js";
+import { stripeWebhookRouter } from "./routes/stripeWebhook.js";
 import { authRouter } from "./routes/auth.js";
 import { requireAuth } from "./middleware/auth.js";
 import { adminSolicitudesRouter } from "./routes/admin/solicitudes.js";
@@ -15,8 +17,15 @@ import { adminPlanesRouter } from "./routes/admin/planes.js";
 import { adminCuentasRouter } from "./routes/admin/cuentas.js";
 import { adminReportesRouter } from "./routes/admin/reportes.js";
 
+validateStripeEnv();
+
 const app = express();
 const PORT = process.env.PORT ?? 3001;
+
+// Necesario para que req.ip refleje la IP real del cliente detrás del proxy
+// de Railway, no la del proxy — se usa como evidencia de contracargo en el
+// flujo de Stripe.
+app.set("trust proxy", 1);
 
 app.use(
   cors({
@@ -24,6 +33,13 @@ app.use(
     credentials: true,
   })
 );
+
+// El webhook de Stripe se monta ANTES de express.json(): necesita el body
+// crudo (Buffer) para verificar la firma, no JSON ya parseado. Si esta ruta
+// se mueve después de express.json(), la verificación de firma deja de
+// funcionar (ver docs/ARCHITECTURE.md, prueba mínima §11.1 del checklist).
+app.use("/api/stripe/webhook", stripeWebhookRouter);
+
 app.use(express.json());
 app.use(pinoHttp.default({ logger }));
 
