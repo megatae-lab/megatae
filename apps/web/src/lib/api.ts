@@ -227,5 +227,11 @@ export const api = {
         headers: JSON_HEADERS,
         body: JSON.stringify({ folio, email }),
       }),
+    cancelarStripe: (accessToken: string): Promise<{ ok: boolean }> =>
+      request("/solicitudes/stripe/cancelar", {
+        method: "POST",
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ accessToken }),
+      }),
   },
 };

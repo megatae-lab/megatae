@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Loader, ExternalLink, AlertCircle, Upload, Download, X } from "lucide-react";
 import { api } from "../../lib/api.js";
-import type { EstadoSolicitud, HistorialItem } from "../../types.js";
+import type { EstadoSolicitud, HistorialItem, MetodoPago } from "../../types.js";
 
 const ESTADO_LABEL: Record<EstadoSolicitud, string> = {
   RECIBIDA: "Nueva",
@@ -256,6 +256,15 @@ export function AdminSolicitudDetalle() {
                   </button>
                 )}
               </>
+            ) : s.estado === "RECIBIDA" ? (
+              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-3 py-4 mb-3 text-center">
+                <p className="text-yellow-300 text-sm font-medium">Esperando confirmación del pago</p>
+                <p className="text-white/40 text-xs mt-1">
+                  El cliente inició el pago con tarjeta pero Stripe todavía no lo confirma.
+                  Si no completa el pago, esto se cancela solo en unos minutos — no requiere
+                  acción tuya.
+                </p>
+              </div>
             ) : (
               <div className="bg-navy-950/60 rounded-lg px-3 py-4 mb-3 text-center">
                 <p className="text-white/70 text-sm font-medium">Pagado con tarjeta vía Stripe</p>
@@ -288,6 +297,8 @@ export function AdminSolicitudDetalle() {
           <AccionesEstado
             estado={s.estado}
             compania={s.compania}
+            metodoPago={s.metodoPago}
+            observacion={s.observacion}
             updatedAt={s.updatedAt}
             loading={mutation.isPending}
             error={mutation.error?.message}
@@ -357,6 +368,8 @@ export function AdminSolicitudDetalle() {
 function AccionesEstado({
   estado,
   compania,
+  metodoPago,
+  observacion,
   updatedAt,
   loading,
   error,
@@ -370,6 +383,8 @@ function AccionesEstado({
 }: {
   estado: EstadoSolicitud;
   compania: string;
+  metodoPago: MetodoPago;
+  observacion: string | null;
   updatedAt: string;
   loading: boolean;
   error?: string;
@@ -398,7 +413,29 @@ function AccionesEstado({
         </p>
       )}
 
-      {estado === "RECIBIDA" && (
+      {estado === "RECIBIDA" && metodoPago === "STRIPE" && !observacion && (
+        <p className="text-white/40 text-xs bg-white/5 rounded-lg px-3 py-2.5">
+          Esperando confirmación automática de Stripe — sin acción manual. Si el
+          cliente no completa el pago, esto se cancela solo.
+        </p>
+      )}
+
+      {estado === "RECIBIDA" && metodoPago === "STRIPE" && observacion && (
+        <div className="flex flex-col gap-2">
+          <p className="text-yellow-300 text-xs bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-3 py-2.5">
+            Stripe reportó una discrepancia (ver observación arriba) — no se
+            confirmó sola. Revísala antes de decidir.
+          </p>
+          <ActionButton
+            label="Revisar discrepancia"
+            color="bg-brand hover:bg-brand-dark"
+            loading={anyLoading}
+            onClick={() => onTransicion("REVISION_PAGO")}
+          />
+        </div>
+      )}
+
+      {estado === "RECIBIDA" && metodoPago !== "STRIPE" && (
         <ActionButton
           label="Iniciar revisión"
           color="bg-brand hover:bg-brand-dark"

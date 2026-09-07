@@ -196,7 +196,16 @@ solicitudesRouter.post("/stripe/checkout", async (req, res, next) => {
         ],
         metadata: { solicitudId: String(solicitud.id) },
         success_url: `${process.env.WEB_URL}/gracias?token=${accessToken}`,
-        cancel_url: `${process.env.WEB_URL}/comprar?stripe=cancelado`,
+        // Se incluye el accessToken para que /comprar pueda avisar al
+        // backend y cancelar de inmediato (ver POST /stripe/cancelar) en vez
+        // de esperar los 30 min de expires_at de abajo.
+        cancel_url: `${process.env.WEB_URL}/comprar?stripe=cancelado&token=${accessToken}`,
+        // Mínimo permitido por Stripe (no se puede poner menos). Reduce de
+        // las 24h por default a 30 min la ventana en la que un checkout
+        // abandonado sin dar clic en "cancelar" (cierra la pestaña, por
+        // ejemplo) se queda visible como RECIBIDA antes de que
+        // checkout.session.expired lo pase a CANCELADA solo.
+        expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
       });
 
       await prisma.solicitud.update({
@@ -213,6 +222,55 @@ solicitudesRouter.post("/stripe/checkout", async (req, res, next) => {
       console.error("Error creando Checkout Session de Stripe:", stripeErr);
       res.status(502).json({ error: "No se pudo iniciar el pago con tarjeta. Intenta de nuevo." });
     }
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      res.status(422).json({ error: err.errors[0]?.message ?? "Datos inválidos" });
+      return;
+    }
+    next(err);
+  }
+});
+
+// POST /api/solicitudes/stripe/cancelar — el cliente le dio "cancelar" en el
+// Checkout de Stripe y fue regresado a /comprar con el accessToken en la
+// URL. Cancela la solicitud al instante en vez de esperar los 30 min de
+// expires_at. Idempotente y silencioso: si el token no existe o la
+// solicitud ya no está en RECIBIDA (ej. el webhook ya la confirmó como
+// pagada, carrera entre "cancelar" y un pago que sí se completó), no hace
+// nada — nunca revierte un PAGO_VALIDADO.
+const cancelarSchema = z.object({ accessToken: z.string().min(1) });
+
+solicitudesRouter.post("/stripe/cancelar", async (req, res, next) => {
+  try {
+    const { accessToken } = cancelarSchema.parse(req.body);
+
+    await prisma.$transaction(async (tx) => {
+      const [solicitud] = await tx.$queryRaw<Array<{ id: number; estado: string }>>`
+        SELECT id, estado FROM "Solicitud" WHERE "accessToken" = ${accessToken} FOR UPDATE
+      `;
+
+      if (!solicitud || solicitud.estado !== "RECIBIDA") return;
+
+      const observacion = "El cliente canceló el pago con tarjeta";
+      await tx.solicitud.update({
+        where: { id: solicitud.id },
+        data: { estado: "CANCELADA", observacion },
+      });
+      await tx.historialEstado.create({
+        data: {
+          solicitudId: solicitud.id,
+          estadoAnterior: "RECIBIDA",
+          estadoNuevo: "CANCELADA",
+          adminId: null,
+          observacion,
+        },
+      });
+    });
+
+    // Misma respuesta exista o no la solicitud / el token — no hay nada
+    // sensible que proteger aquí (a diferencia de by-token/consultar, esto
+    // no devuelve datos), pero mantiene el patrón del resto del archivo.
+    res.json({ ok: true });
   } catch (err) {
     if (err instanceof z.ZodError) {
       res.status(422).json({ error: err.errors[0]?.message ?? "Datos inválidos" });

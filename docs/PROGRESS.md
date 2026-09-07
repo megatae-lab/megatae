@@ -185,3 +185,43 @@ ahí por el fallback de `/gracias` o escribiendo la URL directo).
 - Recarga exacta del plan Movistar $150 (dato ambiguo en el discovery).
 - Confirmar si se permite reintento de pago rechazado sin perder datos ya capturados.
 - Documentación real de la API de SIRED cuando esté disponible.
+
+## Incidente de deploy — migración fallida en producción (2026-09-07)
+
+El primer deploy a Railway con el módulo de Stripe falló: la migración
+`add_public_code_not_null` intentó `SET NOT NULL` sobre `publicCode` con 8
+solicitudes reales ya existentes en `NULL` — nadie corrió el backfill contra
+producción antes del deploy (sí se corrió en local). Como Prisma corre cada
+migración en transacción, no hubo daño: la migración se revirtió sola.
+Resuelto en caliente: `pnpm db:backfill-public-code` contra el
+`DATABASE_URL` público de Railway, `prisma migrate resolve --rolled-back`
+sobre esa migración, y `prisma migrate deploy` manual para aplicarla ya con
+los datos limpios. Lección para el próximo deploy con pasos de backfill:
+correrlo contra prod explícitamente antes de que el migrate automático de
+Railway intente la migración que depende de él — no asumir que el orden de
+"migración nullable → backfill → migración NOT NULL" se respeta solo porque
+se documentó.
+
+## Cancelación de pago con Stripe — solicitud queda como "nueva" (2026-09-07)
+
+Detectado por Edgar: al cancelar un Checkout de Stripe, la `Solicitud` (ya
+creada en `RECIBIDA` desde antes del pago) se quedaba viéndose como una
+solicitud nueva pendiente de revisión hasta que Stripe expiraba la sesión a
+las 24h (default) y el webhook `checkout.session.expired` recién ahí la
+pasaba a `CANCELADA`. Se evaluó agregar un flujo de "reintentar pago" sobre
+la misma solicitud, pero Edgar prefirió mantenerlo simple: si cancela, tiene
+que volver a llenar el formulario (crea una solicitud nueva).
+
+Arreglado con dos cambios en `POST /api/solicitudes/stripe/checkout`:
+- `expires_at` del Checkout Session bajado a 30 min (mínimo que permite la
+  API de Stripe — no acepta menos, ej. 15 min es rechazado).
+- `cancel_url` ahora lleva el `accessToken`; `Comprar.tsx` lo detecta
+  (`?stripe=cancelado&token=...`) y dispara `POST
+  /api/solicitudes/stripe/cancelar` al montar, que cancela la solicitud al
+  instante (con lock de fila, solo si sigue en `RECIBIDA` — nunca revierte
+  un `PAGO_VALIDADO` si hubo carrera con el webhook). El caso de "cierra la
+  pestaña sin dar clic en cancelar" sigue cubierto por el timeout de 30 min.
+
+Probado manualmente end-to-end contra la BD local: crear checkout → cancelar
+→ verificar `CANCELADA` con `HistorialEstado` correcto → confirmar
+idempotencia (cancelar dos veces, o con un token que no existe, no truena).

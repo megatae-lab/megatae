@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, ChevronRight } from "lucide-react";
+import { AlertCircle, ChevronRight, ChevronLeft } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { getAdminUser } from "../../lib/auth.js";
 import type { EstadoSolicitud, SolicitudResumen } from "../../types.js";
@@ -56,12 +56,20 @@ function masde24h(iso: string): boolean {
   return Date.now() - new Date(iso).getTime() > 24 * 3_600_000;
 }
 
+const POR_PAGINA = 8;
+
 export function AdminSolicitudes() {
   const navigate = useNavigate();
   const admin = getAdminUser();
   const rol = admin?.rol ?? "GENERAL";
   const TABS = ALL_TABS.filter((t) => (TABS_POR_ROL[rol] ?? []).includes(t.estado));
   const [tabActual, setTabActual] = useState<EstadoSolicitud>(TABS[0]?.estado ?? "RECIBIDA");
+  const [pagina, setPagina] = useState(1);
+
+  function cambiarTab(estado: EstadoSolicitud) {
+    setTabActual(estado);
+    setPagina(1);
+  }
 
   const { data: todas = [], isLoading } = useQuery({
     queryKey: ["admin", "solicitudes"],
@@ -74,6 +82,12 @@ export function AdminSolicitudes() {
   ) as Record<EstadoSolicitud, number>;
 
   const visibles = todas.filter((s) => s.estado === tabActual);
+  const totalPaginas = Math.max(1, Math.ceil(visibles.length / POR_PAGINA));
+  const paginaActual = Math.min(pagina, totalPaginas);
+  const visiblesPagina = visibles.slice(
+    (paginaActual - 1) * POR_PAGINA,
+    paginaActual * POR_PAGINA
+  );
 
   return (
     <div className="p-6">
@@ -84,7 +98,7 @@ export function AdminSolicitudes() {
         {TABS.map((tab) => (
           <button
             key={tab.estado}
-            onClick={() => setTabActual(tab.estado)}
+            onClick={() => cambiarTab(tab.estado)}
             className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               tabActual === tab.estado
                 ? "bg-brand/20 text-white"
@@ -117,15 +131,41 @@ export function AdminSolicitudes() {
           No hay solicitudes en este estado
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
-          {visibles.map((s) => (
-            <FilaSolicitud
-              key={s.id}
-              s={s}
-              onClick={() => navigate(`/admin/solicitudes/${s.id}`)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="flex flex-col gap-2">
+            {visiblesPagina.map((s) => (
+              <FilaSolicitud
+                key={s.id}
+                s={s}
+                onClick={() => navigate(`/admin/solicitudes/${s.id}`)}
+              />
+            ))}
+          </div>
+
+          {totalPaginas > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-5">
+              <button
+                onClick={() => setPagina((p) => Math.max(1, p - 1))}
+                disabled={paginaActual === 1}
+                className="flex items-center gap-1 text-sm text-white/40 hover:text-white disabled:opacity-30 disabled:hover:text-white/40 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Anterior
+              </button>
+              <span className="text-white/30 text-xs">
+                Página {paginaActual} de {totalPaginas}
+              </span>
+              <button
+                onClick={() => setPagina((p) => Math.min(totalPaginas, p + 1))}
+                disabled={paginaActual === totalPaginas}
+                className="flex items-center gap-1 text-sm text-white/40 hover:text-white disabled:opacity-30 disabled:hover:text-white/40 transition-colors"
+              >
+                Siguiente
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

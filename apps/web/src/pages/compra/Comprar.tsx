@@ -116,6 +116,18 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   const [ladaKey, setLadaKey] = useState("");
 
   const pagoCancelado = searchParams.get("stripe") === "cancelado";
+  const cancelToken = searchParams.get("token");
+
+  // Avisa al backend en cuanto Stripe regresa por cancelación, en vez de
+  // esperar los 30 min de expiración de la sesión — pasa la solicitud a
+  // CANCELADA de inmediato. Fire-and-forget: si falla, el timeout de todos
+  // modos la limpia después.
+  useEffect(() => {
+    if (pagoCancelado && cancelToken) {
+      api.solicitudes.cancelarStripe(cancelToken).catch(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { data: planes = [] } = useQuery({
     queryKey: ["planes"],
