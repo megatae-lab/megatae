@@ -6,7 +6,9 @@ import type {
   Plan,
   SolicitudDetalle,
   SolicitudPayload,
+  SolicitudPublica,
   SolicitudResumen,
+  SolicitudStripeCheckoutPayload,
 } from "../types.js";
 import { clearSession, getToken } from "./auth.js";
 
@@ -205,11 +207,25 @@ export const api = {
         headers: JSON_HEADERS,
         body: JSON.stringify({ contentType }),
       }),
-    create: (payload: SolicitudPayload): Promise<{ ok: boolean; id: number }> =>
+    create: (payload: SolicitudPayload): Promise<{ ok: boolean; id: number; publicCode: string }> =>
       request("/solicitudes", {
         method: "POST",
         headers: JSON_HEADERS,
         body: JSON.stringify(payload),
+      }),
+    stripeCheckout: (payload: SolicitudStripeCheckoutPayload): Promise<{ url: string }> =>
+      request("/solicitudes/stripe/checkout", {
+        method: "POST",
+        headers: JSON_HEADERS,
+        body: JSON.stringify(payload),
+      }),
+    byToken: (accessToken: string): Promise<SolicitudPublica> =>
+      request(`/solicitudes/by-token/${encodeURIComponent(accessToken)}`),
+    consultar: (folio: string, email: string): Promise<SolicitudPublica> =>
+      request("/solicitudes/consultar", {
+        method: "POST",
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ folio, email }),
       }),
   },
 };

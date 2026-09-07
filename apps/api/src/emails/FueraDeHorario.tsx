@@ -1,7 +1,7 @@
 import { Html, Head, Font, Body, Container, Text, Img, Preview } from "@react-email/components";
 
 interface Props {
-  folio: number;
+  folio: string;
   nombre: string;
   iconUrl?: string;
   assetsBaseUrl?: string;

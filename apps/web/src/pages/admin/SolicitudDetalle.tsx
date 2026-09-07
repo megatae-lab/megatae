@@ -123,7 +123,7 @@ export function AdminSolicitudDetalle() {
   }
 
   async function descargarComprobante() {
-    if (!s) return;
+    if (!s?.comprobante) return;
     setDescargando(true);
     try {
       const res = await fetch(s.comprobante);
@@ -168,10 +168,11 @@ export function AdminSolicitudDetalle() {
         <div>
           <h1 className="text-white font-black text-2xl">
             {s.nombre}{" "}
-            <span className="text-white/30 font-normal text-lg">#{s.id}</span>
+            <span className="text-white/30 font-normal text-lg font-mono">{s.publicCode}</span>
           </h1>
           <p className="text-white/40 text-sm mt-0.5">
-            {COMPANIA_LABEL[s.compania] ?? s.compania} · ${s.plan.precio} MXN · {fmtDate(s.createdAt)}
+            {COMPANIA_LABEL[s.compania] ?? s.compania} · ${s.plan.precio} MXN ·{" "}
+            {s.metodoPago === "STRIPE" ? "Tarjeta (Stripe)" : "Transferencia"} · {fmtDate(s.createdAt)}
           </p>
         </div>
         <span
@@ -213,43 +214,55 @@ export function AdminSolicitudDetalle() {
 
         {/* Columna derecha — comprobante + QR + acciones */}
         <div className="lg:col-span-2 flex flex-col gap-4">
-          {/* Comprobante */}
-          <Card title="Comprobante de pago">
-            <div className="bg-navy-950/60 rounded-lg overflow-hidden mb-3">
-              {!imgError ? (
-                <img
-                  src={s.comprobante}
-                  alt="Comprobante"
-                  className="w-full object-contain max-h-64 cursor-pointer hover:opacity-90 transition-opacity"
-                  onClick={() => setShowComprobanteModal(true)}
-                  onError={() => setImgError(true)}
-                />
-              ) : (
-                <a
-                  href={s.comprobante}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 py-10 text-brand text-sm hover:underline"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Ver comprobante
-                </a>
-              )}
-            </div>
+          {/* Comprobante — solo aplica a transferencia. Stripe confirma el
+              pago solo, sin comprobante que revisar. */}
+          <Card title={s.metodoPago === "STRIPE" ? "Pago" : "Comprobante de pago"}>
+            {s.comprobante ? (
+              <>
+                <div className="bg-navy-950/60 rounded-lg overflow-hidden mb-3">
+                  {!imgError ? (
+                    <img
+                      src={s.comprobante}
+                      alt="Comprobante"
+                      className="w-full object-contain max-h-64 cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => setShowComprobanteModal(true)}
+                      onError={() => setImgError(true)}
+                    />
+                  ) : (
+                    <a
+                      href={s.comprobante}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 py-10 text-brand text-sm hover:underline"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Ver comprobante
+                    </a>
+                  )}
+                </div>
 
-            {s.estado === "REVISION_PAGO" && (
-              <button
-                onClick={descargarComprobante}
-                disabled={descargando}
-                className="w-full mb-3 border border-white/20 hover:border-brand/50 text-white/70 hover:text-white text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {descargando ? (
-                  <Loader className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Download className="w-4 h-4" />
+                {s.estado === "REVISION_PAGO" && (
+                  <button
+                    onClick={descargarComprobante}
+                    disabled={descargando}
+                    className="w-full mb-3 border border-white/20 hover:border-brand/50 text-white/70 hover:text-white text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {descargando ? (
+                      <Loader className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4" />
+                    )}
+                    {descargando ? "Descargando…" : "Descargar comprobante"}
+                  </button>
                 )}
-                {descargando ? "Descargando…" : "Descargar comprobante"}
-              </button>
+              </>
+            ) : (
+              <div className="bg-navy-950/60 rounded-lg px-3 py-4 mb-3 text-center">
+                <p className="text-white/70 text-sm font-medium">Pagado con tarjeta vía Stripe</p>
+                <p className="text-white/40 text-xs mt-1">
+                  Confirmado automáticamente — no requiere revisión de comprobante.
+                </p>
+              </div>
             )}
 
             <div className="bg-brand/10 border border-brand/20 rounded-lg px-3 py-2 text-center">
@@ -330,7 +343,7 @@ export function AdminSolicitudDetalle() {
       )}
 
       {/* Modal comprobante en grande, con zoom */}
-      {showComprobanteModal && !imgError && (
+      {showComprobanteModal && !imgError && s.comprobante && (
         <ImageLightbox
           src={s.comprobante}
           onClose={() => setShowComprobanteModal(false)}

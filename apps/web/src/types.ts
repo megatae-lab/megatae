@@ -46,12 +46,16 @@ export type EstadoSolicitud =
   | "ACTIVADA"
   | "CANCELADA";
 
+export type MetodoPago = "TRANSFERENCIA" | "STRIPE";
+
 export interface SolicitudResumen {
   id: number;
+  publicCode: string;
   nombre: string;
   email: string;
   compania: CompaniaKey;
   estado: EstadoSolicitud;
+  metodoPago: MetodoPago;
   createdAt: string;
   updatedAt: string;
   plan: { precio: string; recarga: string };
@@ -71,7 +75,8 @@ export interface SolicitudDetalle extends SolicitudResumen {
   ciudad: string | null;
   estadoMx: string | null;
   lada: string | null;
-  comprobante: string;
+  // Nulo cuando metodoPago es STRIPE (no hay comprobante que revisar).
+  comprobante: string | null;
   observacion: string | null;
   qrUrl: string | null;
   dn: string | null;
@@ -87,4 +92,26 @@ export interface SolicitudPayload {
   compania: CompaniaKey;
   planId: number;
   comprobanteUrl: string;
+}
+
+// Datos del cliente sin comprobante — usado para iniciar el checkout de
+// Stripe (el comprobante no aplica a este método de pago).
+export interface SolicitudStripeCheckoutPayload {
+  nombre: string;
+  email: string;
+  ciudad?: string;
+  estadoMx?: string;
+  lada?: string;
+  compania: CompaniaKey;
+  planId: number;
+}
+
+// Respuesta mínima de /by-token y /consultar — deliberadamente no incluye el
+// id interno (ver docs/ARCHITECTURE.md, addendum de Stripe).
+export interface SolicitudPublica {
+  publicCode: string;
+  estado: EstadoSolicitud;
+  nombre: string;
+  compania: CompaniaKey;
+  email: string;
 }

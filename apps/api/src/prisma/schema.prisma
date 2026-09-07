@@ -30,6 +30,11 @@ enum RolAdmin {
   RECARGAS
 }
 
+enum MetodoPago {
+  TRANSFERENCIA
+  STRIPE
+}
+
 model Plan {
   id          Int         @id @default(autoincrement())
   compania    Compania
@@ -46,6 +51,12 @@ model Plan {
 
 model Solicitud {
   id          Int             @id @default(autoincrement())
+  // Folio público (nanoid, prefijo "MT-"). Sustituye a `id` en toda
+  // superficie expuesta a usuarios anónimos (emails, /gracias, consulta de
+  // estado) — `id` se conserva solo para las rutas del panel admin
+  // (autenticadas). NOT NULL desde la migración add_public_code_not_null,
+  // aplicada después del backfill de datos existentes.
+  publicCode  String          @unique
   nombre      String
   email       String
   telefono    String?
@@ -55,14 +66,53 @@ model Solicitud {
   compania    Compania
   planId      Int
   plan        Plan            @relation(fields: [planId], references: [id])
-  comprobante String
+  // Requerido a nivel de aplicación cuando metodoPago = TRANSFERENCIA (ver
+  // zod schema en routes/solicitudes.ts) — nullable aquí porque Stripe no
+  // sube comprobante.
+  comprobante String?
+  metodoPago  MetodoPago      @default(TRANSFERENCIA)
   estado      EstadoSolicitud @default(RECIBIDA)
   observacion String?
   qrUrl       String?
   dn          String?
+
+  // --- Campos específicos del flujo Stripe ---
+  // Precio congelado en centavos al crear el Checkout Session. El webhook
+  // compara el monto cobrado contra este valor, no contra el precio vivo del
+  // plan, para no mandar a revisión una venta legítima si el admin edita el
+  // precio del plan entre que el cliente abre el checkout y paga.
+  precioCotizado       Int?
+  // Identificador de correlación con el Checkout Session de Stripe. Se
+  // escribe tanto si el monto coincide como si no — es un identificador de
+  // correlación, no una marca de pago exitoso.
+  stripeSessionId      String?   @unique
+  // Token opaco de un solo propósito: aterrizaje inmediato en /gracias tras
+  // el redirect de Stripe. Expira a las 48h; pasado ese tiempo el cliente usa
+  // la consulta general por folio + correo.
+  accessToken          String?   @unique
+  accessTokenExpiresAt DateTime?
+  // Evidencia para contracargos — solo se captura en el flujo Stripe.
+  ip                   String?
+  userAgent            String?
+
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   historial   HistorialEstado[]
+}
+
+// Registro de eventos de webhook de Stripe procesados, para idempotencia.
+// `id` es el event.id que manda Stripe (no se genera nada propio) — el
+// constraint único de la PK es lo que evita procesar el mismo evento dos
+// veces ante reintentos o entregas concurrentes.
+model StripeEvent {
+  id          String    @id
+  type        String
+  // null = fila insertada pero el procesamiento no terminó (crash a medias,
+  // o en curso). Distinción explícita de "existe la fila" vs "se completó" —
+  // la deduplicación se evalúa sobre este campo, no sobre la existencia de
+  // la fila.
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
 }
 
 model HistorialEstado {
