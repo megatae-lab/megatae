@@ -49,7 +49,41 @@ R2_SECRET_ACCESS_KEY  = (tu API token Secret)
 R2_BUCKET_NAME        = megatae-esim
 R2_PUBLIC_URL         = https://pub-xxx.r2.dev   ← o archivos.megatae.mx cuando tengas el dominio
 VIDEO_TUTORIAL_URL    = (opcional)
+STRIPE_SECRET_KEY     = sk_live_...   ← ver sección 3.1, NUNCA la de test
+STRIPE_WEBHOOK_SECRET = whsec_...     ← ver sección 3.1, del endpoint de producción, no de `stripe listen`
 ```
+
+### 3.1 Conectar la cuenta de Stripe real (llaves live)
+
+Los pasos van en el dashboard de Stripe de la cuenta ya verificada para pagos
+reales — asegúrate de estar en **modo Live** (toggle arriba a la izquierda del
+dashboard, no en Test):
+
+1. **Developers → API keys** → copia la **Secret key** (`sk_live_...`). Es
+   distinta a la Publishable key (`pk_live_...`) — esa no se usa en este
+   proyecto, el checkout es hospedado y no toca el frontend.
+2. **Developers → Webhooks → Add endpoint**:
+   - URL: `https://<tu-api-de-railway>/api/stripe/webhook`
+   - Eventos a suscribir — selecciona exactamente estos tres, no "seleccionar
+     todos": `checkout.session.completed`, `checkout.session.expired`,
+     `charge.dispute.created`.
+   - Al crear el endpoint, Stripe muestra el **Signing secret**
+     (`whsec_...`) una sola vez — cópialo. Es distinto al que genera
+     `stripe listen` en local; cada endpoint (test y live) tiene el suyo.
+3. En Railway → servicio API → Variables, pega ambos valores como
+   `STRIPE_SECRET_KEY` y `STRIPE_WEBHOOK_SECRET`. Railway hace redeploy
+   automático.
+4. La validación de arranque del servidor (`src/lib/env.ts`) rechaza el
+   proceso si detecta una llave `sk_test_` con `NODE_ENV=production` — si el
+   deploy falla justo después de este cambio, revisa que copiaste la llave
+   `sk_live_`, no la de test.
+5. Antes de anunciar el cobro con tarjeta como disponible en producción,
+   repasa el checklist completo en `docs/ARCHITECTURE.md` (sección "Checklist
+   de salida a llaves live"): Turnstile/CAPTCHA activo, reglas de Radar
+   revisadas, y confirmar que ningún `.env` de desarrollo tiene por error una
+   llave `sk_live_` o el `whsec_` de producción.
+6. Confirma que `WEB_URL` en Railway ya apunta al dominio real de producción
+   — Stripe redirige ahí (`success_url`/`cancel_url`) después del pago.
 
 4. Railway hará el primer deploy. Las migraciones de Prisma corren automáticamente antes
    de iniciar el servidor.
