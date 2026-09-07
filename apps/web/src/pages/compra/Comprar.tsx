@@ -107,7 +107,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   const [searchParams] = useSearchParams();
   const initial = (location.state ?? {}) as LocationState;
 
-  const [nombre, setNombre] = useState(initial.nombre ?? "");
+  const [nombre, setNombre] = useState((initial.nombre ?? "").toUpperCase());
   const [email, setEmail] = useState(initial.email ?? "");
   const [compania, setCompania] = useState<CompaniaKey | "">(
     fixedCompania ?? initial.compania ?? ""
@@ -253,7 +253,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
               </p>
               <Field
                 label="Nombre completo" type="text" value={nombre}
-                onChange={setNombre}
+                onChange={(v) => setNombre(v.toUpperCase())}
                 theme={theme}
               />
               <Field
