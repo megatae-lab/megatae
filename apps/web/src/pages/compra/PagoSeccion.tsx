@@ -8,7 +8,6 @@ import {
   Loader,
   ArrowRight,
   Zap,
-  CheckCircle2,
   Lock,
   CreditCard,
 } from "lucide-react";
