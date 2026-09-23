@@ -179,9 +179,9 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 
         {/* Encabezado */}
         <div className="mb-6">
-          <h1 className="text-white font-black text-3xl leading-tight">Contrata tu eSIM</h1>
+          <h1 className="text-white font-black text-3xl leading-tight">Finaliza tu compra</h1>
           <p className={`text-sm mt-1.5 transition-colors ${theme ? theme.label : "text-white/50"}`}>
-            Estás a un paso de estar conectado 🚀
+            Estás a un paso de estar conectado 
           </p>
         </div>
 
