@@ -138,12 +138,7 @@ export function PagoSeccion({
   return (
     <div className="flex flex-col gap-5">
       {/* Encabezado del paso final */}
-      <div>
-        <h2 className="text-white font-black text-2xl leading-tight">Finaliza tu compra</h2>
-        <p className={`text-sm mt-1 transition-colors ${theme.label}`}>
-          Estás a un paso de estar conectado 🚀
-        </p>
-      </div>
+      <h2 className="text-white font-black text-2xl leading-tight">Finaliza tu compra</h2>
 
       {/* Resumen del plan elegido */}
       <div
