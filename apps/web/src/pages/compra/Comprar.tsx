@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, ChevronDown, Search, X } from "lucide-react";
+import { AlertCircle, ChevronDown, Search, X, Zap } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { Stepper, type StepperTheme } from "../../components/Stepper.js";
 import { PagoSeccion } from "./PagoSeccion.js";
@@ -15,6 +15,12 @@ const COMPANIAS: { key: CompaniaKey; label: string }[] = [
   { key: "MOVISTAR", label: "Movistar" },
   { key: "BAIT", label: "Bait" },
 ];
+
+const COMPANIA_INICIAL: Record<CompaniaKey, string> = {
+  ATT: "A",
+  MOVISTAR: "M",
+  BAIT: "B",
+};
 
 export interface CompaniaTheme {
   border: string;
@@ -171,6 +177,14 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
     <div className="min-h-screen bg-navy-900 py-10 px-4">
       <div className="mx-auto max-w-lg">
 
+        {/* Encabezado */}
+        <div className="mb-6">
+          <h1 className="text-white font-black text-3xl leading-tight">Contrata tu eSIM</h1>
+          <p className={`text-sm mt-1.5 transition-colors ${theme ? theme.label : "text-white/50"}`}>
+            Estás a un paso de estar conectado 🚀
+          </p>
+        </div>
+
         <Stepper steps={STEPS} current={0} theme={stepperTheme} />
 
         <div
@@ -179,7 +193,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
             : "border-white/10 border-t-brand"
             }`}
         >
-          <h1 className="text-white font-black text-2xl mb-6">Elige tu plan</h1>
+          <h2 className="text-white font-bold text-lg mb-6">Elige tu plan</h2>
 
           {pagoCancelado && (
             <p className="mb-5 text-yellow-300 text-sm bg-yellow-400/10 border border-yellow-400/20 rounded-lg px-3 py-2">
@@ -189,33 +203,49 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 
           <div className="flex flex-col gap-6">
             {/* Compañía — solo se muestra el selector si NO viene fija */}
-           {!fixedCompania && (
+            {!fixedCompania && (
               <div>
                 <p className={`text-sm mb-2 transition-colors ${theme ? theme.label : "text-white/70"}`}>
                   Compañía
                 </p>
 
                 {!compania ? (
-                  <div className="flex gap-2 rounded-xl">
-                    {COMPANIAS.map((c) => (
-                      <button
-                        key={c.key}
-                        type="button"
-                        onClick={() => handleCompaniaChange(c.key)}
-                        className="flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors border-white/20 bg-white/5 text-white/60 hover:border-white/40"
-                      >
-                        {c.label}
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-3 gap-2">
+                    {COMPANIAS.map((c) => {
+                      const t = THEME[c.key];
+                      return (
+                        <button
+                          key={c.key}
+                          type="button"
+                          onClick={() => handleCompaniaChange(c.key)}
+                          className="flex flex-col items-center gap-2 py-3 rounded-xl border border-white/15 bg-white/5 hover:border-white/30 transition-colors"
+                        >
+                          <span
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm border ${t.bg} ${t.border} ${t.text}`}
+                          >
+                            {COMPANIA_INICIAL[c.key]}
+                          </span>
+                          <span className="text-white/70 text-xs font-semibold">{c.label}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 ) : (
-                  <div
-                    className={`flex items-center justify-between px-4 py-2 rounded-lg border ${theme!.borderSelected} ${theme!.bg}`}
+                  <button
+                    type="button"
+                    onClick={() => handleCompaniaChange(compania as CompaniaKey)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${theme!.borderSelected} ${theme!.bg}`}
                   >
-                    <span className="text-white text-sm font-semibold">
+                    <span
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm shrink-0 border ${theme!.bg} ${theme!.border} ${theme!.text}`}
+                    >
+                      {COMPANIA_INICIAL[compania as CompaniaKey]}
+                    </span>
+                    <span className="text-white text-sm font-semibold flex-1 text-left">
                       {COMPANIAS.find((c) => c.key === compania)?.label}
                     </span>
-                  </div>
+                    <span className={`text-xs font-medium ${theme!.text}`}>Cambiar</span>
+                  </button>
                 )}
               </div>
             )}
@@ -318,24 +348,29 @@ function PlanOption({
     <button
       type="button"
       onClick={onSelect}
-      className={`flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left ${selected
+      className={`flex items-center justify-between px-4 py-3.5 rounded-xl border transition-colors text-left ${selected
         ? `${theme.borderSelected} ${theme.bg}`
         : "border-white/20 bg-white/5 hover:border-white/40"
         }`}
     >
-      <div>
-        <p className={`font-bold text-lg ${selected ? "text-white" : "text-white/80"}`}>
-          ${plan.precio} MXN
+      <div className="min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className={`font-bold text-lg ${selected ? "text-white" : "text-white/80"}`}>
+            ${plan.precio} MXN
+          </p>
           {(plan.megas || plan.dias) && (
-            <span className="text-sm font-normal text-white/50 ml-1.5">
-              ({[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")})
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${selected ? `${theme.bg} ${theme.text}` : "bg-white/10 text-white/50"}`}>
+              {[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")}
             </span>
           )}
+        </div>
+        <p className="text-white/50 text-xs mt-1 flex items-center gap-1">
+          <Zap className="w-3 h-3 shrink-0" strokeWidth={2.5} />
+          Incluye recarga de ${plan.recarga} MXN
         </p>
-        <p className="text-white/50 text-xs">Incluye recarga de ${plan.recarga} MXN</p>
       </div>
       <span
-        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selected ? theme.borderSelected : "border-white/30"
+        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ml-3 ${selected ? theme.borderSelected : "border-white/30"
           }`}
       >
         {selected && <span className={`w-2.5 h-2.5 rounded-full ${theme.dot}`} />}
