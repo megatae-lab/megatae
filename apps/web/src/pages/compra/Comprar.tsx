@@ -22,6 +22,12 @@ const COMPANIA_INICIAL: Record<CompaniaKey, string> = {
   BAIT: "B",
 };
 
+const COMPANIA_LABEL: Record<CompaniaKey, string> = {
+  ATT: "AT&T",
+  MOVISTAR: "Movistar",
+  BAIT: "Bait",
+};
+
 export interface CompaniaTheme {
   border: string;
   borderSelected: string;
@@ -231,9 +237,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                     })}
                   </div>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => handleCompaniaChange(compania as CompaniaKey)}
+                  <div
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${theme!.borderSelected} ${theme!.bg}`}
                   >
                     <span
@@ -244,8 +248,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                     <span className="text-white text-sm font-semibold flex-1 text-left">
                       {COMPANIAS.find((c) => c.key === compania)?.label}
                     </span>
-                    <span className={`text-xs font-medium ${theme!.text}`}>Cambiar</span>
-                  </button>
+                  </div>
                 )}
               </div>
             )}
@@ -262,6 +265,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                       <PlanOption
                         key={p.id}
                         plan={p}
+                        compania={compania}
                         selected={planId === p.id}
                         onSelect={() => setPlanId(p.id)}
                         theme={theme}
@@ -335,11 +339,13 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 
 function PlanOption({
   plan,
+  compania,
   selected,
   onSelect,
   theme,
 }: {
   plan: Plan;
+  compania: CompaniaKey;
   selected: boolean;
   onSelect: () => void;
   theme: CompaniaTheme;
@@ -348,33 +354,39 @@ function PlanOption({
     <button
       type="button"
       onClick={onSelect}
-      className={`flex items-center justify-between px-4 py-3.5 rounded-xl border transition-colors text-left ${selected
+      className={`flex items-center gap-4 px-4 py-4 rounded-2xl border-2 transition-colors text-left ${selected
         ? `${theme.borderSelected} ${theme.bg}`
-        : "border-white/20 bg-white/5 hover:border-white/40"
+        : "border-white/15 bg-navy-900 hover:border-white/30"
         }`}
     >
-      <div className="min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <p className={`font-bold text-lg ${selected ? "text-white" : "text-white/80"}`}>
-            ${plan.precio} MXN
-          </p>
-          {(plan.megas || plan.dias) && (
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${selected ? `${theme.bg} ${theme.text}` : "bg-white/10 text-white/50"}`}>
-              {[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")}
-            </span>
-          )}
-        </div>
-        <p className="text-white/50 text-xs mt-1 flex items-center gap-1">
-          <Zap className="w-3 h-3 shrink-0" strokeWidth={2.5} />
-          Incluye recarga de ${plan.recarga} MXN
-        </p>
-      </div>
       <span
-        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ml-3 ${selected ? theme.borderSelected : "border-white/30"
-          }`}
+        className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 font-black text-xl border ${theme.bg} ${theme.border} ${theme.text}`}
       >
-        {selected && <span className={`w-2.5 h-2.5 rounded-full ${theme.dot}`} />}
+        {COMPANIA_INICIAL[compania]}
       </span>
+
+      <div className="flex-1 min-w-0">
+        <p className={`text-xs mb-0.5 transition-colors ${theme.label}`}>
+          eSIM {COMPANIA_LABEL[compania]}
+        </p>
+        <p className="text-white font-bold text-lg leading-tight">
+          {[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+        <p className="text-white/50 text-xs mt-0.5">
+          Paga ${plan.precio} y recibe ${plan.recarga} MXN de saldo
+        </p>
+        <div className={`inline-flex items-center gap-1 mt-2 text-xs font-semibold ${theme.text}`}>
+          <Zap className="w-3 h-3 shrink-0" strokeWidth={2.5} />
+          Activación inmediata
+        </div>
+      </div>
+
+      <div className="text-right shrink-0">
+        <p className="text-white font-black text-2xl leading-none">${plan.precio}</p>
+        <p className="text-white/40 text-[10px] mt-1">MXN</p>
+      </div>
     </button>
   );
 }
