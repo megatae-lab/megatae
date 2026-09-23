@@ -489,6 +489,3 @@ function Field({
     </div>
   );
 }
-
-
-me ayudas a darle un diseño asi
