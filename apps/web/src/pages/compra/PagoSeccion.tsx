@@ -1,7 +1,17 @@
 import { useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Copy, Check, Upload, Loader, CreditCard } from "lucide-react";
+import {
+  Copy,
+  Check,
+  Upload,
+  Loader,
+  ArrowRight,
+  Zap,
+  CheckCircle2,
+  Lock,
+  CreditCard,
+} from "lucide-react";
 import { api } from "../../lib/api.js";
 import { TRANSFERENCIA_HABILITADA } from "../../lib/features.js";
 import type { CompaniaKey } from "../../types.js";
@@ -15,6 +25,12 @@ const COMPANIA_LABEL: Record<CompaniaKey, string> = {
   ATT: "AT&T",
   MOVISTAR: "Movistar",
   BAIT: "Bait",
+};
+
+const COMPANIA_INICIAL: Record<CompaniaKey, string> = {
+  ATT: "A",
+  MOVISTAR: "M",
+  BAIT: "B",
 };
 
 interface PagoSeccionProps {
@@ -114,76 +130,99 @@ export function PagoSeccion({
     }
   }
 
+  const bullets = (planDescripcion ?? "")
+    .split("-")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
   return (
-    <div className="flex flex-col gap-4">
-      {/* Pago con tarjeta / transferencia */}
-      <div
-        className={`bg-navy-800 border rounded-2xl p-6 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
-      >
-        <h2 className="text-white font-bold text-lg mb-3">Realiza tu pago</h2>
-
-        {/* Resumen de la compra — recordatorio del plan elegido justo antes
-            de pagar, ya que a esta altura el selector de arriba puede estar
-            fuera de vista. */}
-        {(planPrecio || planMegas != null || planDias != null || planDescripcion) && (() => {
-          const bullets = (planDescripcion ?? "")
-            .split("-")
-            .map((s) => s.trim())
-            .filter(Boolean);
-          return (
-            <div className={`border rounded-xl px-4 py-3 mb-4 transition-colors ${theme.panelBorder} bg-navy-900`}>
-              <div className="flex items-center justify-between gap-4 mb-2">
-                <div>
-                  <p className={`text-xs uppercase tracking-widest mb-1 transition-colors ${theme.label}`}>
-                    Resumen de tu compra · {COMPANIA_LABEL[compania]}
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {planMegas != null && (
-                      <span className="text-white font-bold text-lg">{planMegas} GB</span>
-                    )}
-                    {planDias != null && (
-                      <span className={`text-sm transition-colors ${theme.label}`}>
-                        {planMegas != null && "·"} {planDias} días
-                      </span>
-                    )}
-                    {planRecarga && (
-                      <span className={`text-sm transition-colors ${theme.label}`}>
-                        · Recarga ${planRecarga} MXN
-                      </span>
-                    )}
-                  </div>
-                </div>
-                {planPrecio && (
-                  <p className="text-white font-black text-xl shrink-0">
-                    ${planPrecio} <span className="text-xs font-normal text-white/40">MXN</span>
-                  </p>
-                )}
-              </div>
-              {bullets.length > 0 && (
-                <ul className="flex flex-col gap-1 mt-1">
-                  {bullets.map((b) => (
-                    <li key={b} className={`flex items-center gap-2 text-xs transition-colors ${theme.label}`}>
-                      <span className="w-1 h-1 rounded-full bg-current shrink-0" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          );
-        })()}
-
-        <p className={`text-sm mb-5 transition-colors ${theme.label}`}>
-          {TRANSFERENCIA_HABILITADA
-            ? "Paga con tarjeta al instante, o transfiere el monto exacto de tu plan y adjunta tu comprobante."
-            : "Paga con tarjeta al instante."}
+    <div className="flex flex-col gap-5">
+      {/* Encabezado del paso final */}
+      <div>
+        <h2 className="text-white font-black text-2xl leading-tight">Finaliza tu compra</h2>
+        <p className={`text-sm mt-1 transition-colors ${theme.label}`}>
+          Estás a un paso de estar conectado 🚀
         </p>
+      </div>
 
+      {/* Resumen del plan elegido */}
+      <div
+        className={`bg-navy-800 border rounded-2xl p-5 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
+      >
+        <div className="flex items-center gap-4">
+          <div
+            className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border transition-colors ${theme.bg} ${theme.borderSelected}`}
+          >
+            <span className={`font-black text-xl ${theme.text}`}>
+              {COMPANIA_INICIAL[compania]}
+            </span>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <p className={`text-xs uppercase tracking-wide mb-0.5 transition-colors ${theme.label}`}>
+              eSIM {COMPANIA_LABEL[compania]}
+            </p>
+            <p className="text-white font-bold text-lg leading-tight">
+              {[planMegas ? `${planMegas} GB` : null, planDias ? `${planDias} días` : null]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+            {planPrecio && planRecarga && (
+              <p className="text-white/50 text-xs mt-0.5 truncate">
+                Paga ${planPrecio} y recibe ${planRecarga} MXN de saldo
+              </p>
+            )}
+          </div>
+
+          {planPrecio && (
+            <div className="text-right shrink-0">
+              <p className="text-white font-black text-2xl leading-none">${planPrecio}</p>
+              <p className="text-white/40 text-[10px] mt-1">MXN</p>
+            </div>
+          )}
+        </div>
+
+        <div
+          className={`inline-flex items-center gap-1.5 mt-4 text-xs font-semibold px-2.5 py-1 rounded-full transition-colors ${theme.bg} ${theme.text}`}
+        >
+          <Zap className="w-3 h-3" strokeWidth={2.5} />
+          Activación inmediata
+        </div>
+
+        {bullets.length > 0 && (
+          <ul className="flex flex-col gap-1 mt-4 pt-4 border-t border-white/10">
+            {bullets.map((b) => (
+              <li key={b} className="flex items-center gap-2 text-xs text-white/50">
+                <span className={`w-1 h-1 rounded-full shrink-0 ${theme.dot}`} />
+                {b}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Destino del eSIM */}
+      <div
+        className={`bg-navy-800 border rounded-2xl p-5 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
+      >
+        <h3 className="text-white font-bold text-base mb-3">¿Dónde enviamos tu eSIM?</h3>
+        <p className={`text-xs mb-1.5 transition-colors ${theme.label}`}>Correo electrónico</p>
+        <div className="bg-navy-900 border border-white/10 rounded-lg px-3.5 py-2.5 text-white text-sm truncate">
+          {email}
+        </div>
+        <p className="flex items-center gap-1.5 mt-2.5 text-emerald-400 text-xs">
+          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+          Tu QR de activación llegará aquí.
+        </p>
+      </div>
+
+      {/* Botón de pago con tarjeta */}
+      <div>
         <button
           type="button"
           onClick={handlePagarConTarjeta}
           disabled={payingWithCard}
-          className={`w-full disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2.5 ${theme.button}`}
+          className={`w-full disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all active:scale-[0.99] shadow-lg flex items-center justify-center gap-2 ${theme.button}`}
         >
           {payingWithCard ? (
             <>
@@ -192,14 +231,11 @@ export function PagoSeccion({
             </>
           ) : (
             <>
-              <CreditCard className="w-5 h-5" strokeWidth={2} />
-              Pagar con tarjeta
+              Pagar {planPrecio ? `$${planPrecio}` : ""} MXN
+              <ArrowRight className="w-5 h-5" />
             </>
           )}
         </button>
-        <p className="text-white/30 text-xs text-center mt-1.5">
-          Pago seguro procesado por Stripe. Se confirma automáticamente, sin subir comprobante.
-        </p>
 
         {cardError && (
           <p className="mt-3 text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
@@ -207,58 +243,71 @@ export function PagoSeccion({
           </p>
         )}
 
-        {TRANSFERENCIA_HABILITADA && (
-          <>
-            <div className="flex items-center gap-3 my-4">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-white/30 text-xs uppercase tracking-widest">o transferencia</span>
-              <div className="flex-1 h-px bg-white/10" />
-            </div>
-
-            {cuentas.length === 0 ? (
-              <p className="text-white/40 text-sm">Cargando cuentas…</p>
-            ) : (
-              <div className="flex flex-col gap-3">
-                {cuentas.map((c) => (
-                  <div
-                    key={c.id}
-                    className={`bg-navy-900 border rounded-xl p-4 transition-colors ${theme.panelBorder}`}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-white font-semibold text-sm">{c.banco}</p>
-                      <p className="text-white/50 text-xs">{c.titular}</p>
-                    </div>
-                    {c.cuenta && (
-                      <CopyRow
-                        label="Cuenta"
-                        value={c.cuenta}
-                        copied={copied === `cuenta-${c.id}`}
-                        onCopy={() => copy(c.cuenta!, `cuenta-${c.id}`)}
-                        theme={theme}
-                      />
-                    )}
-                    {c.clabe && (
-                      <CopyRow
-                        label="CLABE"
-                        value={c.clabe}
-                        copied={copied === `clabe-${c.id}`}
-                        onCopy={() => copy(c.clabe!, `clabe-${c.id}`)}
-                        theme={theme}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
+        {/* Sello de confianza */}
+        <div className="flex flex-col items-center gap-2 mt-5">
+          <p className="flex items-center gap-1.5 text-white/40 text-xs">
+            <Lock className="w-3.5 h-3.5" />
+            Pago seguro procesado por Stripe
+          </p>
+          <p className="text-white/30 text-[11px]">Visa · Mastercard · Apple Pay · Google Pay</p>
+          <p className="text-white/25 text-[11px]">Tu información está protegida y encriptada.</p>
+        </div>
       </div>
+
+      {/* Transferencia bancaria — alternativa opcional */}
+      {TRANSFERENCIA_HABILITADA && (
+        <div
+          className={`bg-navy-800 border rounded-2xl p-5 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-white/30 text-xs uppercase tracking-widest">o transferencia</span>
+            <div className="flex-1 h-px bg-white/10" />
+          </div>
+
+          {cuentas.length === 0 ? (
+            <p className="text-white/40 text-sm">Cargando cuentas…</p>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {cuentas.map((c) => (
+                <div
+                  key={c.id}
+                  className={`bg-navy-900 border rounded-xl p-4 transition-colors ${theme.panelBorder}`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-white font-semibold text-sm">{c.banco}</p>
+                    <p className="text-white/50 text-xs">{c.titular}</p>
+                  </div>
+                  {c.cuenta && (
+                    <CopyRow
+                      label="Cuenta"
+                      value={c.cuenta}
+                      copied={copied === `cuenta-${c.id}`}
+                      onCopy={() => copy(c.cuenta!, `cuenta-${c.id}`)}
+                      theme={theme}
+                    />
+                  )}
+                  {c.clabe && (
+                    <CopyRow
+                      label="CLABE"
+                      value={c.clabe}
+                      copied={copied === `clabe-${c.id}`}
+                      onCopy={() => copy(c.clabe!, `clabe-${c.id}`)}
+                      theme={theme}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Upload comprobante — solo aplica a transferencia */}
       {TRANSFERENCIA_HABILITADA && (
         <form
           onSubmit={handleSubmit}
-          className={`bg-navy-800 border rounded-2xl p-6 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
+          className={`bg-navy-800 border rounded-2xl p-5 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
         >
           <h2 className="text-white font-bold text-lg mb-1">Adjunta tu comprobante</h2>
           <p className={`text-sm mb-5 transition-colors ${theme.label}`}>
@@ -307,7 +356,10 @@ export function PagoSeccion({
                 Enviando solicitud…
               </>
             ) : (
-              "Enviar solicitud"
+              <>
+                <CreditCard className="w-4 h-4" />
+                Enviar solicitud
+              </>
             )}
           </button>
         </form>
