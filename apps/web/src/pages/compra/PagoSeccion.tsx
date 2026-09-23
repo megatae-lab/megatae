@@ -196,21 +196,6 @@ export function PagoSeccion({
         )}
       </div>
 
-      {/* Destino del eSIM */}
-      <div
-        className={`bg-navy-800 border rounded-2xl p-5 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
-      >
-        <h3 className="text-white font-bold text-base mb-3">¿Dónde enviamos tu eSIM?</h3>
-        <p className={`text-xs mb-1.5 transition-colors ${theme.label}`}>Correo electrónico</p>
-        <div className="bg-navy-900 border border-white/10 rounded-lg px-3.5 py-2.5 text-white text-sm truncate">
-          {email}
-        </div>
-        <p className="flex items-center gap-1.5 mt-2.5 text-emerald-400 text-xs">
-          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-          Tu QR de activación llegará aquí.
-        </p>
-      </div>
-
       {/* Botón de pago con tarjeta */}
       <div>
         <button
