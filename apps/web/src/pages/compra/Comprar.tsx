@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, ChevronDown, Search, X } from "lucide-react";
+import { AlertCircle, ChevronDown, Search, X, Zap, Smartphone } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { Stepper, type StepperTheme } from "../../components/Stepper.js";
 import { PagoSeccion } from "./PagoSeccion.js";
@@ -15,6 +15,19 @@ const COMPANIAS: { key: CompaniaKey; label: string }[] = [
   { key: "MOVISTAR", label: "Movistar" },
   { key: "BAIT", label: "Bait" },
 ];
+
+const COMPANIA_LABEL: Record<CompaniaKey, string> = {
+  ATT: "AT&T",
+  MOVISTAR: "Movistar",
+  BAIT: "Bait",
+};
+
+// Rutas de los logos — ajusta a donde guardes tus archivos (p. ej. /public/logos/)
+const COMPANIA_LOGO: Record<CompaniaKey, string> = {
+  ATT: "/assets/icon-att.png",
+  MOVISTAR: "/assets/icon-movistar.png",
+  BAIT: "/assets/icon-bait.png",
+};
 
 export interface CompaniaTheme {
   border: string;
@@ -124,7 +137,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   // modos la limpia después.
   useEffect(() => {
     if (pagoCancelado && cancelToken) {
-      api.solicitudes.cancelarStripe(cancelToken).catch(() => {});
+      api.solicitudes.cancelarStripe(cancelToken).catch(() => { });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -134,9 +147,7 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
     queryFn: api.planes.list,
   });
 
-  const planesCompania = planes.filter(
-    (p) => p.compania === compania && p.activo
-  );
+  const selectedPlan = planId ? planes.find((p) => p.id === planId) : undefined;
 
   const theme: CompaniaTheme | null = compania ? THEME[compania] : null;
   const stepperTheme: StepperTheme | undefined = theme
@@ -159,13 +170,12 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
   const ladaEntry = LADAS_MX.find((l) => l.key === ladaKey);
   const emailInvalido = email.trim().length > 0 && !EMAIL_RE.test(email.trim());
   const emailError = emailInvalido ? "Escribe un correo válido (ej. nombre@correo.com)." : undefined;
+  // El correo ya no es requisito para MOSTRAR la sección de pago; solo se
+  // usa para habilitar el botón de "Pagar con tarjeta" dentro de ella.
+  const emailValido = email.trim().length > 0 && !emailInvalido;
   const datosCompletos =
     !!compania &&
-    !!planId &&
-    (compania !== "ATT" || !!ladaKey) &&
-    nombre.trim().length >= 2 &&
-    email.trim().length > 0 &&
-    !emailInvalido;
+    !!planId;
 
   return (
     <div className="min-h-screen bg-navy-900 py-10 px-4">
@@ -179,7 +189,8 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
             : "border-white/10 border-t-brand"
             }`}
         >
-          <h1 className="text-white font-black text-2xl mb-6">Elige tu plan</h1>
+          <h1 className="text-white font-black text-2xl">Finaliza tu compra</h1>
+          <p className="text-blue-400 text-sm mb-6">Estás a un paso de estar conectado</p>
 
           {pagoCancelado && (
             <p className="mb-5 text-yellow-300 text-sm bg-yellow-400/10 border border-yellow-400/20 rounded-lg px-3 py-2">
@@ -189,55 +200,43 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
 
           <div className="flex flex-col gap-6">
             {/* Compañía — solo se muestra el selector si NO viene fija */}
-           {!fixedCompania && (
+            {!fixedCompania && (
               <div>
-                <p className={`text-sm mb-2 transition-colors ${theme ? theme.label : "text-white/70"}`}>
-                  Compañía
-                </p>
+                {/* Selector de compañía */}
+                <div>
 
-                {!compania ? (
-                  <div className="flex gap-2 rounded-xl">
-                    {COMPANIAS.map((c) => (
-                      <button
-                        key={c.key}
-                        type="button"
-                        onClick={() => handleCompaniaChange(c.key)}
-                        className="flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors border-white/20 bg-white/5 text-white/60 hover:border-white/40"
-                      >
-                        {c.label}
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div
-                    className={`flex items-center justify-between px-4 py-2 rounded-lg border ${theme!.borderSelected} ${theme!.bg}`}
-                  >
-                    <span className="text-white text-sm font-semibold">
-                      {COMPANIAS.find((c) => c.key === compania)?.label}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
+                  {!compania ? (
+                    <div className="flex gap-2 rounded-xl">
+                      {COMPANIAS.map((c) => (
+                        <button
+                          key={c.key}
+                          type="button"
+                          onClick={() => handleCompaniaChange(c.key)}
+                          className="flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors border-white/20 bg-white/5 text-white/60 hover:border-white/40"
+                        >
+                          {c.label}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div
+                      className={`flex items-center justify-between px-4 py-2 rounded-lg border ${theme!.borderSelected
+                        } ${theme!.bg}`}
+                    >
+                      <span className="text-white text-sm font-semibold">
+                        {COMPANIAS.find((c) => c.key === compania)?.label}
+                      </span>
+                    </div>
+                  )}
+                </div>
 
-            {/* Planes */}
-            {compania && theme && (
-              <div>
-                <p className={`text-sm mb-2 transition-colors ${theme.label}`}>Plan</p>
-                {planesCompania.length === 0 ? (
-                  <p className="text-white/40 text-sm">Cargando planes…</p>
-                ) : (
-                  <div className="flex flex-col gap-2">
-                    {planesCompania.map((p) => (
-                      <PlanOption
-                        key={p.id}
-                        plan={p}
-                        selected={planId === p.id}
-                        onSelect={() => setPlanId(p.id)}
-                        theme={theme}
-                      />
-                    ))}
-                  </div>
+                {/* Detalle de la venta — a todo el ancho, debajo de la compañía */}
+                {compania && theme && selectedPlan && (
+                  <ResumenPedido
+                    plan={selectedPlan}
+                    compania={compania}
+                    theme={theme}
+                  />
                 )}
               </div>
             )}
@@ -256,7 +255,6 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
               </div>
             )}
 
-            <hr className={`transition-colors ${theme ? theme.hr : "border-white/10"}`} />
 
             {/* Datos del cliente */}
             <div className="flex flex-col gap-4">
@@ -268,79 +266,127 @@ export function Comprar({ fixedCompania }: { fixedCompania?: CompaniaKey }) {
                 onChange={(v) => setNombre(v.toUpperCase())}
                 theme={theme}
               />
+              <h1 className="text-white font-black text-xl">¿Dónde enviamos tu eSIM?</h1>
+
               <Field
-                label="Correo electrónico (Tu código QR llegará a este correo electrónico)" type="email" value={email}
+                label="Correo electrónico" type="email" value={email}
                 onChange={setEmail}
                 theme={theme} error={emailError}
               />
+              <div className="flex items-center gap-2 rounded-md ">
+                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-green-400">
+                  <svg
+                    className="w-3 h-3 text-[#06336b]"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 011.414-1.414l2.543 2.543 6.543-6.543a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <span className="text-sm text-blue-200">
+                  Tu QR de activación llegará aquí.
+                </span>
+              </div>
+              {datosCompletos && compania && planId && theme && (
+                <div className="mt-4">
+                  <PagoSeccion
+                    theme={theme}
+                    nombre={nombre}
+                    email={email}
+                    compania={compania}
+                    planId={planId}
+                    lada={ladaEntry?.lada}
+                    estadoMx={ladaEntry?.estado}
+                    emailValido={emailValido}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        {datosCompletos && compania && planId && (() => {
-          const selectedPlan = planes.find((p) => p.id === planId);
-          return (
-            <div className="mt-4">
-              <PagoSeccion
-                theme={theme!}
-                nombre={nombre}
-                email={email}
-                compania={compania}
-                planId={planId}
-                lada={ladaEntry?.lada}
-                estadoMx={ladaEntry?.estado}
-                planPrecio={selectedPlan?.precio}
-                planRecarga={selectedPlan?.recarga}
-                planMegas={selectedPlan?.megas}
-                planDias={selectedPlan?.dias}
-                planDescripcion={selectedPlan?.descripcion ?? null}
-              />
-            </div>
-          );
-        })()}
       </div>
     </div>
   );
 }
 
-function PlanOption({
+function ResumenPedido({
   plan,
-  selected,
-  onSelect,
+  compania,
   theme,
 }: {
   plan: Plan;
-  selected: boolean;
-  onSelect: () => void;
+  compania: CompaniaKey;
   theme: CompaniaTheme;
 }) {
+  const [logoError, setLogoError] = useState(false);
+
+  // Si cambia la compañía, vuelve a intentar cargar el logo nuevo
+  useEffect(() => {
+    setLogoError(false);
+  }, [compania]);
+
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left ${selected
-        ? `${theme.borderSelected} ${theme.bg}`
-        : "border-white/20 bg-white/5 hover:border-white/40"
-        }`}
+    <div
+      className={`flex items-center gap-4 rounded-2xl border ${theme.panelBorder} bg-navy-900 px-4 py-3 mt-3 transition-colors`}
     >
-      <div>
-        <p className={`font-bold text-lg ${selected ? "text-white" : "text-white/80"}`}>
-          ${plan.precio} MXN
-          {(plan.megas || plan.dias) && (
-            <span className="text-sm font-normal text-white/50 ml-1.5">
-              ({[plan.megas ? `${plan.megas} GB` : null, plan.dias ? `${plan.dias} días` : null].filter(Boolean).join(" · ")})
+      {/* Logo de la compañía */}
+      <div className={`shrink-0 w-13 h-13 rounded-xl flex items-center justify-center overflow-hidden ${theme.bg}`}>
+        {!logoError ? (
+          <img
+            src={COMPANIA_LOGO[compania]}
+            alt={COMPANIA_LABEL[compania]}
+            className="w-10 h-10 object-contain"
+            onError={() => setLogoError(true)}
+          />
+        ) : (
+          <Smartphone className={`w-5 h-5 ${theme.text}`} />
+        )}
+      </div>
+
+      {/* Contenido */}
+      <div className="flex-1 min-w-0">
+        <p className={`text-xs font-semibold mb-0.5 transition-colors ${theme.text}`}>
+          eSIM {COMPANIA_LABEL[compania]}
+        </p>
+
+        <div className="flex items-baseline gap-1.5 whitespace-nowrap">
+          {plan.megas != null && (
+            <span className="text-white font-black text-lg leading-tight">{plan.megas} GB</span>
+          )}
+          {plan.dias != null && (
+            <span className={`text-sm font-medium leading-tight transition-colors ${theme.label}`}>
+              {plan.megas != null && "·"} {plan.dias} días
             </span>
           )}
-        </p>
-        <p className="text-white/50 text-xs">Incluye recarga de ${plan.recarga} MXN</p>
+        </div>
+
+        {plan.recarga && plan.precio && (
+          <p className={`text-xs mt-0.5 transition-colors ${theme.label}`}>
+            Paga ${plan.precio} y recibe ${plan.recarga} MXN de saldo
+          </p>
+        )}
+
+        <div className="flex items-center gap-1.5 mt-1.5">
+          <Zap className={`w-3.5 h-3.5 shrink-0 ${theme.text}`} fill="currentColor" />
+          <span className={`text-xs font-medium transition-colors ${theme.text}`}>
+            Activación inmediata
+          </span>
+        </div>
       </div>
-      <span
-        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selected ? theme.borderSelected : "border-white/30"
-          }`}
-      >
-        {selected && <span className={`w-2.5 h-2.5 rounded-full ${theme.dot}`} />}
-      </span>
-    </button>
+
+      {/* Precio */}
+      {plan.precio && (
+        <div className={`shrink-0 flex flex-col items-end justify-center border-l pl-4 ${theme.hr}`}>
+          <span className="text-white font-black text-2xl leading-none">${plan.precio}</span>
+          <span className="text-[10px] text-white/40 mt-1">MXN</span>
+        </div>
+      )}
+    </div>
   );
 }
 
