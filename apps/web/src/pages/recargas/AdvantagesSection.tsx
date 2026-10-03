@@ -80,7 +80,7 @@ export function AdvantagesSection() {
                     </button>
                 </div>
             </div>
-            <CtaBanner text="Quiero vender recargas electrónicas" />
+            <CtaBanner text="" />
 
         </section>
     );
