@@ -4,12 +4,18 @@ import { getBasePathFromPathname } from "../lib/routes.js";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
-  const homePath = getBasePathFromPathname(location.pathname) || "/";
+  const { pathname } = useLocation();
+
+  // "" en "/", "/comprar", etc.; "/vende-recargas" o "/v1/eSIM-Att" en su sección
+  const base = getBasePathFromPathname(pathname);
+  const homePath = base || "/";
 
   const NAV_LINKS = [
     { label: "Inicio", to: homePath, active: true },
-    { label: "Conócenos", to: "conocenos", active: true },
+    // "Conócenos" solo aparece dentro de una sección, no en megatae.mx
+    ...(base
+      ? [{ label: "Conócenos", to: `${base}/conocenos`, active: true }]
+      : []),
   ];
 
   return (
@@ -50,13 +56,7 @@ export function Navbar() {
           )}
         </div>
 
-        {/* CTA - solo desktop */}
-        {/* <button className="hidden md:flex shrink-0 items-center gap-2 bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
-          <IconUser />
-          Ser socio
-        </button> */}
-
-        {/* Botón hamburgues */}
+        {/* Botón hamburguesa */}
         <button
           className="md:hidden flex items-center justify-center w-10 h-10 shrink-0"
           onClick={() => setOpen(true)}
@@ -65,16 +65,20 @@ export function Navbar() {
           <IconMenu />
         </button>
       </div>
+
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 md:hidden ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 md:hidden ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
         onClick={() => setOpen(false)}
       />
 
       {/* Panel derecha */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 max-w-[80%] bg-brand z-50 shadow-xl transform transition-transform duration-300 ease-in-out md:hidden flex flex-col
-        ${open ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 h-full w-64 max-w-[80%] bg-brand z-50 shadow-xl transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <div className="flex items-center justify-between px-4 h-16 border-b border-white/10 shrink-0">
           <img
@@ -117,13 +121,8 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Botón + redes abajo */}
+          {/* Redes abajo */}
           <div className="mt-auto flex flex-col gap-4">
-            {/* <button className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
-              <IconUser />
-              Ser socio
-            </button> */}
-
             <div className="flex items-center justify-center gap-4 pt-5 border-t border-white/10">
               <SocialLink href="https://www.facebook.com/megataeglobal?locale=es_LA" label="Facebook" icon={<IconFacebook />} />
               <SocialLink href="#" label="Instagram" icon={<IconInstagram />} />
@@ -147,14 +146,6 @@ function SocialLink({ href, label, icon }: { href: string; label: string; icon: 
     </a>
   );
 }
-
-// function IconUser() {
-//   return (
-//     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-//       <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z" />
-//     </svg>
-//   );
-// }
 
 function IconFacebook() {
   return (
@@ -181,7 +172,6 @@ function IconTikTok() {
     </svg>
   );
 }
-
 
 function IconMenu() {
   return (

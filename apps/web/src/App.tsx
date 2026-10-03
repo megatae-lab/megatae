@@ -23,6 +23,7 @@ import { AdminConfiguracion } from "./pages/admin/Configuracion.js";
 import { AdminReportes } from "./pages/admin/Reportes.js";
 import { useEffect } from "react";
 import { Registro } from "./pages/vinculacion/Registro.js";
+import { ALL_BASE_PATHS } from "./lib/routes.js";
 import { initAnalytics, trackPageView } from "./lib/analytics.js";
 
 function PublicLayout() {
@@ -80,6 +81,9 @@ export function App() {
           <Route path="v1/eSIM-Att/comprar" element={<ComprarAtt />} />
           <Route path="v1/eSIM-Bait/comprar" element={<ComprarBait />} />
           <Route path="v1/eSIM-Movistar/comprar" element={<ComprarMovistar />} />
+          {ALL_BASE_PATHS.map((base) => (
+            <Route key={base} path={`${base}/conocenos`} element={<Conocenos />} />
+          ))}
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminLayout />}>

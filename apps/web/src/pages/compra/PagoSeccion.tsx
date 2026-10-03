@@ -1,7 +1,7 @@
 import { useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Copy, Check, Upload, Loader, CreditCard } from "lucide-react";
+import { Copy, Check, Upload, Loader, CreditCard, Lock } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { TRANSFERENCIA_HABILITADA } from "../../lib/features.js";
 import type { CompaniaKey } from "../../types.js";
@@ -11,11 +11,8 @@ import type { CompaniaTheme } from "./Comprar.js";
 // dentro de Comprar.tsx: aparece inline en cuanto los datos de arriba son
 // válidos, sin salto de página. Recibe los datos ya validados como props en
 // vez de leerlos de location.state.
-const COMPANIA_LABEL: Record<CompaniaKey, string> = {
-  ATT: "AT&T",
-  MOVISTAR: "Movistar",
-  BAIT: "Bait",
-};
+// Nota: el resumen del pedido (plan, precio, etc.) ya NO se muestra aquí —
+// se movió a Comprar.tsx, justo debajo del selector de plan.
 
 interface PagoSeccionProps {
   theme: CompaniaTheme;
@@ -25,16 +22,14 @@ interface PagoSeccionProps {
   planId: number;
   lada?: string;
   estadoMx?: string;
-  planPrecio?: string;
-  planRecarga?: string;
-  planMegas?: number | null;
-  planDias?: number | null;
-  planDescripcion?: string | null;
+  // El correo se valida en Comprar.tsx; aquí solo se usa para bloquear el
+  // botón de "Pagar con tarjeta" hasta que el usuario lo llene bien.
+  emailValido: boolean;
 }
 
 export function PagoSeccion({
   theme, nombre, email, compania, planId, lada, estadoMx,
-  planPrecio, planRecarga, planMegas, planDias, planDescripcion,
+  emailValido,
 }: PagoSeccionProps) {
   const navigate = useNavigate();
 
@@ -60,6 +55,7 @@ export function PagoSeccion({
   }
 
   async function handlePagarConTarjeta() {
+    if (!emailValido) return;
     setCardError("");
     try {
       setPayingWithCard(true);
@@ -118,71 +114,12 @@ export function PagoSeccion({
     <div className="flex flex-col gap-4">
       {/* Pago con tarjeta / transferencia */}
       <div
-        className={`bg-navy-800 border rounded-2xl p-6 shadow-2xl transition-colors border-t-4 ${theme.panelBorder} ${theme.panelTop}`}
+        className={`transition-colors ${theme.panelBorder} ${theme.panelTop}`}
       >
-        <h2 className="text-white font-bold text-lg mb-3">Realiza tu pago</h2>
-
-        {/* Resumen de la compra — recordatorio del plan elegido justo antes
-            de pagar, ya que a esta altura el selector de arriba puede estar
-            fuera de vista. */}
-        {(planPrecio || planMegas != null || planDias != null || planDescripcion) && (() => {
-          const bullets = (planDescripcion ?? "")
-            .split("-")
-            .map((s) => s.trim())
-            .filter(Boolean);
-          return (
-            <div className={`border rounded-xl px-4 py-3 mb-4 transition-colors ${theme.panelBorder} bg-navy-900`}>
-              <div className="flex items-center justify-between gap-4 mb-2">
-                <div>
-                  <p className={`text-xs uppercase tracking-widest mb-1 transition-colors ${theme.label}`}>
-                    Resumen de tu compra · {COMPANIA_LABEL[compania]}
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {planMegas != null && (
-                      <span className="text-white font-bold text-lg">{planMegas} GB</span>
-                    )}
-                    {planDias != null && (
-                      <span className={`text-sm transition-colors ${theme.label}`}>
-                        {planMegas != null && "·"} {planDias} días
-                      </span>
-                    )}
-                    {planRecarga && (
-                      <span className={`text-sm transition-colors ${theme.label}`}>
-                        · Recarga ${planRecarga} MXN
-                      </span>
-                    )}
-                  </div>
-                </div>
-                {planPrecio && (
-                  <p className="text-white font-black text-xl shrink-0">
-                    ${planPrecio} <span className="text-xs font-normal text-white/40">MXN</span>
-                  </p>
-                )}
-              </div>
-              {bullets.length > 0 && (
-                <ul className="flex flex-col gap-1 mt-1">
-                  {bullets.map((b) => (
-                    <li key={b} className={`flex items-center gap-2 text-xs transition-colors ${theme.label}`}>
-                      <span className="w-1 h-1 rounded-full bg-current shrink-0" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          );
-        })()}
-
-        <p className={`text-sm mb-5 transition-colors ${theme.label}`}>
-          {TRANSFERENCIA_HABILITADA
-            ? "Paga con tarjeta al instante, o transfiere el monto exacto de tu plan y adjunta tu comprobante."
-            : "Paga con tarjeta al instante."}
-        </p>
-
         <button
           type="button"
           onClick={handlePagarConTarjeta}
-          disabled={payingWithCard}
+          disabled={payingWithCard || !emailValido}
           className={`w-full disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2.5 ${theme.button}`}
         >
           {payingWithCard ? (
@@ -197,10 +134,8 @@ export function PagoSeccion({
             </>
           )}
         </button>
-        <p className="text-white/30 text-xs text-center mt-1.5">
-          Pago seguro procesado por Stripe. Se confirma automáticamente, sin subir comprobante.
-        </p>
 
+        <SelloConfianzaPago theme={theme} />
         {cardError && (
           <p className="mt-3 text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
             {cardError}
@@ -312,6 +247,59 @@ export function PagoSeccion({
           </button>
         </form>
       )}
+    </div>
+  );
+}
+
+function SelloConfianzaPago({ theme }: { theme: CompaniaTheme }) {
+  return (
+    <div className=" p-4 flex flex-col items-center gap-3">
+      <div className="flex items-center gap-2">
+        <Lock className={`w-4 h-4 ${theme.text}`} strokeWidth={2} />
+        <span className="text-white font-semibold text-sm">
+          Pago seguro procesado por Stripe
+        </span>
+      </div>
+
+      <span className="text-white/40 text-xs">
+        Visa · Mastercard · Apple Pay · Google Pay
+      </span>
+
+      <div className="grid grid-cols-4 gap-2 w-[75%]">
+        <div className="bg-white rounded-md h-8 flex items-center justify-center">
+          <span className="text-[#1A1F71] font-black italic text-xs tracking-tight">
+            VISA
+          </span>
+        </div>
+
+        <div className="bg-white rounded-md h-8 flex items-center justify-center">
+          <div className="flex items-center">
+            <span className="w-3.5 h-3.5 rounded-full bg-[#EB001B] -mr-1.5" />
+            <span className="w-3.5 h-3.5 rounded-full bg-[#F79E1B] opacity-90" />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-md h-8 flex items-center justify-center gap-1">
+          <span className="text-black text-sm leading-none"></span>
+          <span className="text-black font-semibold text-xs">Pay</span>
+        </div>
+
+        <div className="bg-white rounded-md h-8 flex items-center justify-center gap-1">
+          <span className="font-bold text-xs">
+            <span className="text-[#4285F4]">G</span>
+            <span className="text-[#EA4335]">o</span>
+            <span className="text-[#FBBC05]">o</span>
+            <span className="text-[#4285F4]">g</span>
+            <span className="text-[#34A853]">l</span>
+            <span className="text-[#EA4335]">e</span>
+          </span>
+          <span className="text-black font-semibold text-xs">Pay</span>
+        </div>
+      </div>
+
+      <p className="text-white/30 text-[11px] text-center">
+        Tu información está protegida y encriptada.
+      </p>
     </div>
   );
 }
