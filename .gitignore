@@ -4,3 +4,6 @@ dist/
 .env.local
 *.tsbuildinfo
 apps/web/src/**/*.js
+
+# El proyecto usa pnpm; un npm install accidental genera este archivo
+package-lock.json
