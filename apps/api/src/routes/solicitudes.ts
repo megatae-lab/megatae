@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { generatePresignedUploadUrl, isAllowedType } from "../services/r2.js";
-import { sendSolicitudRecibida, sendFueraDeHorario, isWithinBusinessHours } from "../services/email.js";
+import { sendSolicitudRecibida, sendFueraDeHorario, sendNuevaOrden, isWithinBusinessHours } from "../services/email.js";
 import { conPublicCodeUnico, generateAccessToken, ACCESS_TOKEN_TTL_MS } from "../lib/tokens.js";
 import { getStripe, precioACentavos } from "../services/stripe.js";
 
@@ -111,6 +111,21 @@ solicitudesRouter.post("/", async (req, res, next) => {
       recarga: plan.recarga.toString(),
     }).catch((err) => {
       console.error("Error enviando correo SolicitudRecibida:", err);
+    });
+
+    sendNuevaOrden({
+      solicitudId: solicitud.id,
+      folio: solicitud.publicCode,
+      metodoPago: "TRANSFERENCIA",
+      nombre: body.nombre,
+      email: body.email,
+      compania: COMPANY_DISPLAY[body.compania] ?? body.compania,
+      lada,
+      precio: plan.precio.toString(),
+      recarga: plan.recarga.toString(),
+      comprobanteUrl: body.comprobanteUrl,
+    }).catch((err) => {
+      console.error("Error enviando correo NuevaOrden:", err);
     });
 
     if (!isWithinBusinessHours()) {
