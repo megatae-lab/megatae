@@ -5,6 +5,7 @@ import { PagoRechazado } from "../emails/PagoRechazado.js";
 import { QrEnviado } from "../emails/QrEnviado.js";
 import { RecordatorioActivacion } from "../emails/RecordatorioActivacion.js";
 import { FueraDeHorario } from "../emails/FueraDeHorario.js";
+import { NuevaOrden } from "../emails/NuevaOrden.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "no-reply@megatae.mx";
@@ -111,6 +112,43 @@ export async function sendRecordatorioActivacion(opts: {
     from: FROM,
     to: opts.to,
     subject: `Acción requerida: completa tu registro LMTR — eSIM ${opts.compania}`,
+    html,
+  });
+}
+
+// Destinatarios internos de la alerta de orden nueva, separados por comas en
+// NOTIFICACION_NUEVA_ORDEN_EMAILS. Vive en el entorno (no en código) para
+// poder cambiar la lista desde Railway sin tocar el repo. Si está vacía, la
+// alerta simplemente no se envía.
+function destinatariosNuevaOrden(): string[] {
+  return (process.env.NOTIFICACION_NUEVA_ORDEN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim())
+    .filter(Boolean);
+}
+
+export async function sendNuevaOrden(opts: {
+  solicitudId: number;
+  folio: string;
+  metodoPago: "TRANSFERENCIA" | "STRIPE";
+  nombre: string;
+  email: string;
+  compania: string;
+  lada?: string | null;
+  precio: string;
+  recarga: string;
+  comprobanteUrl?: string | null;
+}) {
+  const to = destinatariosNuevaOrden();
+  if (to.length === 0) return;
+
+  const adminUrl = process.env.WEB_URL ? `${process.env.WEB_URL}/admin/solicitudes/${opts.solicitudId}` : undefined;
+  const html = await render(<NuevaOrden {...opts} adminUrl={adminUrl} />);
+  const metodo = opts.metodoPago === "STRIPE" ? "Tarjeta" : "Transferencia";
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Nueva orden ${opts.folio} — eSIM ${opts.compania} $${opts.precio} (${metodo})`,
     html,
   });
 }

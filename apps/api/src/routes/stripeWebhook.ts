@@ -2,7 +2,7 @@ import { Router, raw } from "express";
 import type Stripe from "stripe";
 import { prisma } from "../lib/prisma.js";
 import { getStripe } from "../services/stripe.js";
-import { sendSolicitudRecibida } from "../services/email.js";
+import { sendSolicitudRecibida, sendNuevaOrden } from "../services/email.js";
 
 export const stripeWebhookRouter = Router();
 
@@ -201,6 +201,20 @@ stripeWebhookRouter.post("/", raw({ type: "application/json" }), async (req, res
           precio: solicitud.plan.precio.toString(),
           recarga: solicitud.plan.recarga.toString(),
         }).catch((err) => console.error("Error enviando correo SolicitudRecibida (Stripe):", err));
+
+        // La alerta interna sale aquí (pago confirmado) y no al crear el
+        // Checkout Session, para no avisar de checkouts abandonados.
+        sendNuevaOrden({
+          solicitudId: solicitud.id,
+          folio: solicitud.publicCode,
+          metodoPago: "STRIPE",
+          nombre: solicitud.nombre,
+          email: solicitud.email,
+          compania: COMPANY_DISPLAY[solicitud.compania] ?? solicitud.compania,
+          lada: solicitud.lada,
+          precio: solicitud.plan.precio.toString(),
+          recarga: solicitud.plan.recarga.toString(),
+        }).catch((err) => console.error("Error enviando correo NuevaOrden (Stripe):", err));
       }
     }
   } catch (err) {

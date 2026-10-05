@@ -6,3 +6,7 @@ import "dotenv/config";
 // este valor.
 process.env.STRIPE_SECRET_KEY ||= "sk_test_vitest_placeholder";
 process.env.STRIPE_WEBHOOK_SECRET ||= "whsec_vitest_placeholder";
+
+// Las pruebas no deben disparar la alerta interna de orden nueva a los
+// correos reales del equipo.
+process.env.NOTIFICACION_NUEVA_ORDEN_EMAILS = "";
