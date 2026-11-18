@@ -4,7 +4,7 @@ import { Plus, Loader, ChevronUp, ChevronDown, Pencil } from "lucide-react";
 import { api } from "../../lib/api.js";
 import { getAdminUser } from "../../lib/auth.js";
 import { TRANSFERENCIA_HABILITADA } from "../../lib/features.js";
-import type { Plan, CuentaBancaria } from "../../types.js";
+import type { Plan, CuentaBancaria, DestinoCuenta } from "../../types.js";
 
 const COMPANIA_LABEL: Record<string, string> = {
   ATT: "AT&T", MOVISTAR: "Movistar", BAIT: "Bait",
@@ -16,9 +16,17 @@ const COMPANIA_OPTIONS = [
   { value: "BAIT", label: "Bait" },
 ];
 
-const TABS = (["planes", "cuentas"] as const).filter(
-  (t) => t !== "cuentas" || TRANSFERENCIA_HABILITADA
-);
+// La pestaña de cuentas siempre se muestra: aunque la transferencia de eSIM
+// esté apagada, el registro de negocios para recargas solo acepta
+// transferencia y necesita sus propias cuentas.
+const TABS = ["planes", "cuentas"] as const;
+
+// Cuentas de eSIM solo se administran si la transferencia de eSIM está
+// habilitada; las de recargas, siempre.
+const DESTINOS: { value: DestinoCuenta; label: string }[] = [
+  ...(TRANSFERENCIA_HABILITADA ? [{ value: "ESIM" as const, label: "eSIM" }] : []),
+  { value: "RECARGAS", label: "Registro de recargas" },
+];
 
 export function AdminConfiguracion() {
   const admin = getAdminUser();
@@ -58,7 +66,7 @@ export function AdminConfiguracion() {
       </div>
 
       {tab === "planes" && <PlanesPanel />}
-      {tab === "cuentas" && TRANSFERENCIA_HABILITADA && <CuentasPanel />}
+      {tab === "cuentas" && <CuentasPanel />}
     </div>
   );
 }
@@ -372,13 +380,14 @@ const CUENTA_FORM_EMPTY: CuentaForm = {
 
 function CuentasPanel() {
   const qc = useQueryClient();
+  const [destino, setDestino] = useState<DestinoCuenta>(DESTINOS[0].value);
   const [modal, setModal] = useState<null | { cuenta?: CuentaBancaria }>(null);
   const [form, setForm] = useState<CuentaForm>(CUENTA_FORM_EMPTY);
   const [formError, setFormError] = useState<string | undefined>();
 
   const { data: cuentas = [], isLoading } = useQuery({
-    queryKey: ["admin", "cuentas"],
-    queryFn: () => api.admin.cuentas.list(),
+    queryKey: ["admin", "cuentas", destino],
+    queryFn: () => api.admin.cuentas.list(destino),
   });
 
   const saveMutation = useMutation({
@@ -392,7 +401,7 @@ function CuentasPanel() {
       if (modal?.cuenta) {
         return api.admin.cuentas.update(modal.cuenta.id, payload);
       }
-      return api.admin.cuentas.create(payload);
+      return api.admin.cuentas.create({ ...payload, destino });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "cuentas"] });
@@ -449,8 +458,26 @@ function CuentasPanel() {
 
   return (
     <>
+      {DESTINOS.length > 1 && (
+        <div className="flex gap-1 mb-4">
+          {DESTINOS.map((d) => (
+            <button
+              key={d.value}
+              onClick={() => setDestino(d.value)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                destino === d.value ? "bg-brand/20 text-white" : "text-white/40 hover:text-white/70 hover:bg-white/5"
+              }`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-4">
-        <p className="text-white/40 text-sm">{cuentas.length} cuentas registradas</p>
+        <p className="text-white/40 text-sm">
+          {cuentas.length} cuentas para {DESTINOS.find((d) => d.value === destino)?.label}
+        </p>
         <button
           onClick={openCreate}
           className="flex items-center gap-1.5 bg-brand hover:bg-brand-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors"

@@ -1,7 +1,13 @@
 import type {
   AdminUser,
   CompaniaKey,
+  ConfigRegistroRecargas,
   CuentaBancaria,
+  DestinoCuenta,
+  EstadoRegistro,
+  RegistroRecargasDetalle,
+  RegistroRecargasPayload,
+  RegistroRecargasResumen,
   EstadoSolicitud,
   Plan,
   SolicitudDetalle,
@@ -110,12 +116,14 @@ export const api = {
         }),
     },
     cuentas: {
-      list: (): Promise<CuentaBancaria[]> => adminRequest("/admin/cuentas-bancarias"),
+      list: (destino?: DestinoCuenta): Promise<CuentaBancaria[]> =>
+        adminRequest(`/admin/cuentas-bancarias${destino ? `?destino=${destino}` : ""}`),
       create: (data: {
         banco: string;
         titular: string;
         cuenta?: string;
         clabe?: string;
+        destino?: DestinoCuenta;
       }): Promise<CuentaBancaria> =>
         adminRequest("/admin/cuentas-bancarias", {
           method: "POST",
@@ -181,6 +189,29 @@ export const api = {
       recordatorio: (id: number): Promise<{ ok: boolean }> =>
         adminRequest(`/admin/solicitudes/${id}/recordatorio`, { method: "POST" }),
     },
+    registrosRecargas: {
+      list: (): Promise<RegistroRecargasResumen[]> => adminRequest("/admin/registros-recargas"),
+      get: (id: number): Promise<RegistroRecargasDetalle> =>
+        adminRequest(`/admin/registros-recargas/${id}`),
+      transicion: (
+        id: number,
+        data: { estadoNuevo: EstadoRegistro; observacion?: string; montoValidado?: number }
+      ): Promise<{ ok: boolean }> =>
+        adminRequest(`/admin/registros-recargas/${id}/estado`, {
+          method: "PATCH",
+          headers: JSON_HEADERS,
+          body: JSON.stringify(data),
+        }),
+      enviarCredenciales: (
+        id: number,
+        data: { usuario: string; contrasena: string }
+      ): Promise<{ ok: boolean }> =>
+        adminRequest(`/admin/registros-recargas/${id}/credenciales`, {
+          method: "POST",
+          headers: JSON_HEADERS,
+          body: JSON.stringify(data),
+        }),
+    },
     reportes: {
       solicitudesXlsx: (filtros: {
         desde?: string;
@@ -197,6 +228,21 @@ export const api = {
         return adminRequestBlob(`/admin/reportes/solicitudes.xlsx${qs ? `?${qs}` : ""}`);
       },
     },
+  },
+  registrosRecargas: {
+    config: (): Promise<ConfigRegistroRecargas> => request("/registros-recargas/config"),
+    presignedUrl: (contentType: string): Promise<{ uploadUrl: string; publicUrl: string }> =>
+      request("/registros-recargas/presigned-url", {
+        method: "POST",
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ contentType }),
+      }),
+    create: (payload: RegistroRecargasPayload): Promise<{ ok: boolean; publicCode: string }> =>
+      request("/registros-recargas", {
+        method: "POST",
+        headers: JSON_HEADERS,
+        body: JSON.stringify(payload),
+      }),
   },
   solicitudes: {
     presignedUrl: (

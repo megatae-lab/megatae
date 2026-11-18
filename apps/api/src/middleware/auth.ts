@@ -45,3 +45,13 @@ export function requirePro(
   }
   next();
 }
+
+export function requireRol(...roles: AdminPayload["rol"][]) {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.admin || !roles.includes(req.admin.rol)) {
+      res.status(403).json({ error: "No tienes acceso a esta sección" });
+      return;
+    }
+    next();
+  };
+}

@@ -13,6 +13,9 @@ import { Gracias } from "./pages/compra/Gracias.js";
 import { Consultar } from "./pages/compra/Consultar.js";
 import { Conocenos } from "./pages/conocenos/Conocenos.js";
 import { VendeRecargas } from "./pages/recargas/Recargas.js";
+import { RegistroNegocio } from "./pages/recargas/RegistroNegocio.js";
+import { AdminRegistrosRecargas } from "./pages/admin/RegistrosRecargas.js";
+import { AdminRegistroRecargasDetalle } from "./pages/admin/RegistroRecargasDetalle.js";
 import { AdminLogin } from "./pages/admin/Login.js";
 import { PageLoader } from './components/PageLoader.js'
 import { AdminLayout } from "./components/AdminLayout.js";
@@ -71,6 +74,7 @@ export function App() {
           <Route index element={<Landing />} />
           <Route path="conocenos" element={<Conocenos />} />
           <Route path="vende-recargas" element={<VendeRecargas />} />
+          <Route path="registro-negocio" element={<RegistroNegocio />} />
           <Route path="registro" element={<Registro />} />
           <Route path="comprar" element={<Comprar />} />
           <Route path="gracias" element={<Gracias />} />
@@ -92,6 +96,8 @@ export function App() {
           <Route path="solicitudes/:id" element={<AdminSolicitudDetalle />} />
           <Route path="configuracion" element={<AdminConfiguracion />} />
           <Route path="reportes" element={<AdminReportes />} />
+          <Route path="registros-recargas" element={<AdminRegistrosRecargas />} />
+          <Route path="registros-recargas/:id" element={<AdminRegistroRecargasDetalle />} />
         </Route>
       </Routes>
     </>

@@ -34,6 +34,7 @@ export interface CuentaBancaria {
   clabe: string | null;
   activo: boolean;
   orden: number;
+  destino: "ESIM" | "RECARGAS";
 }
 
 export type EstadoSolicitud =
@@ -114,4 +115,71 @@ export interface SolicitudPublica {
   nombre: string;
   compania: CompaniaKey;
   email: string;
+}
+
+// ─── Registro de negocios para recargas ─────────────────────────────────────
+
+export type DestinoCuenta = "ESIM" | "RECARGAS";
+
+export type EstadoRegistro =
+  | "RECIBIDO"
+  | "REVISION_PAGO"
+  | "PAGO_RECHAZADO"
+  | "PAGO_VALIDADO"
+  | "CREDENCIALES_ENVIADAS"
+  | "CANCELADO";
+
+export interface GiroOpcion {
+  clave: string;
+  etiqueta: string;
+}
+
+export interface ConfigRegistroRecargas {
+  montoMinimo: number;
+  giros: GiroOpcion[];
+  cuentas: Pick<CuentaBancaria, "id" | "banco" | "titular" | "cuenta" | "clabe">[];
+}
+
+export interface RegistroRecargasPayload {
+  nombreCompleto: string;
+  email: string;
+  telefono: string;
+  nombreNegocio: string;
+  giro: string;
+  giroOtro?: string;
+  comprobanteUrl: string;
+}
+
+export interface RegistroRecargasResumen {
+  id: number;
+  publicCode: string;
+  nombreCompleto: string;
+  nombreNegocio: string;
+  giro: string;
+  giroOtro: string | null;
+  giroEtiqueta: string;
+  estado: EstadoRegistro;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HistorialRegistroItem {
+  id: number;
+  estadoAnterior: EstadoRegistro;
+  estadoNuevo: EstadoRegistro;
+  observacion: string | null;
+  createdAt: string;
+  admin: { nombre: string } | null;
+}
+
+export interface RegistroRecargasDetalle extends RegistroRecargasResumen {
+  email: string;
+  telefono: string;
+  comprobante: string;
+  montoValidado: string | null;
+  observacion: string | null;
+  usuarioPlataforma: string | null;
+  credencialesEnviadasAt: string | null;
+  montoMinimo: number;
+  historial: HistorialRegistroItem[];
 }

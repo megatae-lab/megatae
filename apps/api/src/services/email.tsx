@@ -6,6 +6,10 @@ import { QrEnviado } from "../emails/QrEnviado.js";
 import { RecordatorioActivacion } from "../emails/RecordatorioActivacion.js";
 import { FueraDeHorario } from "../emails/FueraDeHorario.js";
 import { NuevaOrden } from "../emails/NuevaOrden.js";
+import { RegistroRecargasRecibido } from "../emails/recargas/RegistroRecargasRecibido.js";
+import { RegistroRecargasRechazado } from "../emails/recargas/RegistroRecargasRechazado.js";
+import { CredencialesRecargas } from "../emails/recargas/CredencialesRecargas.js";
+import { NuevoRegistroRecargas } from "../emails/recargas/NuevoRegistroRecargas.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "no-reply@megatae.mx";
@@ -149,6 +153,92 @@ export async function sendNuevaOrden(opts: {
     from: FROM,
     to,
     subject: `Nueva orden ${opts.folio} — eSIM ${opts.compania} $${opts.precio} (${metodo})`,
+    html,
+  });
+}
+
+// ─── Módulo de recargas ──────────────────────────────────────────────────────
+
+export async function sendRegistroRecargasRecibido(opts: {
+  folio: string;
+  to: string;
+  nombre: string;
+  nombreNegocio: string;
+}) {
+  const html = await render(<RegistroRecargasRecibido {...opts} logoUrl={logoUrl} />);
+  await resend.emails.send({
+    from: FROM,
+    to: opts.to,
+    subject: `Recibimos tu registro para vender recargas — folio ${opts.folio}`,
+    html,
+  });
+}
+
+export async function sendRegistroRecargasRechazado(opts: {
+  folio: string;
+  to: string;
+  nombre: string;
+  observacion: string;
+  montoMinimo: string;
+}) {
+  const html = await render(<RegistroRecargasRechazado {...opts} logoUrl={logoUrl} />);
+  await resend.emails.send({
+    from: FROM,
+    to: opts.to,
+    subject: "Tu comprobante de pago no pudo ser verificado — Registro de recargas",
+    html,
+  });
+}
+
+// A diferencia del resto, este envío se espera (await) dentro de la
+// transacción que cambia el estado: si el correo falla, el registro no
+// avanza y el admin ve el error para reintentar. Resend responde con
+// { error } en vez de lanzar, así que se convierte en excepción aquí.
+// La contraseña nunca se registra en logs: el error que se lanza no la
+// incluye.
+export async function sendCredencialesRecargas(opts: {
+  folio: string;
+  to: string;
+  nombre: string;
+  nombreNegocio: string;
+  usuario: string;
+  contrasena: string;
+}) {
+  const plataformaUrl = process.env.PLATAFORMA_RECARGAS_URL || undefined;
+  const html = await render(<CredencialesRecargas {...opts} plataformaUrl={plataformaUrl} logoUrl={logoUrl} />);
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: opts.to,
+    subject: "Tu acceso a la plataforma de recargas MEGATAE",
+    html,
+  });
+  if (error) {
+    throw new Error(`No se pudo enviar el correo de credenciales: ${error.message}`);
+  }
+}
+
+export async function sendNuevoRegistroRecargas(opts: {
+  registroId: number;
+  folio: string;
+  nombreCompleto: string;
+  email: string;
+  telefono: string;
+  nombreNegocio: string;
+  giro: string;
+  montoMinimo: string;
+  comprobanteUrl: string;
+}) {
+  const to = destinatariosNuevaOrden();
+  if (to.length === 0) return;
+
+  const adminUrl = process.env.WEB_URL
+    ? `${process.env.WEB_URL}/admin/registros-recargas/${opts.registroId}`
+    : undefined;
+  const html = await render(<NuevoRegistroRecargas {...opts} adminUrl={adminUrl} />);
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Nuevo registro de recargas ${opts.folio} — ${opts.nombreNegocio}`,
     html,
   });
 }

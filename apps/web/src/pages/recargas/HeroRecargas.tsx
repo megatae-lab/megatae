@@ -18,7 +18,7 @@ export function HeroRecargas() {
                 />
 
                 {/* Banner superior */}
-                <CtaBanner text="" />
+                <CtaBanner text="¿Quieres vender recargas? Registra tu negocio aquí" />
 
                 <div className="relative mx-auto max-w-7xl px-6 sm:px-14 mb-8 sm:mb-14 py-6 md:py-7 flex flex-col md:flex-row items-center gap-6 md:gap-10">
                     {/* Copy izquierdo */}
@@ -71,7 +71,7 @@ export function HeroRecargas() {
                 </div>
 
                 {/* Banner inferior */}
-                <CtaBanner text="" />
+                <CtaBanner text="Registra tu negocio" />
             </section>
         </>
     );

@@ -11,7 +11,7 @@ export function Hero() {
             />
 
             {/* Banner superior */}
-            {/* <CtaBanner text="Únete a Megatae" /> */}
+            <CtaBanner text="Únete a Megatae" />
 
             <div className="relative mx-auto max-w-7xl px-4 py-10 md:scroll-py-52 flex flex-col items-center justify-center text-center">
 
@@ -49,21 +49,21 @@ export function Hero() {
             </div>
 
             {/* Banner inferior */}
-            {/* <CtaBanner text="Lleva tu negocio al siguiente nivel" /> */}
+            <CtaBanner text="Lleva tu negocio al siguiente nivel" />
         </section>
     );
 }
 
 
-// function CtaBanner({ text }: { text: string }) {
-//     return (
-//         <div className="bg-brand py-2 text-center">
-//             <button
-//                 onClick={() => (window.location.href = "/vende-recargas")}
-//                 className="text-white text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
-//             >
-//                 {text}
-//             </button>
-//         </div>
-//     );
-// }
+function CtaBanner({ text }: { text: string }) {
+    return (
+        <div className="bg-brand py-2 text-center">
+            <button
+                onClick={() => (window.location.href = "/vende-recargas")}
+                className="text-white text-sm font-medium underline underline-offset-2 hover:text-white/80 transition-colors"
+            >
+                {text}
+            </button>
+        </div>
+    );
+}
