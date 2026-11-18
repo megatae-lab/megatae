@@ -19,7 +19,15 @@ export function getBasePath(compania?: CompaniaKey): string {
   return compania ? COMPANIA_BASE_PATH[compania] : "";
 }
 
+export const SECTION_ALIASES: Record<string, string> = {
+  "/registro-negocio": "/vende-recargas",
+};
 export function getBasePathFromPathname(pathname: string): string {
+  const alias = Object.keys(SECTION_ALIASES).find(
+    (path) => pathname === path || pathname.startsWith(path + "/")
+  );
+  if (alias) return SECTION_ALIASES[alias];
+
   const match = ALL_BASE_PATHS.find(
     (base) => pathname === base || pathname.startsWith(base + "/")
   );

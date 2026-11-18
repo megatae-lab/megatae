@@ -16,6 +16,8 @@ import { adminSolicitudesRouter } from "./routes/admin/solicitudes.js";
 import { adminPlanesRouter } from "./routes/admin/planes.js";
 import { adminCuentasRouter } from "./routes/admin/cuentas.js";
 import { adminReportesRouter } from "./routes/admin/reportes.js";
+import { registrosRecargasRouter } from "./routes/registrosRecargas.js";
+import { adminRegistrosRecargasRouter } from "./routes/admin/registrosRecargas.js";
 
 validateStripeEnv();
 
@@ -69,6 +71,7 @@ app.use("/api/planes", planesRouter);
 app.use("/api/leads", publicLimiter, leadsRouter);
 app.use("/api/cuentas-bancarias", cuentasRouter);
 app.use("/api/solicitudes", publicLimiter, solicitudesRouter);
+app.use("/api/registros-recargas", publicLimiter, registrosRecargasRouter);
 app.use("/api/auth", authLimiter, authRouter);
 
 // Rutas protegidas — requireAuth se aplica a todo /api/admin/*
@@ -77,6 +80,7 @@ app.use("/api/admin/solicitudes", adminSolicitudesRouter);
 app.use("/api/admin/planes", adminPlanesRouter);
 app.use("/api/admin/cuentas-bancarias", adminCuentasRouter);
 app.use("/api/admin/reportes", adminReportesRouter);
+app.use("/api/admin/registros-recargas", adminRegistrosRecargasRouter);
 
 // Error handler global
 app.use(

@@ -1,14 +1,19 @@
 import { Router } from "express";
 import { z } from "zod";
+import { DestinoCuenta } from "@prisma/client";
 import { prisma } from "../../lib/prisma.js";
 import { requirePro } from "../../middleware/auth.js";
 import type { AuthRequest } from "../../middleware/auth.js";
 
 export const adminCuentasRouter = Router();
 
-adminCuentasRouter.get("/", async (_req, res, next) => {
+// ?destino=ESIM|RECARGAS filtra; sin parámetro regresa todas.
+adminCuentasRouter.get("/", async (req, res, next) => {
   try {
+    const destino = req.query.destino as DestinoCuenta | undefined;
+    const where = destino && Object.values(DestinoCuenta).includes(destino) ? { destino } : {};
     const cuentas = await prisma.cuentaBancaria.findMany({
+      where,
       orderBy: { orden: "asc" },
     });
     res.json(cuentas);
@@ -22,12 +27,16 @@ const cuentaCreateSchema = z.object({
   titular: z.string().min(1, "El titular es requerido"),
   cuenta: z.string().optional(),
   clabe: z.string().optional(),
+  destino: z.nativeEnum(DestinoCuenta).default("ESIM"),
 });
 
 adminCuentasRouter.post("/", requirePro, async (req: AuthRequest, res, next) => {
   try {
     const data = cuentaCreateSchema.parse(req.body);
-    const last = await prisma.cuentaBancaria.findFirst({ orderBy: { orden: "desc" } });
+    const last = await prisma.cuentaBancaria.findFirst({
+      where: { destino: data.destino },
+      orderBy: { orden: "desc" },
+    });
     const cuenta = await prisma.cuentaBancaria.create({
       data: { ...data, orden: (last?.orden ?? -1) + 1 },
     });

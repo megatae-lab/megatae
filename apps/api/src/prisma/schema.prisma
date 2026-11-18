@@ -35,6 +35,25 @@ enum MetodoPago {
   STRIPE
 }
 
+// A qué flujo pertenece una cuenta bancaria. Las cuentas de recargas son
+// distintas a las de eSIM y nunca se muestran en el checkout de eSIM.
+enum DestinoCuenta {
+  ESIM
+  RECARGAS
+}
+
+// Flujo del registro de negocios para la plataforma de recargas. Más corto
+// que el de eSIM: no hay activación en sistema de compañía ni QR, se
+// entregan usuario + contraseña genérica.
+enum EstadoRegistro {
+  RECIBIDO
+  REVISION_PAGO
+  PAGO_RECHAZADO
+  PAGO_VALIDADO
+  CREDENCIALES_ENVIADAS
+  CANCELADO
+}
+
 model Plan {
   id          Int         @id @default(autoincrement())
   compania    Compania
@@ -95,9 +114,9 @@ model Solicitud {
   ip                   String?
   userAgent            String?
 
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  historial   HistorialEstado[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  historial HistorialEstado[]
 }
 
 // Registro de eventos de webhook de Stripe procesados, para idempotencia.
@@ -128,13 +147,59 @@ model HistorialEstado {
 }
 
 model CuentaBancaria {
-  id      Int     @id @default(autoincrement())
+  id      Int           @id @default(autoincrement())
   banco   String
   titular String
   cuenta  String?
   clabe   String?
-  activo  Boolean @default(true)
-  orden   Int     @default(0)
+  activo  Boolean       @default(true)
+  orden   Int           @default(0)
+  destino DestinoCuenta @default(ESIM)
+}
+
+// Registro de un negocio que quiere vender recargas con la plataforma de
+// MEGATAE. Tabla propia (no reutiliza Solicitud) porque no tiene compañía,
+// plan ni LADA. La contraseña entregada NO se guarda — viaja solo en el
+// correo de credenciales (ver docs/ARCHITECTURE.md, sección 17).
+model RegistroRecargas {
+  id                     Int                         @id @default(autoincrement())
+  // Folio público, prefijo "RR-" (mismo alfabeto que el folio de eSIM).
+  publicCode             String                      @unique
+  nombreCompleto         String
+  email                  String
+  telefono               String
+  nombreNegocio          String
+  // Clave del catálogo GIROS_NEGOCIO (lib/giros.ts). Se valida en la API, no
+  // con un enum de Postgres, para poder agregar opciones sin migración.
+  giro                   String
+  // Solo cuando giro = "OTRO".
+  giroOtro               String?
+  comprobante            String
+  // Capturado por mesa de control al validar; debe ser >= monto mínimo.
+  montoValidado          Decimal?                    @db.Decimal(10, 2)
+  estado                 EstadoRegistro              @default(RECIBIDO)
+  observacion            String?
+  usuarioPlataforma      String?
+  credencialesEnviadasAt DateTime?
+  createdAt              DateTime                    @default(now())
+  updatedAt              DateTime                    @updatedAt
+  historial              HistorialRegistroRecargas[]
+
+  @@index([estado])
+}
+
+model HistorialRegistroRecargas {
+  id             Int              @id @default(autoincrement())
+  registroId     Int
+  registro       RegistroRecargas @relation(fields: [registroId], references: [id])
+  estadoAnterior EstadoRegistro
+  estadoNuevo    EstadoRegistro
+  adminId        Int?
+  admin          Admin?           @relation(fields: [adminId], references: [id])
+  observacion    String?
+  createdAt      DateTime         @default(now())
+
+  @@index([registroId])
 }
 
 model Lead {
@@ -145,12 +210,13 @@ model Lead {
 }
 
 model Admin {
-  id           Int               @id @default(autoincrement())
-  email        String            @unique
-  passwordHash String
-  nombre       String
-  rol          RolAdmin
-  activo       Boolean           @default(true)
-  createdAt    DateTime          @default(now())
-  historial    HistorialEstado[]
+  id                 Int                         @id @default(autoincrement())
+  email              String                      @unique
+  passwordHash       String
+  nombre             String
+  rol                RolAdmin
+  activo             Boolean                     @default(true)
+  createdAt          DateTime                    @default(now())
+  historial          HistorialEstado[]
+  historialRegistros HistorialRegistroRecargas[]
 }

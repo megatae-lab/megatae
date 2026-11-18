@@ -5,14 +5,16 @@ import { Prisma } from "@prisma/client";
 // pueda leer y transcribir a mano sin errores.
 const PUBLIC_CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 const PUBLIC_CODE_LENGTH = 10;
-const PUBLIC_CODE_PREFIX = "MT-";
+// "MT-" para solicitudes de eSIM, "RR-" para registros de recargas.
+export const PUBLIC_CODE_PREFIX = "MT-";
+export const PUBLIC_CODE_PREFIX_RECARGAS = "RR-";
 
-export function generatePublicCode(): string {
+export function generatePublicCode(prefix: string = PUBLIC_CODE_PREFIX): string {
   let code = "";
   for (let i = 0; i < PUBLIC_CODE_LENGTH; i++) {
     code += PUBLIC_CODE_ALPHABET[randomInt(PUBLIC_CODE_ALPHABET.length)];
   }
-  return `${PUBLIC_CODE_PREFIX}${code}`;
+  return `${prefix}${code}`;
 }
 
 // Token opaco de 32 bytes (256 bits) — uso único: aterrizaje en /gracias
@@ -36,11 +38,12 @@ function esColisionDeCampo(err: unknown, campo: string): boolean {
 // pero el código no debe asumir que nunca pasa).
 export async function conPublicCodeUnico<T>(
   fn: (publicCode: string) => Promise<T>,
-  intentos = 5
+  intentos = 5,
+  prefix: string = PUBLIC_CODE_PREFIX
 ): Promise<T> {
   for (let intento = 0; intento < intentos; intento++) {
     try {
-      return await fn(generatePublicCode());
+      return await fn(generatePublicCode(prefix));
     } catch (err) {
       if (esColisionDeCampo(err, "publicCode") && intento < intentos - 1) continue;
       throw err;
